@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>История на записаните часове</title>
+  <link rel="stylesheet" type="text/css" href="/css/index.css">
+</head>
+<body>
+
+<!-- Горна лента -->
+<div class="top-header">
+  <div class="contact">📞 0888 123 456</div>
+  <div class="address">📍 гр. Русе, бул. Красота 19</div>
+</div>
+
+<!-- Навигация -->
+<header class="info">
+  <nav>
+    <ul>
+      <li><a th:href="@{/profile}">⬅ Назад към профила</a></li>
+      <li><a th:href="@{/logout}">Изход</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Заглавие -->
+<section class="hero">
+  <div class="hero-text">
+    <h1>История на моите часове 💖</h1>
+    <p>Вижте всички завършени и отменени посещения</p>
+  </div>
+</section>
+
+<main class="container">
+
+  <!-- Таблица с историята на часовете -->
+  <section class="appointments-history">
+    <h2>Моите минали часове</h2>
+
+    <!-- Ако няма минали часове -->
+    <div th:if="${#lists.isEmpty(pastAppointments)}" class="no-appointments">
+      <p>Все още нямате завършени или отменени часове.</p>
+      <a class="btn" th:href="@{/bookingForm}">Запази нов час</a>
+    </div>
+
+    <!-- Таблица с минали часове -->
+<!--    <table th:if="${!#lists.isEmpty(pastAppointments)}">-->
+      <table>
+      <thead>
+      <tr>
+        <th>Дата и час</th>
+        <th>Услуга</th>
+        <th>Служител</th>
+        <th>Продължителност</th>
+        <th>Цена</th>
+        <th>Статус</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="appointment : ${user.appointments}">
+        <td th:text="${#temporals.format(appointment.appointmentDate, 'dd MMM YYYY HH:mm')}">11 Jan 2025 11:00</td>
+        <td th:text="${appointment.service.serviceName.displayName}"></td>
+<!--        <td th:text="${appointment.employee.firstName + ' ' + appointment.employee.lastName}"></td>-->
+        <td th:text="${appointment.durationMinutes + ' мин.'}"></td>
+        <td th:text="${appointment.price + ' лв.'}"></td>
+        <td>
+          <p th:if="${appointment.status.name() == 'SCHEDULED'}" class="status active">Scheduled</p>
+          <p th:if="${appointment.status.name() == 'CANCELLED'}" class="status completed">Cancelled</p>
+          <p th:if="${appointment.status.name()  == 'COMPLETED'}" class="status terminated">Completed</p>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<footer>
+  <p>© 2025 Салон за красота "Bellezza" | <a th:href="@{/about-us}">За нас</a></p>
+</footer>
+
+</body>
+</html>

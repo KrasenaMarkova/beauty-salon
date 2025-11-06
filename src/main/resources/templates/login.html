@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" type="text/css" href="/css/index.css">
+</head>
+<body>
+
+<!-- Top Header -->
+<div class="top-header">
+  <div class="contact">📞 0888 123 456</div>
+  <div class="address">📍 гр. Русе, бул. Красота 19</div>
+</div>
+
+<!-- Навигация -->
+<!--<header class="info">-->
+<!--    <nav>-->
+<!--        <ul>-->
+<!--            <li><a th:href="@{/}">Начало</a></li>-->
+<!--            <li><a th:href="@{/about}">За нас</a></li>-->
+<!--            <li><a th:href="@{/services}">Услуги</a></li>-->
+<!--            <li><a th:href="@{/team}">Екип</a></li>-->
+<!--            <li><a th:href="@{/register}" class="active">Регистрация</a></li>-->
+<!--            <li><a th:href="@{/login}">Вход</a></li>-->
+<!--        </ul>-->
+<!--    </nav>-->
+<!--</header>-->
+
+<!-- Hero секция -->
+<section class="hero">
+  <div class="hero-text">
+    <h1>Вход в салон "Bellezza"</h1>
+    <p>Влезте в своя профил и управлявайте своите резервации и услуги удобно и бързо.</p>
+  </div>
+  <div class="reservation login-box" id="reservation">
+    <h2>Вход</h2>
+    <form th:method="POST" th:action="@{/login}" th:object="${loginRequest}">
+
+      <label for="username">Потребителско име:</label>
+      <input type="text" th:field="*{username}" id="username" placeholder="Изберете потребителско име">
+      <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-message"></div>
+
+      <label for="password">Парола:</label>
+      <input type="password" th:field="*{password}" id="password" placeholder="Парола">
+      <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></div>
+
+      <button type="submit">Вход</button>
+    </form>
+    <p>Все още нямата акаунт? <a th:href="@{/register}">Регистрация</a></p>
+  </div>
+</section>
+
+<!-- Основен контейнер -->
+<!--<main class="container">-->
+<!--    <div class="reservation" id="reservation">-->
+<!--        <h2>Вход</h2>-->
+<!--        <form th:method="POST" th:action="@{/login}" th:object="${loginRequest}">-->
+
+<!--            <label for="username">Потребителско име:</label>-->
+<!--            <input type="text" th:field="*{username}" id="username" placeholder="Изберете потребителско име">-->
+<!--            <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-message"></div>-->
+
+<!--            <label for="password">Парола:</label>-->
+<!--            <input type="password" th:field="*{password}" id="password" placeholder="Парола">-->
+<!--            <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></div>-->
+
+<!--            <button type="submit">Вход</button>-->
+<!--        </form>-->
+<!--        <p>Все още нямата акаунт? <a th:href="@{/register}">Регистрация</a></p>-->
+<!--    </div>-->
+<!--</main>-->
+
+
+<!-- Footer-->
+<footer>
+  <p>© 2025 Салон за красота "Bellezza" | <a th:href="@{/about-us}">За нас</a> </p>
+</footer>
+
+</body>
+</html>

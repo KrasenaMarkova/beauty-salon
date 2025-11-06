@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class BeautyService {
+public class BeautyTreatment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

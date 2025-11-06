@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Редакция на профила</title>
+  <link rel="stylesheet" type="text/css" href="/css/index.css">
+</head>
+<body>
+
+<div class="top-header">
+  <div class="contact">📞 0888 123 456</div>
+  <div class="address">📍 гр. Русе, бул. Красота 19</div>
+</div>
+
+<header class="info">
+  <nav>
+    <ul>
+      <li><a th:href="@{/profile}">⬅ Назад към профила</a></li>
+      <li><a th:href="@{/logout}">Изход</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Hero секция (оставяме я, но правим я по-компактна и центрирана) -->
+<section class="hero small-hero">
+  <div class="hero-text">
+    <h1>Редактирайте своя профил 💅</h1>
+    <p>Актуализирайте вашите данни, когато е необходимо.</p>
+  </div>
+</section>
+
+<main class="container">
+  <section class="edit-profile-section">
+    <div class="user-card edit-form">
+      <form th:action="@{/profile/update}" th:object="${user}" method="post">
+        <div class="form-group">
+          <label for="username">Потребителско име:</label>
+          <input type="text" id="username" th:field="*{username}" readonly>
+        </div>
+
+        <div class="form-group">
+          <label for="firstName">Име:</label>
+          <input type="text" id="firstName" th:field="*{firstName}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Фамилия:</label>
+          <input type="text" id="lastName" th:field="*{lastName}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Имейл:</label>
+          <input type="email" id="email" th:field="*{email}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Телефон:</label>
+          <input type="text" id="phone" th:field="*{phone}">
+        </div>
+
+        <button type="submit" class="edit-btn">💾 Запази промените</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2025 Салон за красота "Bellezza" | <a th:href="@{/about-us}">За нас</a></p>
+</footer>
+
+</body>
+</html>

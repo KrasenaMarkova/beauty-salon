@@ -1,6 +1,7 @@
 package com.example.beauty_salon.appointment.model;
 
-import com.example.beauty_salon.beautyService.model.BeautyService;
+import com.example.beauty_salon.beautyService.model.BeautyTreatment;
+import com.example.beauty_salon.employee.model.Employee;
 import com.example.beauty_salon.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -39,5 +40,9 @@ public class Appointment {
 
     @ManyToOne
     @JoinColumn(name = "service_id")
-    private BeautyService service;
+    private BeautyTreatment service;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id", nullable = false)
+    private Employee employee;
 }

@@ -1,0 +1,380 @@
+/* Общи стилове */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    background: linear-gradient(135deg, #fff0f5, #ffe4e1);
+    color: #333;
+}
+
+/* Top Header */
+.top-header {
+    background: #e75480;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 30px;
+    font-size: 14px;
+}
+
+/* Навигация */
+.info {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.info ul {
+    list-style: none;
+    margin: 0;
+    padding: 15px 0;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+.info a {
+    color: #e75480;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.info a:hover {
+    color: #c03b64;
+}
+
+/* Hero секция с фон на салон за красота */
+.hero {
+    background: url('https://images.pexels.com/photos/7750108/pexels-photo-7750108.jpeg')
+    no-repeat center center/cover;
+    color: #fff;
+    text-align: center;
+    padding: 100px 20px;
+    position: relative;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(231, 84, 128, 0.55);
+}
+
+.hero-text {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.hero h1 {
+    font-size: 42px;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.btn {
+    background: #fff;
+    color: #e75480;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.btn:hover {
+    background: #e75480;
+    color: #fff;
+}
+
+/* Основен контейнер */
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 60px 50px;
+    gap: 50px;
+    flex-wrap: wrap;
+}
+
+/* Лява част */
+.about {
+    flex: 2;
+}
+
+/* Заглавие За салона */
+.about h2 {
+    color: #e75480;
+    margin-bottom: 20px;
+    font-size: 32px;       /* по-голям шрифт */
+    font-weight: 700;      /* малко по-дебел шрифт */
+    text-align: center;    /* центрираме заглавието */
+    text-transform: uppercase; /* буквите с главни букви */
+}
+
+/* Текст под заглавието */
+.about p {
+    text-align: center;     /* центрираме текста */
+    font-size: 16px;        /* леко увеличаваме размера */
+    line-height: 1.8;       /* малко повече разстояние между редовете */
+    margin: 0 auto;
+    max-width: 700px;       /* ограничаваме ширината за по-добро четене */
+}
+
+/* Форма за резервация */
+.reservation {
+    max-width: 420px;
+    margin: 50px auto;
+    padding: 30px 35px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 12px;
+}
+
+.reservation h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #444;
+}
+
+.reservation form label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.reservation form input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.reservation form input:focus {
+    border-color: #ff69b4;
+    outline: none;
+    box-shadow: 0 0 4px rgba(255,105,180,0.3);
+}
+
+.reservation form button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 25px;
+    background-color: #ff69b4;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.reservation form button:hover {
+    background-color: #e055a1;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.reservation p {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.reservation p a {
+    color: #ff69b4;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.reservation p a:hover {
+    text-decoration: underline;
+}
+
+.login-box {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: relative;
+    z-index: 2; /* това е ключово */
+    color: #333; /* гарантира, че текстът е тъмен и четим */
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column; /* Подрежда елементите вертикално */
+    align-items: center;    /* Центрира по хоризонтала */
+    margin-top: 40px;
+    text-align: center;     /* Центрира текста на заглавието */
+}
+
+.user-info h2 {
+    margin-bottom: 15px;
+    color: #d63384;
+}
+
+.user-card {
+    background-color: #f7c6d9; /* светлорозово */
+    border-radius: 20px;
+    padding: 25px 35px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 320px;
+    text-align: left;
+    color: #4a004e; /* леко лилав текст за контраст */
+}
+
+.user-card p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.user-card strong {
+    color: #d63384;
+}
+
+.edit-btn {
+    display: inline-block;
+    margin-top: 15px;
+    background-color: #d63384;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.edit-btn:hover {
+    background-color: #b02a6b;
+}
+
+
+.edit-profile-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.edit-form {
+    width: 350px;
+}
+
+.edit-form .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.edit-form label {
+    font-weight: bold;
+    color: #d63384;
+    margin-bottom: 5px;
+}
+
+.edit-form input {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+.edit-form input:focus {
+    outline: none;
+    border-color: #d63384;
+    box-shadow: 0 0 5px rgba(214, 51, 132, 0.4);
+}
+
+.appointments-history {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.appointments-history h2 {
+    color: #d63384;
+    margin-bottom: 20px;
+}
+
+.appointments-history table {
+    width: 90%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.appointments-history th,
+.appointments-history td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #f0a6c4;
+}
+
+.appointments-history thead {
+    background-color: #f7c6d9;
+    color: #4a004e;
+}
+
+.appointments-history tbody tr:nth-child(even) {
+    background-color: #fff0f5;
+}
+
+.status-completed {
+    color: #198754; /* зелено */
+    font-weight: bold;
+}
+
+.status-cancelled {
+    color: #dc3545; /* червено */
+    font-weight: bold;
+}
+
+.status-scheduled {
+    color: #ffc107; /* жълто */
+    font-weight: bold;
+}
+
+.no-appointments {
+    margin-top: 30px;
+}
+
+.no-appointments p {
+    font-size: 18px;
+    color: #4a004e;
+}
+
+footer {
+    background: #333;
+    color: #fff;
+    display: flex;              /* добавено за центриране */
+    flex-direction: column;     /* вертикално подреждане */
+    align-items: center;        /* центриране хоризонтално */
+    justify-content: center;    /* центриране вертикално */
+    padding: 20px 0;
+    margin-top: 40px;
+    text-align: center;
+}
+
+footer a {
+    color: #e75480;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}

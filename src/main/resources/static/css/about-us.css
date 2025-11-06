@@ -1,0 +1,147 @@
+/* Общи стилове */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    background: linear-gradient(135deg, #fff0f5, #ffe4e1);
+    color: #333;
+}
+
+/* Top Header */
+.top-header {
+    background: #e75480;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 30px;
+    font-size: 14px;
+}
+
+/* Навигация */
+.info {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.info ul {
+    list-style: none;
+    margin: 0;
+    padding: 15px 0;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+.info a {
+    color: #e75480;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.info a:hover {
+    color: #c03b64;
+}
+
+/* Hero секция с фон на салон за красота */
+.hero {
+    background: url('https://images.pexels.com/photos/7750108/pexels-photo-7750108.jpeg')
+    no-repeat center center/cover;
+    color: #fff;
+    text-align: center;
+    padding: 100px 20px;
+    position: relative;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(231, 84, 128, 0.55);
+}
+
+.hero-text {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.hero h1 {
+    font-size: 42px;
+    margin-bottom: 20px;
+}
+
+/* Основен контейнер */
+.container {
+    display: flex;
+    justify-content: center; /* центрираме цялата секция хоризонтално */
+    gap: 9px;
+    flex-wrap: wrap; /* за мобилни устройства */
+    align-items: center; /* центрираме вертикално съдържанието */
+}
+
+/* Лява част - текст */
+.about {
+    flex: 1;
+    text-align: center; /* текстът е центриран */
+}
+
+/* Заглавие За салона */
+.about h2 {
+    color: #e75480;
+    margin-bottom: 20px;
+    font-size: 32px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Текст под заглавието */
+.about p {
+    font-size: 19px;
+    line-height: 1.8;
+    margin: 0 auto;
+    max-width: 500px;       /* ограничаваме ширината за по-добър вид */
+}
+
+/* Дясна част - картинка */
+.picture {
+    flex: 1;
+    display: flex;           /* за да центрираме картинката вътре в блока */
+    justify-content: center; /* центрираме хоризонтално */
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.picture img {
+    width: 100%;
+    max-width: 550px;        /* ограничаваме ширината на картинката */
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+/* Footer */
+footer {
+    background: #333;
+    color: #fff;
+    display: flex;              /* добавено за центриране */
+    flex-direction: column;     /* вертикално подреждане */
+    align-items: center;        /* центриране хоризонтално */
+    justify-content: center;    /* центриране вертикално */
+    padding: 20px 0;
+    margin-top: 40px;
+    text-align: center;
+}
+
+footer a {
+    color: #e75480;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
