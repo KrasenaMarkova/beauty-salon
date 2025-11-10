@@ -9,25 +9,22 @@
 </head>
 <body>
 
-<!-- Top Header -->
 <div class="top-header">
   <div class="contact">📞 0888 123 456</div>
   <div class="address">📍 гр. Русе, бул. Красота 19</div>
 </div>
 
 <!-- Навигация -->
-<!--<header class="info">-->
-<!--    <nav>-->
-<!--        <ul>-->
-<!--            <li><a th:href="@{/}">Начало</a></li>-->
-<!--            <li><a th:href="@{/about}">За нас</a></li>-->
+<header class="info">
+    <nav>
+        <ul>
+            <li><a th:href="@{/}">Начало</a></li>
+            <li><a th:href="@{/about}">За нас</a></li>
 <!--            <li><a th:href="@{/services}">Услуги</a></li>-->
-<!--            <li><a th:href="@{/team}">Екип</a></li>-->
-<!--            <li><a th:href="@{/register}" class="active">Регистрация</a></li>-->
-<!--            <li><a th:href="@{/login}">Вход</a></li>-->
-<!--        </ul>-->
-<!--    </nav>-->
-<!--</header>-->
+            <li><a th:href="@{/team}">Екип</a></li>
+        </ul>
+    </nav>
+</header>
 
 <!-- Hero секция -->
 <section class="hero">
@@ -37,15 +34,15 @@
   </div>
   <div class="reservation login-box" id="reservation">
     <h2>Вход</h2>
-    <form th:method="POST" th:action="@{/login}" th:object="${loginRequest}">
+    <form th:action="@{/login}" th:method="POST" th:object="${loginRequest}">
 
       <label for="username">Потребителско име:</label>
       <input type="text" th:field="*{username}" id="username" placeholder="Изберете потребителско име">
-      <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-message"></div>
+      <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-message">Invalid username</div>
 
       <label for="password">Парола:</label>
       <input type="password" th:field="*{password}" id="password" placeholder="Парола">
-      <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></div>
+      <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message">Invalid password</div>
 
       <button type="submit">Вход</button>
     </form>
@@ -53,31 +50,8 @@
   </div>
 </section>
 
-<!-- Основен контейнер -->
-<!--<main class="container">-->
-<!--    <div class="reservation" id="reservation">-->
-<!--        <h2>Вход</h2>-->
-<!--        <form th:method="POST" th:action="@{/login}" th:object="${loginRequest}">-->
-
-<!--            <label for="username">Потребителско име:</label>-->
-<!--            <input type="text" th:field="*{username}" id="username" placeholder="Изберете потребителско име">-->
-<!--            <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-message"></div>-->
-
-<!--            <label for="password">Парола:</label>-->
-<!--            <input type="password" th:field="*{password}" id="password" placeholder="Парола">-->
-<!--            <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></div>-->
-
-<!--            <button type="submit">Вход</button>-->
-<!--        </form>-->
-<!--        <p>Все още нямата акаунт? <a th:href="@{/register}">Регистрация</a></p>-->
-<!--    </div>-->
-<!--</main>-->
-
-
 <!-- Footer-->
-<footer>
-  <p>© 2025 Салон за красота "Bellezza" | <a th:href="@{/about-us}">За нас</a> </p>
-</footer>
+<th:block th:insert="fragments/footer :: my-footer"></th:block>
 
 </body>
 </html>

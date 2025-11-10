@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.UUID;
@@ -46,44 +47,51 @@ public class IndexController {
     }
 
     @PostMapping("/register")
-    public String registerNewUser(@Valid RegisterRequest registerRequest, BindingResult bindingResult) {
+    public ModelAndView registerNewUser(@Valid RegisterRequest registerRequest, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
-            return "register";
+            return new ModelAndView("register");
         }
 
-        userService.register(registerRequest);
 
-        return "redirect:/login";
+        //TODO: use feign to call userValidation microservice to check if user with mail and username already excists
+        //case 1 - app has user - throw UserAlreadyExistsException and handle it in global ExceptionHandler
+        //case 2 - no user exists - continue with registration
+        userService.register(registerRequest);
+        redirectAttributes.addFlashAttribute("registrationSuccessful", "Your registration is successful");
+
+        return new ModelAndView("redirect:/login");
     }
 
 
     @GetMapping("/login")
     public ModelAndView getLoginPage() {
-        //public ModelAndView getLoginPage(@RequestParam(name = "loginAttemptMessage", required = false) String message) {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("login");
         modelAndView.addObject("loginRequest", new LoginRequest());
 
-//        ??????
-//        modelAndView.addObject("loginAttemptMessage", message);
-
         return modelAndView;
     }
 
-    // Autowire HttpSession = automatically create user session, generate session id and return Set-Cookie header with the session id
+
     @PostMapping("/login")
-    public String loginUser(@Valid LoginRequest loginRequest, BindingResult bindingResult, HttpSession session) {
+    public ModelAndView loginUser(@Valid LoginRequest loginRequest, BindingResult bindingResult, HttpSession session) {
 
         if (bindingResult.hasErrors()) {
-            return "login";
+            return new ModelAndView("login");
         }
 
         User user = userService.login(loginRequest);
-        session.setAttribute("userId", user.getId());
 
-        return "redirect:/home";
+//        if (user == null) {
+//            ModelAndView modelAndView = new ModelAndView("login");
+//            modelAndView.addObject("loginAttemptMessage", "Incorrect username or password.");
+//            return modelAndView;
+//        }
+
+        session.setAttribute("userId", user.getId());
+        return new ModelAndView("redirect:/home");
     }
 
 

@@ -357,6 +357,25 @@ body {
     color: #4a004e;
 }
 
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* две колони */
+    gap: 20px; /* разстояние между полетата */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-grid button {
+    grid-column: span 2; /* бутонът да заема целия ред */
+    padding: 10px 20px;
+    margin-top: 10px;
+}
+
+
 footer {
     background: #333;
     color: #fff;
@@ -365,9 +384,10 @@ footer {
     align-items: center;        /* центриране хоризонтално */
     justify-content: center;    /* центриране вертикално */
     padding: 20px 0;
-    margin-top: 40px;
+    margin-top: auto;
     text-align: center;
 }
+
 
 footer a {
     color: #e75480;

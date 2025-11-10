@@ -1,13 +1,13 @@
-package com.example.beauty_salon.beautyService.model;
+package com.example.beauty_salon.beautyTreatment.model;
 
-public enum ServiceName {
+public enum BeautyTreatmentName {
     HAIRCUT("Haircut"),
     MANICURE("Manicure"),
     FACIAL_CLEANSING("Facial Cleansing");
 
     private final String displayName;
 
-    ServiceName(String displayName) {
+    BeautyTreatmentName(String displayName) {
         this.displayName = displayName;
     }
 

@@ -1,6 +1,6 @@
-package com.example.beauty_salon.beautyService.service;
+package com.example.beauty_salon.beautyTreatment.service;
 
-import com.example.beauty_salon.beautyService.repository.BeautyTreatmentRepository;
+import com.example.beauty_salon.beautyTreatment.repository.BeautyTreatmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

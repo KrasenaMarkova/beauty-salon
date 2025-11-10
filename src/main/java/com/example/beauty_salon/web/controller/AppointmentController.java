@@ -1,24 +1,14 @@
 package com.example.beauty_salon.web.controller;
 
 import com.example.beauty_salon.appointment.service.AppointmentService;
-import com.example.beauty_salon.beautyService.repository.BeautyTreatmentRepository;
 import com.example.beauty_salon.user.model.User;
 import com.example.beauty_salon.user.service.UserService;
-import com.example.beauty_salon.web.dto.AppointmentRequest;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/appointments")

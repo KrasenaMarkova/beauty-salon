@@ -31,7 +31,7 @@
   <div class="hero-text">
     <h1>Добре дошли, <span th:text="${user.firstName}">Потребител</span>!</h1>
     <p>Радваме се, че отново сте с нас 💇‍♀️</p>
-    <a class="btn" th:href="@{/appointments/create}">Запази нов час</a>
+    <a class="btn" th:href="@{/booking}">Запази нов час</a>
   </div>
 </section>
 
@@ -49,7 +49,7 @@
       <!-- Бутон за редакция на профила -->
       <a class="edit-btn" th:href="@{'/users/' + ${user.id} + '/profile'}">✏️ Редактирай профил</a>
 
-      <a class="edit-btn" th:href="@{'/appointments/history'}">✏️ Записани часове</a>
+<!--      <a class="edit-btn" th:href="@{'/appointments/history'}">✏️ Твоите часове</a>-->
     </div>
   </section>
 
@@ -60,7 +60,7 @@
     <div th:if="${#lists.isEmpty(allAppointment)}">
       <p>Все още нямате записани часове.</p>
 <!--      <a class="btn" th:href="@{/appointments/book}">Запази час</a>-->
-      <a class="btn" th:href="@{/bookingForm}">Запази час</a>
+      <a class="btn" th:href="@{/booking}">Запази час</a>
     </div>
 
     <table th:if="${!#lists.isEmpty(allAppointment)}">
@@ -89,9 +89,7 @@
 
 </main>
 
-<footer>
-  <p>© 2025 Салон за красота "Bellezza" | <a th:href="@{/about-us}">За нас</a> </p>
-</footer>
+<th:block th:insert="fragments/footer :: my-footer"></th:block>
 
 </body>
 </html>

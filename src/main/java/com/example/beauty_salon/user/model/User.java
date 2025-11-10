@@ -30,7 +30,6 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
-    @Email
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -48,7 +47,6 @@ public class User {
 
     // Един потребител може да има много часове (appointments)
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
-    // най-горе да е последният записан час
     @OrderBy("appointmentDate DESC")
     private List<Appointment> appointments = new ArrayList<>();
 }

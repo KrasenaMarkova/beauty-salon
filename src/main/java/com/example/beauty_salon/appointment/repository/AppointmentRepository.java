@@ -14,16 +14,4 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
 
     List<Appointment> findByUserIdOrderByAppointmentDateDesc(UUID userId);
 
-    // Извлича всички запазени часове за даден ден с определен статус
-    List<Appointment> findByAppointmentDateBetweenAndStatus(
-            LocalDateTime startOfDay,
-            LocalDateTime endOfDay,
-            AppointmentStatus status
-    );
-
-    List<Appointment> findByAppointmentDateBetweenAndStatusAndEmployeeId(
-            LocalDateTime localDateTime,
-            LocalDateTime localDateTime1,
-            AppointmentStatus appointmentStatus,
-            UUID employeeId);
 }

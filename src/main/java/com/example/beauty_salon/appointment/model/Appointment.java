@@ -1,6 +1,6 @@
 package com.example.beauty_salon.appointment.model;
 
-import com.example.beauty_salon.beautyService.model.BeautyTreatment;
+import com.example.beauty_salon.beautyTreatment.model.BeautyTreatment;
 import com.example.beauty_salon.employee.model.Employee;
 import com.example.beauty_salon.user.model.User;
 import jakarta.persistence.*;

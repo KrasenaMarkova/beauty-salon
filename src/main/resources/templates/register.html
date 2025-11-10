@@ -22,8 +22,6 @@
             <li><a th:href="@{/about-us}">За нас</a></li>
 <!--            <li><a th:href="@{/services}">Услуги</a></li>-->
             <li><a th:href="@{/team}">Екип</a></li>
-            <li><a th:href="@{/register}" class="active">Регистрация</a></li>
-            <li><a th:href="@{/login}">Вход</a></li>
         </ul>
     </nav>
 </header>
@@ -33,47 +31,61 @@
         <h1>Регистрация в салон "Bellezza"</h1>
         <p>Създайте своя профил и се възползвайте от нашите услуги лесно и бързо.</p>
     </div>
-</section>
 
-<main class="container">
-    <div class="reservation" id="reservation">
+    <div class="reservation login-box" id="reservation">
         <h2>Създайте акаунт</h2>
         <form th:method="POST" th:action="@{/register}" th:object="${registerRequest}">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="firstName">Име:</label>
+                    <input type="text" th:field="*{firstName}" id="firstName" placeholder="Вашето име">
+                    <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="error-message"></div>
+                </div>
 
-            <label for="firstName">Име:</label>
-            <input type="text" th:field="*{firstName}" id="firstName" placeholder="Вашето име">
-            <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="error-message"></div>
+                <div class="form-group">
+                    <label for="lastName">Фамилия:</label>
+                    <input type="text" th:field="*{lastName}" id="lastName" placeholder="Вашата фамилия">
+                    <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="error-message"></div>
+                </div>
 
-            <label for="lastName">Фамилия:</label>
-            <input type="text" th:field="*{lastName}" id="lastName" placeholder="Вашата фамилия">
-            <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="error-message"></div>
+                <div class="form-group">
+                    <label for="username">Потребителско име:</label>
+                    <input type="text" th:field="*{username}" id="username" placeholder="Изберете потребителско име">
+                    <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-message"></div>
+                </div>
 
+                <div class="form-group">
+                    <label for="email">Имейл:</label>
+                    <input type="email" th:field="*{email}" id="email" placeholder="example@mail.com">
+                    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message"></div>
+                </div>
 
-            <label for="username">Потребителско име:</label>
-            <input type="text" th:field="*{username}" id="username" placeholder="Изберете потребителско име">
-            <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-message"></div>
+                <div class="form-group">
+                    <label for="password">Парола:</label>
+                    <input type="password" th:field="*{password}" id="password" placeholder="Парола">
+                    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></div>
+                </div>
 
-            <label for="email">Имейл:</label>
-            <input type="email" th:field="*{email}" id="email" placeholder="example@mail.com">
-            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message"></div>
+                <div class="form-group">
+                    <label for="confirmPassword">Повтори парола:</label>
+                    <input type="password" th:field="*{confirmPassword}" id="confirmPassword" placeholder="Повтори парола:">
+                    <div th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="error-message"></div>
+                </div>
 
-            <label for="phone">Телефон:</label>
-            <input type="tel" th:field="*{phone}" id="phone" placeholder="0888123456">
-            <div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="error-message"></div>
-
-            <label for="password">Парола:</label>
-            <input type="password" th:field="*{password}" id="password" placeholder="Парола">
-            <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></div>
+                <div class="form-group">
+                    <label for="phone">Телефон:</label>
+                    <input type="tel" th:field="*{phone}" id="phone" placeholder="0888123456">
+                    <div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="error-message"></div>
+                </div>
+            </div>
 
             <button type="submit">Регистрация</button>
         </form>
         <p>Вече имате акаунт? <a th:href="@{/login}">Вход</a></p>
     </div>
-</main>
+</section>
 
-<footer>
-    <p>© 2025 Салон за красота "Bellezza" | <a th:href="@{/about-us}">За нас</a> </p>
-</footer>
+<th:block th:insert="fragments/footer :: my-footer"></th:block>
 
 </body>
 </html>
