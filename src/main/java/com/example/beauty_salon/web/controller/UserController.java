@@ -5,10 +5,12 @@ import com.example.beauty_salon.user.service.UserService;
 import com.example.beauty_salon.web.dto.DtoMapper;
 import com.example.beauty_salon.web.dto.EditProfileRequest;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,5 +56,27 @@ public class UserController {
         userService.updateProfile(id, editProfileRequest);
         return new ModelAndView("redirect:/home");
     }
+
+    @GetMapping
+    public ModelAndView getUsers() {
+
+        List<User> users = userService.getAll();
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("users");
+        modelAndView.addObject("users", users);
+
+        return modelAndView;
+    }
+
+    @PatchMapping("/{userId}/status")
+    public String switchUserStatus(@PathVariable UUID userId) {
+
+        userService.switchStatus(userId);
+
+        return "redirect:/users";
+    }
+
+
 
 }

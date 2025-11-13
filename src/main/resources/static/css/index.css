@@ -89,6 +89,15 @@ body {
     transition: all 0.3s;
 }
 
+.edit-btn:disabled {
+    background-color: #ccc !important;  /* сив фон */
+    color: #666 !important;             /* по-блед текст */
+    cursor: not-allowed !important;     /* ясно показва неактивност */
+    pointer-events: none !important;    /* деактивира клик */
+    box-shadow: none !important;        /* премахва сенки */
+    opacity: 0.6;                       /* допълнителен визуален ефект */
+}
+
 .btn:hover {
     background: #e75480;
     color: #fff;

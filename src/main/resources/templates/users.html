@@ -57,7 +57,7 @@
                 <th>Статус</th>
                 <th>Промяна на статуса</th>
                 <th>Брой часове</th>
-                <th>Действия</th>
+<!--                <th>Действия</th>-->
             </tr>
             </thead>
             <tbody>
@@ -67,13 +67,14 @@
                 <td th:text="${user.firstName + ' ' + user.lastName}">Име Фамилия</td>
                 <td th:text="${user.email}">email@example.com</td>
                 <td th:text="${user.phone}">0888123456</td>
-                <td th:text="${user.userRole.getDisplayName()}">CLIENT</td>
+                <td th:text="${user.userRole.getDisplayName()}">User</td>
                 <td>
                     <p th:if="${user.active}" class="status active">Активен</p>
                     <p th:if="${!user.active}" class="status terminated">Неактивен</p>
                 </td>
                 <td>
-                    <form th:action="@{'/admin/users/' + ${user.id} + '/toggle-status'}" method="post" style="display:inline;">
+<!--                    <form th:action="@{'/admin/users/' + ${user.id} + '/toggle-status'}" method="post" style="display:inline;">-->
+                    <form th:action="@{'/users/' + ${user.id} + '/status'}" th:method="PATCH" style="display:inline;">
                         <button type="submit"
                                 th:text="${user.active ? 'Деактивирай' : 'Активирай'}"
                                 th:class="${user.active ? 'btn btn-inactive' : 'btn btn-active'}">
@@ -82,11 +83,12 @@
 
                 </td>
                 <td th:text="${#lists.size(user.appointments)}">2</td>
-                <td>
-                    <form th:action="@{'/admin/users/' + ${user.id} + '/delete'}" method="post" style="display:inline;">
-                        <button type="submit" class="btn btn-delete" onclick="return confirm('Сигурни ли сте, че искате да изтриете този потребител?');">🗑 Изтрий</button>
-                    </form>
-                </td>
+<!--                <td>-->
+<!--&lt;!&ndash;                    <form th:action="@{'/admin/users/' + ${user.id} + '/delete'}" method="post" style="display:inline;">&ndash;&gt;-->
+<!--                    <form th:action="@{'/users/' + ${user.id} + '/delete'}" th:method="PATCH" style="display:inline;">-->
+<!--                        <button type="submit" class="btn btn-delete" onclick="return confirm('Сигурни ли сте, че искате да изтриете този потребител?');">🗑 Изтрий</button>-->
+<!--                    </form>-->
+<!--                </td>-->
             </tr>
             </tbody>
         </table>

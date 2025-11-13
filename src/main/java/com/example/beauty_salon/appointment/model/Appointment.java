@@ -39,8 +39,8 @@ public class Appointment {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "service_id")
-    private BeautyTreatment service;
+    @JoinColumn(name = "treatment_id")
+    private BeautyTreatment treatment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)

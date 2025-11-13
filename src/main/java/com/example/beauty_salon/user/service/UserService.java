@@ -8,6 +8,7 @@ import com.example.beauty_salon.web.dto.EditProfileRequest;
 import com.example.beauty_salon.web.dto.LoginRequest;
 import com.example.beauty_salon.web.dto.RegisterRequest;
 import jakarta.validation.Valid;
+import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -109,6 +110,15 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("Потребителят не е намерен!"));
 
         user.setActive(!user.isActive());
+        userRepository.save(user);
+    }
+
+//    @CacheEvict(value = "users", allEntries = true)
+    public void switchStatus(UUID userId) {
+
+        User user = getById(userId);
+        user.setActive(!user.isActive());
+
         userRepository.save(user);
     }
 }

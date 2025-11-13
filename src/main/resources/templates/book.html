@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Запазване на час - Beauty salon</title>
+  <link rel="stylesheet" type="text/css" href="/css/index.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+
+<!-- ======= Горен хедър ======= -->
+<div class="top-header">
+  <div class="contact">📞 0888 123 456</div>
+  <div class="address">📍 гр. Русе, бул. Красота 19</div>
+</div>
+
+<!-- ======= Навигация ======= -->
+<header class="info">
+  <nav>
+    <ul>
+      <li><a th:href="@{/}">Начало</a></li>
+      <li><a th:href="@{/about-us}">За нас</a></li>
+      <li><a th:href="@{/team}">Екип</a></li>
+      <li><a th:href="@{/booking}" class="active">Запази час</a></li>
+      <li><a th:href="@{/login}">Вход</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- ======= Hero секция ======= -->
+<section class="hero">
+  <div class="hero-text">
+    <h1>Запазете своя час в салон "Bellezza"</h1>
+    <p>Изберете услуга, дата и удобен час – ние ще се погрижим за останалото.</p>
+  </div>
+</section>
+
+<!-- ======= Основно съдържание ======= -->
+<main class="container">
+  <div class="reservation" id="reservation">
+    <h2>Форма за резервация</h2>
+
+<!--    <form id="booking-form" th:action="@{/booking}" th:method="POST" th:object="${bookingRequest}">-->
+    <form id="booking-form" th:action="@{/booking}" th:method="POST" th:object="${appointmentRequest}">
+
+      <input type="hidden" th:field="*{date}" id="hiddenDate">
+      <input type="hidden" th:field="*{selectedTime}" id="hiddenTime">
+      <input type="hidden" th:field="*{serviceId}" id="hiddenServiceId">
+      <input type="hidden" th:field="*{userId}" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11">
+
+      <label for="serviceId">Услуга:</label>
+      <select id="serviceId" name="serviceId" required>
+        <option value="">Изберете...</option>
+        <option th:each="treatment : ${treatments}"
+                th:value="${treatment.id}"
+                th:text="${treatment.serviceName.displayName + ' (' + treatment.durationMinutes + ' мин.)'}">
+        </option>
+      </select>
+
+<!--      <select id="serviceId" name="serviceId" required th:field="*{country}">-->
+<!--        <option th:each="country : ${T(app.user.model.Country).values()}" th:value="${country}" th:text="${country.getDisplayName()}">abv</option>-->
+<!--      </select>-->
+
+      <label for="bookingDate">Дата:</label>
+      <input type="date" id="bookingDate" name="date" required>
+
+      <label>Свободни часове:</label>
+      <div id="time-slots-container"></div>
+
+      <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+      <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+      <button type="submit">Резервирай</button>
+    </form>
+  </div>
+</main>
+
+<!-- ======= Footer ======= -->
+<th:block th:insert="fragments/footer :: my-footer"></th:block>
+
+<!-- ======= AJAX логика ======= -->
+<script>
+  $('#bookingDate, #serviceId').on('change', function() {
+    var date = $('#bookingDate').val();
+    var serviceId = $('#serviceId').val();
+    var slotsContainer = $('#time-slots-container');
+
+    $('#hiddenDate').val(date);
+    $('#hiddenServiceId').val(serviceId);
+    $('#hiddenTime').val('');
+
+    if (date && serviceId) {
+      slotsContainer.html('<p>Зареждане на часове...</p>');
+
+      $.ajax({
+        url: '/available-slots',
+        type: 'GET',
+        data: { date: date, serviceId: serviceId },
+        success: function(slots) {
+          slotsContainer.empty();
+          if (slots.length > 0) {
+            slots.forEach(function(slot) {
+              var radio = `
+                <div class="time-option">
+                  <input type="radio" name="selectedTime" value="${slot}" id="slot-${slot}" required>
+                  <label for="slot-${slot}">${slot}</label>
+                </div>`;
+              slotsContainer.append(radio);
+            });
+          } else {
+            slotsContainer.append('<p class="text-danger">Няма свободни часове за тази дата.</p>');
+          }
+        },
+        error: function() {
+          slotsContainer.empty();
+          slotsContainer.append('<p class="text-danger">Грешка при зареждане на часовете.</p>');
+        }
+      });
+    } else {
+      slotsContainer.empty();
+    }
+  });
+
+  $(document).on('change', 'input[name="selectedTime"]', function() {
+    $('#hiddenTime').val($(this).val());
+  });
+</script>
+
+</body>
+</html>
