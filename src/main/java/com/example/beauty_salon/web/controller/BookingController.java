@@ -27,23 +27,11 @@ public class BookingController {
       this.employeeRepository = employeeRepository;
     }
 
-//    @GetMapping("/booking")
-//    public ModelAndView showBookingForm() {
-//
-//        ModelAndView modelAndView = new ModelAndView("booking");
-//
-//        modelAndView.addObject("treatments", beautyTreatmentRepository.findAll());
-//        modelAndView.addObject("bookingForm", new AppointmentRequest());
-//
-//        return modelAndView;
-//    }
-
     @GetMapping("/booking")
     public ModelAndView showBookingForm() {
+
         ModelAndView modelAndView = new ModelAndView("booking");
         modelAndView.addObject("treatments", beautyTreatmentRepository.findAll());
-        // Ако служителят се избира автоматично, не е нужно да ги пращаш
-        // modelAndView.addObject("employees", employeeRepository.findAll());
         modelAndView.addObject("appointmentRequest", new AppointmentRequest()); //
 
         return modelAndView;
@@ -56,16 +44,12 @@ public class BookingController {
         ModelAndView modelAndView = new ModelAndView("booking");
         modelAndView.addObject("treatments", beautyTreatmentRepository.findAll());
 
-        // ❗️ employees не са нужни, ако системата автоматично избира служител
-        // modelAndView.addObject("employees", employeeRepository.findAll());
-
         if (result.hasErrors()) {
             modelAndView.addObject("error", "Моля, попълнете коректно всички задължителни полета.");
             return modelAndView;
         }
 
         try {
-            // ✅ вземаме userId от HttpSession
             UUID userId = (UUID) session.getAttribute("userId");
 
             if (userId == null) {
@@ -73,7 +57,6 @@ public class BookingController {
                 return modelAndView;
             }
 
-            // създаваме запазения час
             appointmentService.createAppointment(
                 userId,
                 appointmentRequest.getTreatmentId(),

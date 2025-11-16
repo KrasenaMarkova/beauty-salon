@@ -19,6 +19,7 @@
 <header class="info">
   <nav>
     <ul>
+      <li><a th:href="@{/}">Начало</a></li>
       <li><a th:href="@{/home}">⬅ Назад към профила</a></li>
       <li><a th:href="@{/logout}">Изход</a></li>
     </ul>
@@ -56,11 +57,13 @@
           <th style="padding: 12px;">Продължителност</th>
           <th style="padding: 12px;">Цена</th>
           <th style="padding: 12px;">Статус</th>
+          <th style="padding: 12px;">Изтрий</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="appointment : ${pastAppointments}" style="background-color: #fff0f5; border-bottom: 1px solid #f0a6c4;">
-          <td style="padding: 10px;" th:text="${#temporals.format(appointment.appointmentDate, 'dd.MM.yyyy HH:mm')}">11.01.2025 11:00</td>
+<!--          <td style="padding: 10px;" th:text="${#temporals.format(appointment.appointmentDate, 'dd.MM.yyyy HH:mm')}">11.01.2025 11:00</td>-->
+          <td th:text="${#temporals.format(appointment.appointmentDate, 'dd.MM.yyyy HH:mm')}"></td>
           <td style="padding: 10px;" th:text="${appointment.treatment != null ? appointment.treatment.beautyTreatmentName.displayName : '–'}">Услуга</td>
 <!--          <td style="padding: 10px;" th:text="${appointment.employee != null ? appointment.employee.firstName + ' ' + appointment.employee.lastName : '–'}">Служител</td>-->
           <td style="padding: 10px;" th:text="${appointment.durationMinutes + ' мин.'}">60 мин.</td>
@@ -69,6 +72,14 @@
             <span th:if="${appointment.status.name() == 'SCHEDULED'}" class="status-scheduled" th:text="${appointment.status.displayName}"></span>
             <span th:if="${appointment.status.name() == 'CANCELLED'}" class="status-cancelled" th:text="'Cancelled'"></span>
             <span th:if="${appointment.status.name() == 'COMPLETED'}" class="status-completed" th:text="'Completed'"></span>
+          </td>
+
+          <!-- Нова колона за бутон Изтрий -->
+          <td style="text-align: center;">
+            <form th:action="@{'/appointments/' + ${appointment.id} + '/delete'}" th:method="POST"
+                  onsubmit="return confirm('Сигурни ли сте, че искате да изтриете този час?');">
+              <button type="submit" class="edit-btn">🗑️ Изтрий</button>
+            </form>
           </td>
         </tr>
         </tbody>

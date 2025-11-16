@@ -117,5 +117,9 @@ public class AppointmentService {
     public void save(Appointment appointment) {
         appointmentRepository.save(appointment);
     }
+
+    public void deleteAppointment(UUID id) {
+        appointmentRepository.deleteById(id);
+    }
 }
 

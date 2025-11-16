@@ -25,7 +25,7 @@ public class Appointment {
     private LocalDateTime appointmentDate;
 
     @Column(nullable = false)
-    private int durationMinutes; // примерно 60 минути
+    private int durationMinutes;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;

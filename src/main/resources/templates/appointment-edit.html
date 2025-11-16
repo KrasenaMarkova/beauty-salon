@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Редакция на час</title>
+  <link rel="stylesheet" type="text/css" href="/css/index.css">
+  <!-- Flatpickr CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+
+<div class="top-header">
+  <div class="contact">📞 0888 123 456</div>
+  <div class="address">📍 гр. Русе, бул. Красота 19</div>
+</div>
+
+<header class="info">
+  <nav>
+    <ul>
+      <li><a th:href="@{/}">Начало</a></li>
+      <li><a th:href="@{/home}">⬅ Назад към профила</a></li>
+      <li><a th:href="@{/logout}">Изход</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-text">
+    <h1>Редакция на запазен час</h1>
+    <p>Можете да промените дата, час или услуга за Вашия час.</p>
+  </div>
+
+  <div class="reservation login-box" id="reservation">
+    <h2>Редакция</h2>
+
+    <!-- Съобщения -->
+    <div th:if="${success}" class="success-message" th:text="${success}"></div>
+    <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+    <form th:action="@{'/appointments/' + ${appointment.id} + '/edit'}"
+          th:object="${editAppointmentRequest}" method="POST">
+
+      <label>Дата и час:</label>
+      <input type="text" id="appointmentDate" th:field="*{appointmentDate}" />
+
+      <label>Услуга:</label>
+      <select th:field="*{treatmentId}">
+        <option th:each="t : ${treatments}"
+                th:value="${t.id}"
+                th:text="${t.beautyTreatmentName.displayName}"
+                th:selected="${t.id == editAppointmentRequest.treatmentId}">
+        </option>
+      </select>
+
+      <button type="submit">Запази промените</button>
+    </form>
+
+  </div>
+</section>
+
+<!-- Footer -->
+<th:block th:insert="fragments/footer :: my-footer"></th:block>
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const workStart = "09:00"; // 09:00
+    const workEnd = "19:00";   // 18:00
+
+    flatpickr("#appointmentDate", {
+      enableTime: true,
+      time_24hr: true,
+      dateFormat: "Y-m-d\\TH:i",
+      minDate: "today",
+      minTime: workStart,
+      maxTime: workEnd,
+      defaultDate: /*[[${editAppointmentRequest.appointmentDate}]]*/ null
+    });
+  });
+</script>
+
+</body>
+</html>
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns="http://www.w3.org/1999/xhtml"-->
+<!--      xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--  <title>Редакция на час</title>-->
+<!--  <link rel="stylesheet" type="text/css" href="/css/index.css">-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<div class="top-header">-->
+<!--  <div class="contact">📞 0888 123 456</div>-->
+<!--  <div class="address">📍 гр. Русе, бул. Красота 19</div>-->
+<!--</div>-->
+
+<!--<header class="info">-->
+<!--  <nav>-->
+<!--    <ul>-->
+<!--      <li><a th:href="@{/}">Начало</a></li>-->
+<!--      <li><a th:href="@{/home}">⬅ Назад към профила</a></li>-->
+<!--      <li><a th:href="@{/logout}">Изход</a></li>-->
+<!--    </ul>-->
+<!--  </nav>-->
+<!--</header>-->
+
+<!--<section class="hero">-->
+<!--  <div class="hero-text">-->
+<!--    <h1>Редакция на запазен час</h1>-->
+<!--    <p>Можете да промените дата, час или услуга за Вашия час.</p>-->
+<!--  </div>-->
+
+<!--  <div class="reservation login-box" id="reservation">-->
+<!--    <h2>Редакция</h2>-->
+
+<!--    &lt;!&ndash; Съобщения &ndash;&gt;-->
+<!--    <div th:if="${success}" class="success-message" th:text="${success}"></div>-->
+<!--    <div th:if="${error}" class="error-message" th:text="${error}"></div>-->
+
+<!--    <form th:action="@{'/appointments/' + ${appointment.id} + '/edit'}"-->
+<!--          th:object="${editAppointmentRequest}" method="POST">-->
+
+<!--&lt;!&ndash;      <label for="appointmentDate">Дата и час:</label>&ndash;&gt;-->
+<!--      <label>Дата и час:</label>-->
+<!--      <input type="datetime-local"-->
+<!--             th:field="*{appointmentDate}" />-->
+
+<!--&lt;!&ndash;      <label for="treatment">Услуга:</label>&ndash;&gt;-->
+<!--      <label>Услуга:</label>-->
+<!--      <select th:field="*{treatmentId}">-->
+<!--        <option th:each="t : ${treatments}"-->
+<!--                th:value="${t.id}"-->
+<!--                th:text="${t.beautyTreatmentName.displayName}"-->
+<!--                th:selected="${t.id == editAppointmentRequest.treatmentId}">-->
+<!--        </option>-->
+<!--      </select>-->
+
+<!--      <button type="submit">Запази промените</button>-->
+<!--    </form>-->
+
+<!--  </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Footer &ndash;&gt;-->
+<!--<th:block th:insert="fragments/footer :: my-footer"></th:block>-->
+
+<!--&lt;!&ndash; Скрипт за минимална дата и час &ndash;&gt;-->
+<!--<script>-->
+<!--  document.addEventListener("DOMContentLoaded", function() {-->
+<!--    const dateInput = document.getElementById('appointmentDate');-->
+<!--    if (!dateInput) return;-->
+
+<!--    const workStart = 9; // 09:00-->
+<!--    const workEnd = 19;  // 19:00-->
+
+<!--    const now = new Date();-->
+<!--    const year = now.getFullYear();-->
+<!--    const month = String(now.getMonth() + 1).padStart(2, '0');-->
+<!--    const day = String(now.getDate()).padStart(2, '0');-->
+<!--    const hours = String(now.getHours()).padStart(2, '0');-->
+<!--    const minutes = String(now.getMinutes()).padStart(2, '0');-->
+
+<!--    // Минимален час (сегашния момент)-->
+<!--    dateInput.min = `${year}-${month}-${day}T${hours}:${minutes}`;-->
+
+<!--    // Проверка дали избраният час е в работното време-->
+<!--    dateInput.addEventListener('input', function() {-->
+<!--      const selected = new Date(this.value);-->
+<!--      const hour = selected.getHours();-->
+<!--      if (hour < workStart || hour >= workEnd) {-->
+<!--        alert("Моля, изберете час между 09:00 и 19:00!");-->
+<!--        this.value = '';-->
+<!--      }-->
+<!--    });-->
+<!--  });-->
+<!--</script>-->
+
+<!--</body>-->
+<!--</html>-->

@@ -37,10 +37,6 @@
 
 <main class="container" style="display: flex; gap: 20px; margin-top: 20px;">
 
-
-  <!-- Информация за потребителя -->
-
-  <!-- Информация за потребителя (1/3) -->
   <section class="user-info" style="flex: 1; max-width: 33%;">
     <h2>Моят профил</h2>
     <div class="user-card" style="background-color: #ffe0f0; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
@@ -49,23 +45,14 @@
       <p><strong>Имейл:</strong> <span th:text="${user.email}"></span></p>
       <p><strong>Телефон:</strong> <span th:text="${user.phone}"></span></p>
       <a class="edit-btn" th:href="@{'/users/' + ${user.id} + '/profile'}" style="display: inline-block; margin-top: 10px;">✏️ Редактирай профил</a>
+
+      <!-- Нов бутон за минали часове -->
+      <a class="edit-btn" th:href="@{/appointments/history}" style="display: inline-block; margin-top: 10px; background-color: #d63384;">
+        ⏰ Моите минали часове
+      </a>
     </div>
   </section>
 
-  <!--  <section class="user-info">-->
-<!--    <h2>Моят профил</h2>-->
-<!--    <div class="user-card">-->
-<!--      <p><strong>Потребителско име:</strong> <span th:text="${user.username}"></span></p>-->
-<!--      <p><strong>Име:</strong> <span th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>-->
-<!--      <p><strong>Имейл:</strong> <span th:text="${user.email}"></span></p>-->
-<!--      <p><strong>Телефон:</strong> <span th:text="${user.phone}"></span></p>-->
-
-<!--      &lt;!&ndash; Бутон за редакция на профила &ndash;&gt;-->
-<!--      <a class="edit-btn" th:href="@{'/users/' + ${user.id} + '/profile'}">✏️ Редактирай профил</a>-->
-
-<!--&lt;!&ndash;      <a class="edit-btn" th:href="@{'/appointments/history'}">✏️ Твоите часове</a>&ndash;&gt;-->
-<!--    </div>-->
-<!--  </section>-->
 
   <!-- Таблица с часовете -->
   <section class="appointments" style="flex: 2; max-width: 66%;">
@@ -78,17 +65,17 @@
     </div>
 
     <div th:if="${!#lists.isEmpty(allAppointment)}" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
-      <!-- Заглавие на колоните -->
+
       <div style="display: flex; background-color: #f7c6d9; color: #4a004e; font-weight: bold; padding: 12px 20px; border-radius: 10px; text-align: center;">
         <div style="flex: 2;">Дата и час</div>
         <div style="flex: 2;">Услуга</div>
         <div style="flex: 1;">Цена</div>
         <div style="flex: 1;">Времетраене</div>
         <div style="flex: 1;">Статус</div>
+        <div style="flex: 1;">Редакция</div>
         <div style="flex: 1;">Отмяна на час</div>
       </div>
 
-      <!-- Всеки записан час -->
       <div th:each="appointment : ${allAppointment}"
            th:if="${appointment.status.name() == 'SCHEDULED'}"
            style="display: flex; align-items: center; padding: 15px 20px; background-color: #ffe0f0; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); gap: 10px;">
@@ -99,12 +86,15 @@
         <div style="flex: 1;" th:text="${appointment.durationMinutes + ' мин.'}"></div>
         <div style="flex: 1;" th:text="${appointment.status}"></div>
 
-        <!-- Бутон за отказ (6-та колона) -->
+        <div style="flex: 1; text-align: right;">
+          <a class="edit-btn"
+             th:href="@{'/appointments/' + ${appointment.id} + '/edit'}">
+            Редактирай
+          </a>
+        </div>
+
         <div style="flex: 1; text-align: right;">
           <form th:action="@{'/appointments/' + ${appointment.id} + '/cancel'}" th:method="POST">
-<!--            <button class="edit-btn" th:disabled="${appointment.status == 'CANCELLED'}" style="display: inline-block; margin-top: 10px;">-->
-<!--              Откажи-->
-<!--            </button>-->
             <button class="edit-btn" th:disabled="${appointment.status == 'CANCELLED'}">
               Откажи
             </button>
@@ -112,6 +102,7 @@
         </div>
       </div>
     </div>
+
   </section>
 
 </main>

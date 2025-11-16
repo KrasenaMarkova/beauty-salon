@@ -1,6 +1,7 @@
 package com.example.beauty_salon.web.controller;
 
 import com.example.beauty_salon.appointment.model.Appointment;
+import com.example.beauty_salon.appointment.model.AppointmentStatus;
 import com.example.beauty_salon.appointment.service.AppointmentService;
 import com.example.beauty_salon.user.model.User;
 import com.example.beauty_salon.user.service.UserService;
@@ -8,6 +9,7 @@ import com.example.beauty_salon.web.dto.LoginRequest;
 import com.example.beauty_salon.web.dto.RegisterRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import java.util.Comparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -86,16 +88,32 @@ public class IndexController {
 
         User user = userService.login(loginRequest);
 
-//        if (user == null) {
-//            ModelAndView modelAndView = new ModelAndView("login");
-//            modelAndView.addObject("loginAttemptMessage", "Incorrect username or password.");
-//            return modelAndView;
-//        }
-
         session.setAttribute("userId", user.getId());
+
         return new ModelAndView("redirect:/home");
     }
 
+
+//    @GetMapping("/home")
+//    public ModelAndView getHomePage(HttpSession session) {
+//
+//        UUID userId = (UUID) session.getAttribute("userId");
+//        User user = userService.getById(userId);
+//
+//        List<Appointment> allAppointment = appointmentService.getAllByUserId(userId);
+//
+//        List<Appointment> activeAppointments = allAppointment.stream()
+//            .filter(a -> a.getStatus().name().equals("SCHEDULED"))
+//            .toList();
+//
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("home");
+//        modelAndView.addObject("user", user);
+//        modelAndView.addObject("allAppointment", allAppointment);
+//        modelAndView.addObject("activeAppointments", activeAppointments);
+//
+//        return modelAndView;
+//    }
 
     @GetMapping("/home")
     public ModelAndView getHomePage(HttpSession session) {
@@ -103,12 +121,19 @@ public class IndexController {
         UUID userId = (UUID) session.getAttribute("userId");
         User user = userService.getById(userId);
 
-        List<Appointment> allAppointment = appointmentService.getAllByUserId(userId);
+        List<Appointment> allAppointment = appointmentService.getAllByUserId(userId).stream()
+            .sorted(Comparator.comparing(Appointment::getAppointmentDate))
+            .toList();
+
+        List<Appointment> activeAppointments = allAppointment.stream()
+            .filter(a -> a.getStatus() == AppointmentStatus.SCHEDULED)
+            .toList();
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("home");
         modelAndView.addObject("user", user);
         modelAndView.addObject("allAppointment", allAppointment);
+        modelAndView.addObject("activeAppointments", activeAppointments);
 
         return modelAndView;
     }

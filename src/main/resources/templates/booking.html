@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+<html lang="bg" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Запазване на час</title>
   <link rel="stylesheet" type="text/css" href="/css/index.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
 
@@ -18,9 +19,8 @@
   <nav>
     <ul>
       <li><a th:href="@{/}">Начало</a></li>
-      <li><a th:href="@{/about}">За нас</a></li>
-      <!--            <li><a th:href="@{/services}">Услуги</a></li>-->
-      <li><a th:href="@{/team}">Екип</a></li>
+      <li><a th:href="@{/home}">⬅ Назад към профила</a></li>
+      <li><a th:href="@{/logout}">Изход</a></li>
     </ul>
   </nav>
 </header>
@@ -39,12 +39,10 @@
 
     <form th:action="@{/booking}" th:object="${appointmentRequest}" th:method="POST">
 
-      <!-- Дата и час -->
       <label for="appointmentDate">Дата и час:</label>
-      <input type="datetime-local" th:field="*{appointmentDate}" id="appointmentDate">
+      <input type="text" th:field="*{appointmentDate}" id="appointmentDate" placeholder="Изберете дата и час"/>
       <div th:if="${#fields.hasErrors('appointmentDate')}" th:errors="*{appointmentDate}" class="error-message"></div>
 
-      <!-- Услуга -->
       <label for="treatment">Услуга:</label>
       <select id="treatment" th:field="*{treatmentId}">
         <option value="">-- Избери услуга --</option>
@@ -52,36 +50,120 @@
                 th:value="${treatment.id}"
                 th:text="${treatment.beautyTreatmentName.displayName}">
         </option>
-        </option>
       </select>
       <div th:if="${#fields.hasErrors('treatmentId')}" th:errors="*{treatmentId}" class="error-message"></div>
+
       <button type="submit">Запази час</button>
     </form>
   </div>
 </section>
 
-<!-- Footer-->
 <th:block th:insert="fragments/footer :: my-footer"></th:block>
 
-<!-- Скрипт за минимална дата и час -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/bg.js"></script> <!-- за български -->
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    const dateInput = document.getElementById('appointmentDate');
-    if (dateInput) {
-      const now = new Date();
-
-      // Форматираме дата във формат yyyy-MM-ddTHH:mm
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-
-      const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-      dateInput.min = minDateTime;
-    }
+    flatpickr("#appointmentDate", {
+      enableTime: true,
+      time_24hr: true,
+      dateFormat: "Y-m-d\\TH:i", // Важно: има "T" между дата и час
+      minDate: "today",
+      minTime: "09:00",
+      maxTime: "19:00",
+      locale: "bg"
+    });
   });
 </script>
 
 </body>
 </html>
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns="http://www.w3.org/1999/xhtml"-->
+<!--      xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--  <title>Запазване на час</title>-->
+<!--  <link rel="stylesheet" type="text/css" href="/css/index.css">-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<div class="top-header">-->
+<!--  <div class="contact">📞 0888 123 456</div>-->
+<!--  <div class="address">📍 гр. Русе, бул. Красота 19</div>-->
+<!--</div>-->
+
+<!--<header class="info">-->
+<!--  <nav>-->
+<!--    <ul>-->
+<!--      <li><a th:href="@{/}">Начало</a></li>-->
+<!--      <li><a th:href="@{/home}">⬅ Назад към профила</a></li>-->
+<!--      <li><a th:href="@{/logout}">Изход</a></li>-->
+<!--    </ul>-->
+<!--  </nav>-->
+<!--</header>-->
+
+<!--<section class="hero">-->
+<!--  <div class="hero-text">-->
+<!--    <h1>Запазете час в салон "Bellezza"</h1>-->
+<!--    <p>Изберете услуга и дата, за да резервирате Вашия час удобно и бързо.</p>-->
+<!--  </div>-->
+<!--  <div class="reservation login-box" id="reservation">-->
+<!--    <h2>Резервация</h2>-->
+
+<!--    &lt;!&ndash; Съобщения &ndash;&gt;-->
+<!--    <div th:if="${success}" class="success-message" th:text="${success}"></div>-->
+<!--    <div th:if="${error}" class="error-message" th:text="${error}"></div>-->
+
+<!--    <form th:action="@{/booking}" th:object="${appointmentRequest}" th:method="POST">-->
+
+<!--      &lt;!&ndash; Дата и час &ndash;&gt;-->
+<!--      <label for="appointmentDate">Дата и час:</label>-->
+<!--      <input type="datetime-local" th:field="*{appointmentDate}" id="appointmentDate">-->
+<!--      <div th:if="${#fields.hasErrors('appointmentDate')}" th:errors="*{appointmentDate}" class="error-message"></div>-->
+
+<!--      &lt;!&ndash; Услуга &ndash;&gt;-->
+<!--      <label for="treatment">Услуга:</label>-->
+<!--      <select id="treatment" th:field="*{treatmentId}">-->
+<!--        <option value="">&#45;&#45; Избери услуга &#45;&#45;</option>-->
+<!--        <option th:each="treatment : ${treatments}"-->
+<!--                th:value="${treatment.id}"-->
+<!--                th:text="${treatment.beautyTreatmentName.displayName}">-->
+<!--        </option>-->
+<!--        </option>-->
+<!--      </select>-->
+<!--      <div th:if="${#fields.hasErrors('treatmentId')}" th:errors="*{treatmentId}" class="error-message"></div>-->
+<!--      <button type="submit">Запази час</button>-->
+<!--    </form>-->
+<!--  </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Footer&ndash;&gt;-->
+<!--<th:block th:insert="fragments/footer :: my-footer"></th:block>-->
+
+<!--&lt;!&ndash; Скрипт за минимална дата и час &ndash;&gt;-->
+<!--<script>-->
+<!--  document.addEventListener("DOMContentLoaded", function() {-->
+<!--    const dateInput = document.getElementById('appointmentDate');-->
+<!--    if (dateInput) {-->
+<!--      const now = new Date();-->
+
+<!--      // Форматираме дата във формат yyyy-MM-ddTHH:mm-->
+<!--      const year = now.getFullYear();-->
+<!--      const month = String(now.getMonth() + 1).padStart(2, '0');-->
+<!--      const day = String(now.getDate()).padStart(2, '0');-->
+<!--      const hours = String(now.getHours()).padStart(2, '0');-->
+<!--      const minutes = String(now.getMinutes()).padStart(2, '0');-->
+
+<!--      const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;-->
+<!--      dateInput.min = minDateTime;-->
+<!--    }-->
+<!--  });-->
+<!--</script>-->
+
+<!--</body>-->
+<!--</html>-->

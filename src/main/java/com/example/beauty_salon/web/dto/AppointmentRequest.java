@@ -7,12 +7,14 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 import java.util.UUID;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 public class AppointmentRequest {
 
     @NotNull(message = "Датата е задължителна.")
     @Future(message = "Не можете да изберете минала дата и час.")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // <- добавено
     private LocalDateTime appointmentDate;
 
     @NotNull(message = "Услугата е задължителна.")
