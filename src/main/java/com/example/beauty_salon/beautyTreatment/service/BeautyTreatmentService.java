@@ -23,6 +23,7 @@ public class BeautyTreatmentService {
     }
 
     public BeautyTreatment getById(UUID id) {
-        return beautyTreatmentRepository.findById(id).orElse(null);
+        return beautyTreatmentRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Услугата не е намерена."));
     }
 }

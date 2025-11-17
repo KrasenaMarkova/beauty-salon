@@ -2,7 +2,9 @@ package com.example.beauty_salon.web.controller;
 
 import com.example.beauty_salon.appointment.service.AppointmentService;
 import com.example.beauty_salon.beautyTreatment.repository.BeautyTreatmentRepository;
+import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
 import com.example.beauty_salon.employee.repository.EmployeeRepository;
+import com.example.beauty_salon.employee.service.EmployeeService;
 import com.example.beauty_salon.web.dto.AppointmentRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -17,21 +19,18 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class BookingController {
     private final AppointmentService appointmentService;
-    private final BeautyTreatmentRepository beautyTreatmentRepository;
-    private final EmployeeRepository employeeRepository;
+    private final BeautyTreatmentService beautyTreatmentService;
 
-    public BookingController(AppointmentService appointmentService, BeautyTreatmentRepository beautyTreatmentRepository,
-        EmployeeRepository employeeRepository) {
+    public BookingController(AppointmentService appointmentService, BeautyTreatmentService beautyTreatmentService) {
         this.appointmentService = appointmentService;
-        this.beautyTreatmentRepository = beautyTreatmentRepository;
-      this.employeeRepository = employeeRepository;
+      this.beautyTreatmentService = beautyTreatmentService;
     }
 
     @GetMapping("/booking")
     public ModelAndView showBookingForm() {
 
         ModelAndView modelAndView = new ModelAndView("booking");
-        modelAndView.addObject("treatments", beautyTreatmentRepository.findAll());
+        modelAndView.addObject("treatments", beautyTreatmentService.getAll());
         modelAndView.addObject("appointmentRequest", new AppointmentRequest()); //
 
         return modelAndView;
@@ -42,7 +41,7 @@ public class BookingController {
         BindingResult result, HttpSession session) {
 
         ModelAndView modelAndView = new ModelAndView("booking");
-        modelAndView.addObject("treatments", beautyTreatmentRepository.findAll());
+        modelAndView.addObject("treatments", beautyTreatmentService.getAll());
 
         if (result.hasErrors()) {
             modelAndView.addObject("error", "Моля, попълнете коректно всички задължителни полета.");

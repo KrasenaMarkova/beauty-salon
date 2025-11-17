@@ -1,6 +1,9 @@
 package com.example.beauty_salon.employee.service;
 
+import com.example.beauty_salon.employee.model.Employee;
+import com.example.beauty_salon.employee.model.EmployeePosition;
 import com.example.beauty_salon.employee.repository.EmployeeRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,4 +18,7 @@ public class EmployeeService {
     }
 
 
+  public List<Employee> getEmployeeByPosition(EmployeePosition requiredPosition) {
+    return employeeRepository.findByEmployeePosition(requiredPosition);
+  }
 }

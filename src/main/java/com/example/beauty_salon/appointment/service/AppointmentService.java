@@ -6,11 +6,14 @@ import com.example.beauty_salon.appointment.repository.AppointmentRepository;
 import com.example.beauty_salon.beautyTreatment.model.BeautyTreatment;
 import com.example.beauty_salon.beautyTreatment.model.BeautyTreatmentName;
 import com.example.beauty_salon.beautyTreatment.repository.BeautyTreatmentRepository;
+import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
 import com.example.beauty_salon.employee.model.Employee;
 import com.example.beauty_salon.employee.model.EmployeePosition;
 import com.example.beauty_salon.employee.repository.EmployeeRepository;
+import com.example.beauty_salon.employee.service.EmployeeService;
 import com.example.beauty_salon.user.model.User;
 import com.example.beauty_salon.user.repository.UserRepository;
+import com.example.beauty_salon.user.service.UserService;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,30 +28,28 @@ import java.util.List;
 public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
-    private final EmployeeRepository employeeRepository;
-    private final UserRepository userRepository;
-    private final BeautyTreatmentRepository beautyTreatmentRepository;
+    private final EmployeeService employeeService;
+    private final UserService userService;
+    private final BeautyTreatmentService beautyTreatmentService;
 
     @Autowired
-    public AppointmentService(AppointmentRepository appointmentRepository, EmployeeRepository employeeRepository, UserRepository userRepository,
-        BeautyTreatmentRepository beautyTreatmentRepository) {
+    public AppointmentService(AppointmentRepository appointmentRepository, EmployeeService employeeService, UserService userService,
+        BeautyTreatmentService beautyTreatmentService) {
         this.appointmentRepository = appointmentRepository;
-      this.employeeRepository = employeeRepository;
-      this.userRepository = userRepository;
-      this.beautyTreatmentRepository = beautyTreatmentRepository;
+      this.employeeService = employeeService;
+      this.userService = userService;
+      this.beautyTreatmentService = beautyTreatmentService;
     }
 
     @Transactional
     public Appointment createAppointment(UUID userId, UUID treatmentId, LocalDateTime dateTime) {
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("Потребителят не е намерен."));
+        User user = userService.getById(userId);
 
-        BeautyTreatment treatment = beautyTreatmentRepository.findById(treatmentId)
-            .orElseThrow(() -> new IllegalArgumentException("Услугата не е намерена."));
+        BeautyTreatment treatment = beautyTreatmentService.getById(treatmentId);
 
         EmployeePosition requiredPosition = mapTreatmentToEmployeePosition(treatment.getBeautyTreatmentName());
 
-        List<Employee> potentialEmployees = employeeRepository.findByEmployeePosition(requiredPosition);
+        List<Employee> potentialEmployees = employeeService.getEmployeeByPosition(requiredPosition);
         if (potentialEmployees.isEmpty()) {
             throw new IllegalStateException("Няма наличен служител за тази услуга.");
         }
@@ -121,5 +122,7 @@ public class AppointmentService {
     public void deleteAppointment(UUID id) {
         appointmentRepository.deleteById(id);
     }
+
+
 }
 

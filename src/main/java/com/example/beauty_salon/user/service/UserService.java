@@ -1,14 +1,11 @@
 package com.example.beauty_salon.user.service;
 
-import com.example.beauty_salon.exception.UserAlreadyExists;
 import com.example.beauty_salon.user.model.User;
 import com.example.beauty_salon.user.model.UserRole;
 import com.example.beauty_salon.user.repository.UserRepository;
 import com.example.beauty_salon.web.dto.EditProfileRequest;
 import com.example.beauty_salon.web.dto.LoginRequest;
 import com.example.beauty_salon.web.dto.RegisterRequest;
-import jakarta.validation.Valid;
-import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -93,7 +90,7 @@ public class UserService {
 
     public User getById(UUID userId) {
 
-        return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User with id [%s] does not exist.".formatted(userId)));
+        return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Потребител с id [%s] не е намерен.".formatted(userId)));
     }
 
     public List<User> getAll() {
@@ -121,5 +118,6 @@ public class UserService {
 
         userRepository.save(user);
     }
+
 }
 

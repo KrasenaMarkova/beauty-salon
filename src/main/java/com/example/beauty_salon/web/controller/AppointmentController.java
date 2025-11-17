@@ -9,6 +9,7 @@ import com.example.beauty_salon.beautyTreatment.model.BeautyTreatment;
 import com.example.beauty_salon.beautyTreatment.repository.BeautyTreatmentRepository;
 import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
 import com.example.beauty_salon.employee.repository.EmployeeRepository;
+import com.example.beauty_salon.employee.service.EmployeeService;
 import com.example.beauty_salon.user.model.User;
 import com.example.beauty_salon.user.repository.UserRepository;
 import com.example.beauty_salon.user.service.UserService;
@@ -31,20 +32,16 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
     private final UserService userService;
-    private final UserRepository userRepository;
-    private final BeautyTreatmentRepository beautyTreatmentRepository;
-    private final EmployeeRepository employeeRepository;
+    private final EmployeeService employeeService;
     private final BeautyTreatmentService beautyTreatmentService;
 
 
     public AppointmentController(AppointmentService appointmentService,
                                  UserService userService, UserRepository userRepository, BeautyTreatmentRepository beautyTreatmentRepository, EmployeeRepository employeeRepository,
-        BeautyTreatmentService beautyTreatmentService) {
+        BeautyTreatmentService beautyTreatmentService, EmployeeService employeeService) {
         this.appointmentService = appointmentService;
         this.userService = userService;
-      this.userRepository = userRepository;
-      this.beautyTreatmentRepository = beautyTreatmentRepository;
-      this.employeeRepository = employeeRepository;
+      this.employeeService = employeeService;
       this.beautyTreatmentService = beautyTreatmentService;
     }
 
@@ -88,7 +85,7 @@ public class AppointmentController {
 
     @PostMapping("/{id}/edit")
     public ModelAndView editAppointment(@PathVariable("id") UUID appointmentId,
-        @ModelAttribute("editAppointmentDTO") EditAppointmentRequest editAppointmentRequest,
+        @ModelAttribute("editAppointmentRequest") EditAppointmentRequest editAppointmentRequest,
         HttpSession session) {
 
         UUID userId = (UUID) session.getAttribute("userId");
@@ -158,6 +155,7 @@ public class AppointmentController {
         }
 
         Appointment appointment = appointmentService.getById(id);
+
         if (appointment != null && appointment.getUser().getId().equals(userId)) {
             appointmentService.deleteAppointment(id);
         }
@@ -188,16 +186,16 @@ public class AppointmentController {
             )
             .toList();
 
-        List<Appointment> activeAppointments = allAppointments.stream()
-            .filter(a -> a.getStatus() == AppointmentStatus.SCHEDULED)
-            .sorted(Comparator.comparing(Appointment::getAppointmentDate))
-            .toList();
+//        List<Appointment> activeAppointments = allAppointments.stream()
+//            .filter(a -> a.getStatus() == AppointmentStatus.SCHEDULED)
+//            .sorted(Comparator.comparing(Appointment::getAppointmentDate))
+//            .toList();
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("appointments-history");
         modelAndView.addObject("user", user);
         modelAndView.addObject("pastAppointments", pastAppointments);
-        modelAndView.addObject("allAppointment", activeAppointments);
+//        modelAndView.addObject("allAppointment", activeAppointments);
 
         return modelAndView;
     }

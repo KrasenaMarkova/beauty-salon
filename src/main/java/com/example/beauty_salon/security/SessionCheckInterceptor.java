@@ -15,7 +15,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class SessionCheckInterceptor implements HandlerInterceptor {
 
   private static final String INACTIVE_PROFILE_REDIRECT_MESSAGE = "Your profile is not active!";
-  public static final Set<String> UNAUTHENTICATED_ENDPOINTS = Set.of("/login", "/register", "/");
+  public static final Set<String> UNAUTHENTICATED_ENDPOINTS = Set.of("/login", "/register", "/", "/about-us", "/team");;
 
   private final UserService userService;
 
