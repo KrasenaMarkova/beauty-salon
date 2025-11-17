@@ -1,5 +1,6 @@
 package com.example.beauty_salon.user.service;
 
+import com.example.beauty_salon.event.SuccessfulChargeEvent;
 import com.example.beauty_salon.user.model.User;
 import com.example.beauty_salon.user.model.UserRole;
 import com.example.beauty_salon.user.repository.UserRepository;
@@ -9,6 +10,7 @@ import com.example.beauty_salon.web.dto.RegisterRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +25,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final ApplicationEventPublisher eventPublisher;
+
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ApplicationEventPublisher eventPublisher) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+      this.eventPublisher = eventPublisher;
     }
 
     public void register(RegisterRequest registerRequest) {
@@ -56,6 +61,16 @@ public class UserService {
 
         userRepository.save(user);
 
+        SuccessfulChargeEvent event = SuccessfulChargeEvent.builder()
+            .userId(user.getId())
+            .username(user.getUsername())
+            .email(user.getEmail())
+            .firstName(user.getFirstName())
+            .lastName(user.getLastName())
+            .build();
+        eventPublisher.publishEvent(event);
+
+        System.out.println("Hi");
         log.info("New user profile was registered in the system for user [%s].".formatted(registerRequest.getUsername()));
     }
 
