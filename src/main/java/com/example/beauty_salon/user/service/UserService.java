@@ -10,6 +10,7 @@ import com.example.beauty_salon.web.dto.RegisterRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class UserService {
       this.eventPublisher = eventPublisher;
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public void register(RegisterRequest registerRequest) {
 
         Optional<User> optionalUser = userRepository.findByUsernameOrEmail(registerRequest.getUsername(), registerRequest.getEmail());
@@ -70,7 +72,6 @@ public class UserService {
             .build();
         eventPublisher.publishEvent(event);
 
-        System.out.println("Hi");
         log.info("New user profile was registered in the system for user [%s].".formatted(registerRequest.getUsername()));
     }
 
@@ -108,15 +109,18 @@ public class UserService {
         return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Потребител с id [%s] не е намерен.".formatted(userId)));
     }
 
+    @Cacheable("users")
     public List<User> getAll() {
 
         return userRepository.findAll();
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public void deleteById(UUID id) {
         userRepository.deleteById(id);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public void toggleUserStatus(UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Потребителят не е намерен!"));
@@ -125,7 +129,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-//    @CacheEvict(value = "users", allEntries = true)
+    @CacheEvict(value = "users", allEntries = true)
     public void switchStatus(UUID userId) {
 
         User user = getById(userId);
