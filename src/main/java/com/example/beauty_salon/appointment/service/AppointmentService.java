@@ -7,6 +7,7 @@ import com.example.beauty_salon.beautyTreatment.model.BeautyTreatment;
 import com.example.beauty_salon.beautyTreatment.model.BeautyTreatmentName;
 import com.example.beauty_salon.beautyTreatment.repository.BeautyTreatmentRepository;
 import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
+import com.example.beauty_salon.email.EmailService;
 import com.example.beauty_salon.employee.model.Employee;
 import com.example.beauty_salon.employee.model.EmployeePosition;
 import com.example.beauty_salon.employee.repository.EmployeeRepository;
@@ -31,14 +32,16 @@ public class AppointmentService {
     private final EmployeeService employeeService;
     private final UserService userService;
     private final BeautyTreatmentService beautyTreatmentService;
+    private final EmailService emailService;
 
     @Autowired
     public AppointmentService(AppointmentRepository appointmentRepository, EmployeeService employeeService, UserService userService,
-        BeautyTreatmentService beautyTreatmentService) {
-        this.appointmentRepository = appointmentRepository;
+                            BeautyTreatmentService beautyTreatmentService, EmailService emailService) {
+      this.appointmentRepository = appointmentRepository;
       this.employeeService = employeeService;
       this.userService = userService;
       this.beautyTreatmentService = beautyTreatmentService;
+      this.emailService = emailService;
     }
 
     @Transactional
@@ -101,6 +104,29 @@ public class AppointmentService {
             case MANICURE -> EmployeePosition.MANICURE;
             case FACIAL_CLEANSING -> EmployeePosition.COSMETICIAN;
         };
+    }
+
+    public void sendUpcomingAppointmentReminders() {
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime soon = now.plusHours(2);
+
+        List<Appointment> upcoming =
+            appointmentRepository.findUpcomingAppointments(now, soon);
+
+        for (Appointment appointment : upcoming) {
+            BeautyTreatment treatment = appointment.getTreatment();
+
+            if (treatment != null) {
+                emailService.sendAppointmentReminder(
+                    appointment.getUser().getEmail(),
+                    treatment.getBeautyTreatmentName().getDisplayName(),
+                    appointment.getAppointmentDate()
+                );
+            }
+        }
+
+        System.out.println("Sent reminders: " + upcoming.size());
     }
 
     public List<Appointment> getAll() {
