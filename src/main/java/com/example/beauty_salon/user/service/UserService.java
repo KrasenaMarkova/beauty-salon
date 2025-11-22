@@ -35,20 +35,12 @@ public class UserService {
       this.eventPublisher = eventPublisher;
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     public void register(RegisterRequest registerRequest) {
 
         Optional<User> optionalUser = userRepository.findByUsernameOrEmail(registerRequest.getUsername(), registerRequest.getEmail());
         if (optionalUser.isPresent()) {
             throw new RuntimeException("User with [%s] username already exist.".formatted(registerRequest.getUsername()));
         }
-
-//        User excistsUser = userRepository
-//                .findByUsernameOrEmail(registerRequest.getUsername(), registerRequest.getEmail())
-//               .orElseThrow(() -> new UserAlreadyExists("User with [%s] username already exist.".formatted(registerRequest.getUsername())));
-        /*if (optionalUser.isPresent()) {
-            throw new RuntimeException("User with [%s] username already exist.".formatted(registerRequest.getUsername()));
-        }*/
 
         User user = User.builder()
                 .firstName(registerRequest.getFirstName())
@@ -90,7 +82,6 @@ public class UserService {
         return optionalUser.get();
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     public void updateProfile(UUID id, EditProfileRequest editProfileRequest) {
 
         User user = getById(id);
@@ -109,18 +100,15 @@ public class UserService {
         return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Потребител с id [%s] не е намерен.".formatted(userId)));
     }
 
-    @Cacheable("users")
     public List<User> getAll() {
 
         return userRepository.findAll();
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     public void deleteById(UUID id) {
         userRepository.deleteById(id);
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     public void toggleUserStatus(UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Потребителят не е намерен!"));
@@ -129,7 +117,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     public void switchStatus(UUID userId) {
 
         User user = getById(userId);

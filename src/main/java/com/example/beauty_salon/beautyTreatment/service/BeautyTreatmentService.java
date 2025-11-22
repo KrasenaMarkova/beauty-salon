@@ -8,6 +8,8 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +25,7 @@ public class BeautyTreatmentService {
     }
 
     @Transactional
+    @CacheEvict(value = "beautyTreatments", allEntries = true)
     public void adjustPricesForInflation() {
         List<BeautyTreatment> treatments = beautyTreatmentRepository.findAll();
 
@@ -37,6 +40,7 @@ public class BeautyTreatmentService {
             " treatments due to 0.8% monthly inflation.");
     }
 
+    @Cacheable("beautyTreatments")
     public List<BeautyTreatment> getAll() {
         return beautyTreatmentRepository.findAll();
     }
