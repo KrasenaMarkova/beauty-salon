@@ -5,10 +5,12 @@ import com.example.beauty_salon.beautyTreatment.repository.BeautyTreatmentReposi
 import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
 import com.example.beauty_salon.employee.repository.EmployeeRepository;
 import com.example.beauty_salon.employee.service.EmployeeService;
+import com.example.beauty_salon.security.UserData;
 import com.example.beauty_salon.web.dto.AppointmentRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.util.UUID;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +40,7 @@ public class BookingController {
 
     @PostMapping("/booking")
     public ModelAndView bookAppointment(@Valid @ModelAttribute("appointmentRequest") AppointmentRequest appointmentRequest,
-        BindingResult result, HttpSession session) {
+        BindingResult result, @AuthenticationPrincipal UserData userData) {
 
         ModelAndView modelAndView = new ModelAndView("booking");
         modelAndView.addObject("treatments", beautyTreatmentService.getAll());
@@ -49,7 +51,7 @@ public class BookingController {
         }
 
         try {
-            UUID userId = (UUID) session.getAttribute("userId");
+            UUID userId = userData.getUserId();
 
             if (userId == null) {
                 modelAndView.setViewName("redirect:/login");

@@ -23,7 +23,7 @@ public class AdminController {
         this.userService = userService;
     }
 
-    //    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ModelAndView getAllUsers() {
 
@@ -36,17 +36,20 @@ public class AdminController {
         return modelAndView;
     }
 
-    // Смяна на статуса Active / Inactive
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{id}/toggle-status")
     public String toggleUserStatus(@PathVariable UUID id) {
+
         userService.toggleUserStatus(id);
+
         return "redirect:/admin/users";
     }
 
     @PostMapping("/{id}/delete")
     public String deleteUser(@PathVariable UUID id) {
+
         userService.deleteById(id);
+
         return "redirect:/admin/users";
     }
 
