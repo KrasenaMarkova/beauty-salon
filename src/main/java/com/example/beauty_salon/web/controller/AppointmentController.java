@@ -1,21 +1,14 @@
 package com.example.beauty_salon.web.controller;
 
-import static com.example.beauty_salon.appointment.model.AppointmentStatus.CANCELLED;
-
 import com.example.beauty_salon.appointment.model.Appointment;
 import com.example.beauty_salon.appointment.model.AppointmentStatus;
 import com.example.beauty_salon.appointment.service.AppointmentService;
 import com.example.beauty_salon.beautyTreatment.model.BeautyTreatment;
-import com.example.beauty_salon.beautyTreatment.repository.BeautyTreatmentRepository;
 import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
-import com.example.beauty_salon.employee.repository.EmployeeRepository;
-import com.example.beauty_salon.employee.service.EmployeeService;
 import com.example.beauty_salon.security.UserData;
 import com.example.beauty_salon.user.model.User;
-import com.example.beauty_salon.user.repository.UserRepository;
 import com.example.beauty_salon.user.service.UserService;
 import com.example.beauty_salon.web.dto.EditAppointmentRequest;
-import jakarta.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -37,29 +30,37 @@ public class AppointmentController {
 
   private final AppointmentService appointmentService;
   private final UserService userService;
-  private final EmployeeService employeeService;
   private final BeautyTreatmentService beautyTreatmentService;
 
 
-  public AppointmentController(AppointmentService appointmentService,
-      UserService userService, UserRepository userRepository, BeautyTreatmentRepository beautyTreatmentRepository,
-      EmployeeRepository employeeRepository,
-      BeautyTreatmentService beautyTreatmentService, EmployeeService employeeService) {
+  public AppointmentController(AppointmentService appointmentService, UserService userService, BeautyTreatmentService beautyTreatmentService) {
     this.appointmentService = appointmentService;
     this.userService = userService;
-    this.employeeService = employeeService;
     this.beautyTreatmentService = beautyTreatmentService;
   }
 
+//  @PostMapping("/{id}/cancel")
+//  public String cancelAppointment(@PathVariable("id") UUID appointmentId, @AuthenticationPrincipal UserData userData, RedirectAttributes redirectAttributes) {
+//    UUID userId = userData.getUserId();
+//    Appointment appointment = appointmentService.getById(appointmentId);
+//
+//    appointment.setStatus(CANCELLED);
+//    appointmentService.save(appointment);
+//
+//    redirectAttributes.addFlashAttribute("successMessage", "Часът е успешно отменен.");
+//    return "redirect:/home";
+//  }
+
   @PostMapping("/{id}/cancel")
-  public String cancelAppointment(@PathVariable("id") UUID appointmentId, @AuthenticationPrincipal UserData userData, RedirectAttributes redirectAttributes) {
-    UUID userId = userData.getUserId();
-    Appointment appointment = appointmentService.getById(appointmentId);
+  public String cancelAppointment(@PathVariable("id") UUID appointmentId, @AuthenticationPrincipal UserData userData,
+      RedirectAttributes redirectAttributes) {
+    try {
+      appointmentService.cancelAppointment(appointmentId);
+      redirectAttributes.addFlashAttribute("successMessage", "Часът е успешно отменен.");
+    } catch (IllegalArgumentException e) {
+      redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+    }
 
-    appointment.setStatus(CANCELLED); // или CANCELLED
-    appointmentService.save(appointment);
-
-    redirectAttributes.addFlashAttribute("successMessage", "Часът е успешно отменен.");
     return "redirect:/home";
   }
 
@@ -83,8 +84,8 @@ public class AppointmentController {
     }
 
     ModelAndView modelAndView = new ModelAndView("appointment-edit");
-    modelAndView.addObject("editAppointmentRequest", editAppointmentRequest); // същото име, каквото ползваш във form
-    modelAndView.addObject("appointment", appointment); // ако искаш за справка в HTML
+    modelAndView.addObject("editAppointmentRequest", editAppointmentRequest);
+    modelAndView.addObject("appointment", appointment);
     modelAndView.addObject("treatments", beautyTreatmentService.getAll());
     return modelAndView;
   }
@@ -153,21 +154,15 @@ public class AppointmentController {
         .filter(a -> a.getStatus() == AppointmentStatus.COMPLETED
             || a.getStatus() == AppointmentStatus.CANCELLED)
         .sorted(
-            Comparator.comparing((Appointment a) -> a.getAppointmentDate().toLocalDate()).reversed() // дата низходящо
-                .thenComparing(Appointment::getAppointmentDate) // час възходящо
+            Comparator.comparing((Appointment a) -> a.getAppointmentDate().toLocalDate()).reversed()
+                .thenComparing(Appointment::getAppointmentDate)
         )
         .toList();
-
-//        List<Appointment> activeAppointments = allAppointments.stream()
-//            .filter(a -> a.getStatus() == AppointmentStatus.SCHEDULED)
-//            .sorted(Comparator.comparing(Appointment::getAppointmentDate))
-//            .toList();
 
     ModelAndView modelAndView = new ModelAndView();
     modelAndView.setViewName("appointments-history");
     modelAndView.addObject("user", user);
     modelAndView.addObject("pastAppointments", pastAppointments);
-//        modelAndView.addObject("allAppointment", activeAppointments);
 
     return modelAndView;
   }

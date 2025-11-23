@@ -1,11 +1,19 @@
 package com.example.beauty_salon.employee.model;
 
-
-import jakarta.persistence.*;
-import lombok.*;
-import org.jetbrains.annotations.NotNull;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 @Builder
 @Getter
@@ -15,17 +23,17 @@ import java.util.UUID;
 @Entity
 public class Employee {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @NotNull
-    @Column(nullable = false)
-    private String name;
+  @NotNull
+  @Column(nullable = false)
+  private String name;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private EmployeePosition employeePosition;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private EmployeePosition employeePosition;
 
 }
 

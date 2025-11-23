@@ -19,4 +19,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
       AND a.appointmentDate BETWEEN :now AND :soon
       """)
   List<Appointment> findUpcomingAppointments(LocalDateTime now, LocalDateTime soon);
+
+  List<Appointment> findAllByUserId(UUID userId);
 }

@@ -18,10 +18,10 @@
 <header class="info">
   <nav>
     <ul>
-                  <li><a th:href="@{/home}">Начало</a></li>
-                  <li><a th:href="@{/services}">Услуги</a></li>
-                  <li><a th:href="@{/team}">Екип</a></li>
-                  <li><a th:href="@{/about}">За нас</a></li>
+      <li><a th:href="@{/home}">Начало</a></li>
+      <li><a th:href="@{/services}">Услуги</a></li>
+      <li><a th:href="@{/team}">Екип</a></li>
+      <li><a th:href="@{/about}">За нас</a></li>
       <li><a th:href="@{/logout}">Изход</a></li>
     </ul>
   </nav>
@@ -39,15 +39,19 @@
 
   <section class="user-info" style="flex: 1; max-width: 33%;">
     <h2>Моят профил</h2>
-    <div class="user-card" style="background-color: #ffe0f0; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <div class="user-card"
+         style="background-color: #ffe0f0; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
       <p><strong>Потребителско име:</strong> <span th:text="${user.username}"></span></p>
-      <p><strong>Име:</strong> <span th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>
+      <p><strong>Име:</strong> <span th:text="${user.firstName} + ' ' + ${user.lastName}"></span>
+      </p>
       <p><strong>Имейл:</strong> <span th:text="${user.email}"></span></p>
       <p><strong>Телефон:</strong> <span th:text="${user.phone}"></span></p>
-      <a class="edit-btn" th:href="@{'/users/' + ${user.id} + '/profile'}" style="display: inline-block; margin-top: 10px;">✏️ Редактирай профил</a>
+      <a class="edit-btn" th:href="@{'/users/' + ${user.id} + '/profile'}"
+         style="display: inline-block; margin-top: 10px;">✏️ Редактирай профил</a>
 
       <!-- Нов бутон за минали часове -->
-      <a class="edit-btn" th:href="@{/appointments/history}" style="display: inline-block; margin-top: 10px; background-color: #d63384;">
+      <a class="edit-btn" th:href="@{/appointments/history}"
+         style="display: inline-block; margin-top: 10px; background-color: #d63384;">
         ⏰ Моите минали часове
       </a>
     </div>
@@ -59,14 +63,18 @@
     <h2 style="text-align: center; color: #4a004e; margin-bottom: 20px;">Моите записани часове</h2>
 
     <!-- Проверка за празен списък активни часове -->
-    <div th:if="${#lists.isEmpty(activeAppointments)}" style="text-align: center; margin-top: 20px;">
+    <div th:if="${#lists.isEmpty(activeAppointments)}"
+         style="text-align: center; margin-top: 20px;">
       <p>Все още нямате записани часове.</p>
-      <a class="btn" th:href="@{/appointments/history}" style="margin-top: 10px; display: inline-block;">История на минали или отменени часове</a>
+      <a class="btn" th:href="@{/appointments/history}"
+         style="margin-top: 10px; display: inline-block;">История на минали или отменени часове</a>
     </div>
 
-    <div th:if="${!#lists.isEmpty(allAppointment)}" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+    <div th:if="${!#lists.isEmpty(allAppointment)}"
+         style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
 
-      <div style="display: flex; background-color: #f7c6d9; color: #4a004e; font-weight: bold; padding: 12px 20px; border-radius: 10px; text-align: center;">
+      <div
+          style="display: flex; background-color: #f7c6d9; color: #4a004e; font-weight: bold; padding: 12px 20px; border-radius: 10px; text-align: center;">
         <div style="flex: 2;">Дата и час</div>
         <div style="flex: 2;">Услуга</div>
         <div style="flex: 1;">Цена</div>
@@ -80,8 +88,10 @@
            th:if="${appointment.status.name() == 'SCHEDULED'}"
            style="display: flex; align-items: center; padding: 15px 20px; background-color: #ffe0f0; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); gap: 10px;">
 
-      <div style="flex: 2;" th:text="${#temporals.format(appointment.appointmentDate, 'dd.MM.yyyy HH:mm')}"></div>
-        <div style="flex: 2;" th:text="${appointment.treatment != null ? appointment.treatment.beautyTreatmentName : '–'}"></div>
+        <div style="flex: 2;"
+             th:text="${#temporals.format(appointment.appointmentDate, 'dd.MM.yyyy HH:mm')}"></div>
+        <div style="flex: 2;"
+             th:text="${appointment.treatment != null ? appointment.treatment.beautyTreatmentName : '–'}"></div>
         <div style="flex: 1;" th:text="${appointment.price + ' лв.'}"></div>
         <div style="flex: 1;" th:text="${appointment.durationMinutes + ' мин.'}"></div>
         <div style="flex: 1;" th:text="${appointment.status}"></div>
@@ -107,7 +117,7 @@
 
 </main>
 
-<th:block th:insert="fragments/footer :: my-footer"></th:block>
+<th:block th:insert="~{fragments/footer :: my-footer}"></th:block>
 
 </body>
 </html>

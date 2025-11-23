@@ -14,7 +14,7 @@
       margin: 0 auto;
       background-color: #fff;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     h2 {
@@ -103,22 +103,22 @@
 
     <div>
       <label for="firstName">Име:</label>
-      <input type="text" id="firstName" th:field="*{firstName}" required />
+      <input type="text" id="firstName" th:field="*{firstName}" required/>
     </div>
 
     <div>
       <label for="lastName">Фамилия:</label>
-      <input type="text" id="lastName" th:field="*{lastName}" required />
+      <input type="text" id="lastName" th:field="*{lastName}" required/>
     </div>
 
     <div>
       <label for="email">Имейл:</label>
-      <input type="email" id="email" th:field="*{email}" required />
+      <input type="email" id="email" th:field="*{email}" required/>
     </div>
 
     <div>
       <label for="phone">Телефон:</label>
-      <input type="text" id="phone" th:field="*{phone}" required />
+      <input type="text" id="phone" th:field="*{phone}" required/>
     </div>
 
     <div>
@@ -145,7 +145,7 @@
   </form>
 </main>
 
-<th:block th:insert="fragments/footer :: my-footer"></th:block>
+<th:block th:insert="~{fragments/footer :: my-footer}"></th:block>
 
 </body>
 </html>

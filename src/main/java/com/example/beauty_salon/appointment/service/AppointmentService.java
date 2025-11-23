@@ -5,162 +5,151 @@ import com.example.beauty_salon.appointment.model.AppointmentStatus;
 import com.example.beauty_salon.appointment.repository.AppointmentRepository;
 import com.example.beauty_salon.beautyTreatment.model.BeautyTreatment;
 import com.example.beauty_salon.beautyTreatment.model.BeautyTreatmentName;
-import com.example.beauty_salon.beautyTreatment.repository.BeautyTreatmentRepository;
 import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
-import com.example.beauty_salon.email.EmailService;
 import com.example.beauty_salon.employee.model.Employee;
 import com.example.beauty_salon.employee.model.EmployeePosition;
-import com.example.beauty_salon.employee.repository.EmployeeRepository;
 import com.example.beauty_salon.employee.service.EmployeeService;
 import com.example.beauty_salon.user.model.User;
-import com.example.beauty_salon.user.repository.UserRepository;
 import com.example.beauty_salon.user.service.UserService;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class AppointmentService {
 
-    private final AppointmentRepository appointmentRepository;
-    private final EmployeeService employeeService;
-    private final UserService userService;
-    private final BeautyTreatmentService beautyTreatmentService;
-    private final EmailService emailService;
+  private final AppointmentRepository appointmentRepository;
+  private final EmployeeService employeeService;
+  private final UserService userService;
+  private final BeautyTreatmentService beautyTreatmentService;
 
-    @Autowired
-    public AppointmentService(AppointmentRepository appointmentRepository, EmployeeService employeeService, UserService userService,
-                            BeautyTreatmentService beautyTreatmentService, EmailService emailService) {
-      this.appointmentRepository = appointmentRepository;
-      this.employeeService = employeeService;
-      this.userService = userService;
-      this.beautyTreatmentService = beautyTreatmentService;
-      this.emailService = emailService;
+  @Autowired
+  public AppointmentService(AppointmentRepository appointmentRepository, EmployeeService employeeService, UserService userService,
+      BeautyTreatmentService beautyTreatmentService) {
+    this.appointmentRepository = appointmentRepository;
+    this.employeeService = employeeService;
+    this.userService = userService;
+    this.beautyTreatmentService = beautyTreatmentService;
+  }
+
+  @Transactional
+  public Appointment createAppointment(UUID userId, UUID treatmentId, LocalDateTime dateTime) {
+    User user = userService.getById(userId);
+
+    BeautyTreatment treatment = beautyTreatmentService.getById(treatmentId);
+
+    EmployeePosition requiredPosition = mapTreatmentToEmployeePosition(treatment.getBeautyTreatmentName());
+
+    List<Employee> potentialEmployees = employeeService.getEmployeeByPosition(requiredPosition);
+    if (potentialEmployees.isEmpty()) {
+      throw new IllegalStateException("Няма наличен служител за тази услуга.");
     }
 
-    @Transactional
-    public Appointment createAppointment(UUID userId, UUID treatmentId, LocalDateTime dateTime) {
-        User user = userService.getById(userId);
+    Employee employee = potentialEmployees.stream()
+        .filter(e -> isEmployeeAvailable(e, dateTime, treatment.getDurationMinutes()))
+        .findFirst()
+        .orElseThrow(() -> new IllegalStateException("Няма свободен служител за избрания час."));
 
-        BeautyTreatment treatment = beautyTreatmentService.getById(treatmentId);
+    Appointment appointment = Appointment.builder()
+        .appointmentDate(dateTime)
+        .durationMinutes(treatment.getDurationMinutes())
+        .price(treatment.getPrice())
+        .status(AppointmentStatus.SCHEDULED)
+        .user(user)
+        .employee(employee)
+        .treatment(treatment)
+        .build();
 
-        EmployeePosition requiredPosition = mapTreatmentToEmployeePosition(treatment.getBeautyTreatmentName());
+    return appointmentRepository.save(appointment);
+  }
 
-        List<Employee> potentialEmployees = employeeService.getEmployeeByPosition(requiredPosition);
-        if (potentialEmployees.isEmpty()) {
-            throw new IllegalStateException("Няма наличен служител за тази услуга.");
-        }
+  private boolean isEmployeeAvailable(Employee employee, LocalDateTime startTime, int durationMinutes) {
 
-        Employee employee = potentialEmployees.stream()
-            .filter(e -> isEmployeeAvailable(e, dateTime, treatment.getDurationMinutes()))
-            .findFirst()
-            .orElseThrow(() -> new IllegalStateException("Няма свободен служител за избрания час."));
+    LocalTime workStart = LocalTime.of(9, 0);
+    LocalTime workEnd = LocalTime.of(18, 0);
 
-        Appointment appointment = Appointment.builder()
-            .appointmentDate(dateTime)
-            .durationMinutes(treatment.getDurationMinutes())
-            .price(treatment.getPrice())
-            .status(AppointmentStatus.SCHEDULED)
-            .user(user)
-            .employee(employee)
-            .treatment(treatment)
-            .build();
+    LocalDate appointmentDate = startTime.toLocalDate();
+    LocalDateTime dayStart = appointmentDate.atTime(workStart);
+    LocalDateTime dayEnd = appointmentDate.atTime(workEnd);
 
-        return appointmentRepository.save(appointment);
-    }
+    List<Appointment> existing = appointmentRepository.findAll().stream()
+        .filter(a -> a.getEmployee().getId().equals(employee.getId()))
+        .filter(a -> !a.getAppointmentDate().isBefore(dayStart) && !a.getAppointmentDate().isAfter(dayEnd))
+        .toList();
 
-    private boolean isEmployeeAvailable(Employee employee, LocalDateTime startTime, int durationMinutes) {
+    LocalDateTime endTime = startTime.plusMinutes(durationMinutes);
 
-        LocalTime workStart = LocalTime.of(9, 0);
-        LocalTime workEnd = LocalTime.of(18, 0);
+    return existing.stream().noneMatch(a -> {
+      LocalDateTime aStart = a.getAppointmentDate();
+      LocalDateTime aEnd = aStart.plusMinutes(a.getDurationMinutes());
+      return aStart.isBefore(endTime) && aEnd.isAfter(startTime);
+    }) && !startTime.toLocalTime().isBefore(workStart) && !endTime.toLocalTime().isAfter(workEnd);
+  }
 
-        LocalDate appointmentDate = startTime.toLocalDate();
-        LocalDateTime dayStart = appointmentDate.atTime(workStart);
-        LocalDateTime dayEnd = appointmentDate.atTime(workEnd);
+  private EmployeePosition mapTreatmentToEmployeePosition(BeautyTreatmentName treatmentName) {
+    return switch (treatmentName) {
+      case HAIRCUT -> EmployeePosition.HAIRDRESSER;
+      case MANICURE -> EmployeePosition.MANICURE;
+      case FACIAL_CLEANSING -> EmployeePosition.COSMETICIAN;
+    };
+  }
 
-        List<Appointment> existing = appointmentRepository.findAll().stream()
-            .filter(a -> a.getEmployee().getId().equals(employee.getId()))
-            .filter(a -> !a.getAppointmentDate().isBefore(dayStart) && !a.getAppointmentDate().isAfter(dayEnd))
-            .toList();
+  @Transactional
+  public void markPastAppointmentsAsCompleted() {
+    LocalDateTime now = LocalDateTime.now();
 
-        LocalDateTime endTime = startTime.plusMinutes(durationMinutes);
+    List<Appointment> pastAppointments = appointmentRepository.findAll().stream()
+        .filter(a -> a.getStatus() == AppointmentStatus.SCHEDULED)
+        .filter(a -> a.getAppointmentDate().plusMinutes(a.getDurationMinutes()).isBefore(now))
+        .toList();
 
-        return existing.stream().noneMatch(a -> {
-            LocalDateTime aStart = a.getAppointmentDate();
-            LocalDateTime aEnd = aStart.plusMinutes(a.getDurationMinutes());
-            return aStart.isBefore(endTime) && aEnd.isAfter(startTime);
-        }) && !startTime.toLocalTime().isBefore(workStart) && !endTime.toLocalTime().isAfter(workEnd);
-    }
+    pastAppointments.forEach(a -> a.setStatus(AppointmentStatus.COMPLETED));
+    appointmentRepository.saveAll(pastAppointments);
+  }
 
-    private EmployeePosition mapTreatmentToEmployeePosition(BeautyTreatmentName treatmentName) {
-        return switch (treatmentName) {
-            case HAIRCUT -> EmployeePosition.HAIRDRESSER;
-            case MANICURE -> EmployeePosition.MANICURE;
-            case FACIAL_CLEANSING -> EmployeePosition.COSMETICIAN;
-        };
-    }
+  public List<Appointment> getAllByUserId(UUID userId) {
+    return appointmentRepository.findByUserId(userId);
+  }
 
-    @Transactional
-    public void markPastAppointmentsAsCompleted() {
-        LocalDateTime now = LocalDateTime.now();
+  public Appointment getById(UUID appointmentId) {
+    return appointmentRepository.getById(appointmentId);
+  }
 
-        List<Appointment> pastAppointments = appointmentRepository.findAll().stream()
-            .filter(a -> a.getStatus() == AppointmentStatus.SCHEDULED)
-            .filter(a -> a.getAppointmentDate().plusMinutes(a.getDurationMinutes()).isBefore(now))
-            .toList();
+  public void save(Appointment appointment) {
+    appointmentRepository.save(appointment);
+  }
 
-        pastAppointments.forEach(a -> a.setStatus(AppointmentStatus.COMPLETED));
-        appointmentRepository.saveAll(pastAppointments);
-    }
+  public void deleteAppointment(UUID id) {
+    appointmentRepository.deleteById(id);
+  }
 
-//    public void sendUpcomingAppointmentReminders() {
-//
-//        LocalDateTime now = LocalDateTime.now();
-//        LocalDateTime soon = now.plusHours(2);
-//
-//        List<Appointment> upcoming =
-//            appointmentRepository.findUpcomingAppointments(now, soon);
-//
-//        for (Appointment appointment : upcoming) {
-//            BeautyTreatment treatment = appointment.getTreatment();
-//
-//            if (treatment != null) {
-//                emailService.sendAppointmentReminder(
-//                    appointment.getUser().getEmail(),
-//                    treatment.getBeautyTreatmentName().getDisplayName(),
-//                    appointment.getAppointmentDate()
-//                );
-//            }
-//        }
-//
-//        System.out.println("Sent reminders: " + upcoming.size());
-//    }
+  @Transactional
+  public void cancelAppointment(UUID appointmentId) {
+    Appointment appointment = appointmentRepository.findById(appointmentId)
+        .orElseThrow(() -> new IllegalArgumentException("Часът не съществува!"));
 
-    public List<Appointment> getAll() {
-        return appointmentRepository.findAll();
-    }
+    appointment.setStatus(AppointmentStatus.CANCELLED);
+    appointmentRepository.save(appointment);
+  }
 
-    public List<Appointment> getAllByUserId(UUID userId) {
-        return appointmentRepository.findByUserId(userId);
-    }
+  public List<Appointment> getAllSortedByUser(UUID userId) {
+    return appointmentRepository.findAllByUserId(userId).stream()
+        .sorted(Comparator.comparing(Appointment::getAppointmentDate))
+        .toList();
+  }
 
-    public Appointment getById(UUID appointmentId) {
-        return appointmentRepository.getById(appointmentId);
-    }
-
-    public void save(Appointment appointment) {
-        appointmentRepository.save(appointment);
-    }
-
-    public void deleteAppointment(UUID id) {
-        appointmentRepository.deleteById(id);
-    }
+  public List<Appointment> getActiveAppointments(UUID userId) {
+    return appointmentRepository.findAllByUserId(userId).stream()
+        .filter(a -> a.getStatus() == AppointmentStatus.SCHEDULED)
+        .sorted(Comparator.comparing(Appointment::getAppointmentDate))
+        .toList();
+  }
 
 }
 

@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmployeeService {
 
-    private final EmployeeRepository employeeRepository;
+  private final EmployeeRepository employeeRepository;
 
-    @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
+  @Autowired
+  public EmployeeService(EmployeeRepository employeeRepository) {
+    this.employeeRepository = employeeRepository;
+  }
 
 
   public List<Employee> getEmployeeByPosition(EmployeePosition requiredPosition) {

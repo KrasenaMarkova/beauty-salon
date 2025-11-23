@@ -67,7 +67,6 @@ public class UserService implements UserDetailsService {
     log.info("New user profile was registered in the system for user [%s].".formatted(registerRequest.getUsername()));
   }
 
-
   public void updateProfile(UUID id, EditProfileRequest editProfileRequest) {
 
     User user = getById(id);
@@ -100,14 +99,6 @@ public class UserService implements UserDetailsService {
         .orElseThrow(() -> new IllegalArgumentException("Потребителят не е намерен!"));
 
     user.setActive(!user.isActive());
-    userRepository.save(user);
-  }
-
-  public void switchStatus(UUID userId) {
-
-    User user = getById(userId);
-    user.setActive(!user.isActive());
-
     userRepository.save(user);
   }
 

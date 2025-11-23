@@ -1,16 +1,16 @@
 package com.example.beauty_salon.user.model;
 
 public enum UserRole {
-    USER("User"),
-    ADMIN("Admin");
+  USER("User"),
+  ADMIN("Admin");
 
-    private final String displayName;
+  private final String displayName;
 
-    UserRole(String displayName) {
-        this.displayName = displayName;
-    }
+  UserRole(String displayName) {
+    this.displayName = displayName;
+  }
 
-    public String getDisplayName() {
-        return displayName;
-    }
+  public String getDisplayName() {
+    return displayName;
+  }
 }

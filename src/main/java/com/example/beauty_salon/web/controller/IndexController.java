@@ -1,7 +1,6 @@
 package com.example.beauty_salon.web.controller;
 
 import com.example.beauty_salon.appointment.model.Appointment;
-import com.example.beauty_salon.appointment.model.AppointmentStatus;
 import com.example.beauty_salon.appointment.service.AppointmentService;
 import com.example.beauty_salon.security.UserData;
 import com.example.beauty_salon.user.model.User;
@@ -9,7 +8,6 @@ import com.example.beauty_salon.user.service.UserService;
 import com.example.beauty_salon.web.dto.LoginRequest;
 import com.example.beauty_salon.web.dto.RegisterRequest;
 import jakarta.validation.Valid;
-import java.util.Comparator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -64,12 +62,18 @@ public class IndexController {
   }
 
   @GetMapping("/login")
-  public ModelAndView getLoginPage(@RequestParam(name = "loginAttemptMessage", required = false) String message) {
+  public ModelAndView getLoginPage(@RequestParam(name = "loginAttemptMessage", required = false) String message,
+      @RequestParam(name = "error", required = false) String errorMessage) {
 
     ModelAndView modelAndView = new ModelAndView();
     modelAndView.setViewName("login");
     modelAndView.addObject("loginRequest", new LoginRequest());
     modelAndView.addObject("loginAttemptMessage", message);
+
+    if (errorMessage != null) {
+//      modelAndView.addObject("errorMessage", "Invalid username or password");
+      modelAndView.addObject("errorMessage", "Невалидно потребителско име или парола");
+    }
 
     return modelAndView;
   }
@@ -79,18 +83,13 @@ public class IndexController {
 
     User user = userService.getById(userData.getUserId());
 
-    List<Appointment> allAppointment = appointmentService.getAllByUserId(userData.getUserId()).stream()
-        .sorted(Comparator.comparing(Appointment::getAppointmentDate))
-        .toList();
-
-    List<Appointment> activeAppointments = allAppointment.stream()
-        .filter(a -> a.getStatus() == AppointmentStatus.SCHEDULED)
-        .toList();
+    List<Appointment> allAppointments = appointmentService.getAllSortedByUser(userData.getUserId());
+    List<Appointment> activeAppointments = appointmentService.getActiveAppointments(userData.getUserId());
 
     ModelAndView modelAndView = new ModelAndView();
     modelAndView.setViewName("home");
     modelAndView.addObject("user", user);
-    modelAndView.addObject("allAppointment", allAppointment);
+    modelAndView.addObject("allAppointment", allAppointments);
     modelAndView.addObject("activeAppointments", activeAppointments);
 
     return modelAndView;

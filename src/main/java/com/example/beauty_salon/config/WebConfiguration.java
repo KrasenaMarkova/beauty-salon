@@ -18,14 +18,12 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     httpSecurity.authorizeHttpRequests(matcher -> matcher
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                .requestMatchers("/", "/register", "/about-us", "/team", "/error").permitAll()
+                .requestMatchers("/", "/register", "/login", "/about-us", "/team", "/error").permitAll()
 //                        .requestMatchers("/admin-panel").hasRole("ADMIN")
                 .anyRequest().authenticated()
         )
         .formLogin(formLogin -> formLogin
                 .loginPage("/login")
-//                        .usernameParameter("username")
-//                        .passwordParameter("password")
                 .defaultSuccessUrl("/home", true)
                 .failureUrl("/login?error")
                 .permitAll()

@@ -41,9 +41,10 @@
     <h2 style="text-align: center; margin-bottom: 20px;">Моите минали часове</h2>
 
     <!-- Ако няма минали часове -->
-    <div th:if="${#lists.isEmpty(pastAppointments)}" class="no-appointments" style="text-align: center; margin-top: 30px;">
+    <div th:if="${#lists.isEmpty(pastAppointments)}" class="no-appointments"
+         style="text-align: center; margin-top: 30px;">
       <p>Все още нямате завършени или отменени часове.</p>
-      <a class="btn" th:href="@{/bookingForm}" style="margin-top: 10px;">Запази нов час</a>
+      <a class="btn" th:href="@{/booking}" style="margin-top: 10px;">Запази нов час</a>
     </div>
 
     <!-- Таблица с минали часове -->
@@ -53,7 +54,7 @@
         <tr style="background-color: #f7c6d9; color: #4a004e; text-align: center;">
           <th style="padding: 12px;">Дата и час</th>
           <th style="padding: 12px;">Услуга</th>
-<!--          <th style="padding: 12px;">Служител</th>-->
+          <!--          <th style="padding: 12px;">Служител</th>-->
           <th style="padding: 12px;">Продължителност</th>
           <th style="padding: 12px;">Цена</th>
           <th style="padding: 12px;">Статус</th>
@@ -61,17 +62,24 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="appointment : ${pastAppointments}" style="background-color: #fff0f5; border-bottom: 1px solid #f0a6c4;">
-<!--          <td style="padding: 10px;" th:text="${#temporals.format(appointment.appointmentDate, 'dd.MM.yyyy HH:mm')}">11.01.2025 11:00</td>-->
+        <tr th:each="appointment : ${pastAppointments}"
+            style="background-color: #fff0f5; border-bottom: 1px solid #f0a6c4;">
+          <!--          <td style="padding: 10px;" th:text="${#temporals.format(appointment.appointmentDate, 'dd.MM.yyyy HH:mm')}">11.01.2025 11:00</td>-->
           <td th:text="${#temporals.format(appointment.appointmentDate, 'dd.MM.yyyy HH:mm')}"></td>
-          <td style="padding: 10px;" th:text="${appointment.treatment != null ? appointment.treatment.beautyTreatmentName.displayName : '–'}">Услуга</td>
-<!--          <td style="padding: 10px;" th:text="${appointment.employee != null ? appointment.employee.firstName + ' ' + appointment.employee.lastName : '–'}">Служител</td>-->
+          <td style="padding: 10px;"
+              th:text="${appointment.treatment != null ? appointment.treatment.beautyTreatmentName.displayName : '–'}">
+            Услуга
+          </td>
+          <!--          <td style="padding: 10px;" th:text="${appointment.employee != null ? appointment.employee.firstName + ' ' + appointment.employee.lastName : '–'}">Служител</td>-->
           <td style="padding: 10px;" th:text="${appointment.durationMinutes + ' мин.'}">60 мин.</td>
           <td style="padding: 10px;" th:text="${appointment.price + ' лв.'}">50 лв.</td>
           <td style="padding: 10px;">
-            <span th:if="${appointment.status.name() == 'SCHEDULED'}" class="status-scheduled" th:text="${appointment.status.displayName}"></span>
-            <span th:if="${appointment.status.name() == 'CANCELLED'}" class="status-cancelled" th:text="'Cancelled'"></span>
-            <span th:if="${appointment.status.name() == 'COMPLETED'}" class="status-completed" th:text="'Completed'"></span>
+            <span th:if="${appointment.status.name() == 'SCHEDULED'}" class="status-scheduled"
+                  th:text="${appointment.status.displayName}"></span>
+            <span th:if="${appointment.status.name() == 'CANCELLED'}" class="status-cancelled"
+                  th:text="'Cancelled'"></span>
+            <span th:if="${appointment.status.name() == 'COMPLETED'}" class="status-completed"
+                  th:text="'Completed'"></span>
           </td>
 
           <!-- Нова колона за бутон Изтрий -->
@@ -90,7 +98,7 @@
 
 </main>
 
-<th:block th:insert="fragments/footer :: my-footer"></th:block>
+<th:block th:insert="~{fragments/footer :: my-footer}"></th:block>
 
 </body>
 </html>

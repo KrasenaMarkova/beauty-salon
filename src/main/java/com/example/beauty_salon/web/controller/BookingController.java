@@ -1,15 +1,11 @@
 package com.example.beauty_salon.web.controller;
 
 import com.example.beauty_salon.appointment.service.AppointmentService;
-import com.example.beauty_salon.beautyTreatment.repository.BeautyTreatmentRepository;
 import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
-import com.example.beauty_salon.employee.repository.EmployeeRepository;
-import com.example.beauty_salon.employee.service.EmployeeService;
 import com.example.beauty_salon.security.UserData;
 import com.example.beauty_salon.web.dto.AppointmentRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import java.util.UUID;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -20,57 +16,52 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class BookingController {
-    private final AppointmentService appointmentService;
-    private final BeautyTreatmentService beautyTreatmentService;
 
-    public BookingController(AppointmentService appointmentService, BeautyTreatmentService beautyTreatmentService) {
-        this.appointmentService = appointmentService;
-      this.beautyTreatmentService = beautyTreatmentService;
+  private final AppointmentService appointmentService;
+  private final BeautyTreatmentService beautyTreatmentService;
+
+  public BookingController(AppointmentService appointmentService, BeautyTreatmentService beautyTreatmentService) {
+    this.appointmentService = appointmentService;
+    this.beautyTreatmentService = beautyTreatmentService;
+  }
+
+  @GetMapping("/booking")
+  public ModelAndView showBookingForm() {
+
+    ModelAndView modelAndView = new ModelAndView("booking");
+    modelAndView.addObject("treatments", beautyTreatmentService.getAll());
+    modelAndView.addObject("appointmentRequest", new AppointmentRequest()); //
+
+    return modelAndView;
+  }
+
+  @PostMapping("/booking")
+  @PreAuthorize("isAuthenticated()")
+  public ModelAndView bookAppointment(@Valid @ModelAttribute("appointmentRequest") AppointmentRequest appointmentRequest,
+      BindingResult result, @AuthenticationPrincipal UserData userData) {
+
+    ModelAndView modelAndView = new ModelAndView("booking");
+    modelAndView.addObject("treatments", beautyTreatmentService.getAll());
+
+    if (result.hasErrors()) {
+      modelAndView.addObject("error", "Моля, попълнете коректно всички задължителни полета.");
+      return modelAndView;
     }
 
-    @GetMapping("/booking")
-    public ModelAndView showBookingForm() {
+    try {
+      appointmentService.createAppointment(
+          userData.getUserId(),
+          appointmentRequest.getTreatmentId(),
+          appointmentRequest.getAppointmentDate()
+      );
 
-        ModelAndView modelAndView = new ModelAndView("booking");
-        modelAndView.addObject("treatments", beautyTreatmentService.getAll());
-        modelAndView.addObject("appointmentRequest", new AppointmentRequest()); //
-
-        return modelAndView;
+      modelAndView.addObject("success", "Часът беше успешно запазен!");
+      modelAndView.addObject("appointmentRequest", new AppointmentRequest());
+    } catch (IllegalStateException e) {
+      modelAndView.addObject("error", e.getMessage());
     }
 
-    @PostMapping("/booking")
-    public ModelAndView bookAppointment(@Valid @ModelAttribute("appointmentRequest") AppointmentRequest appointmentRequest,
-        BindingResult result, @AuthenticationPrincipal UserData userData) {
-
-        ModelAndView modelAndView = new ModelAndView("booking");
-        modelAndView.addObject("treatments", beautyTreatmentService.getAll());
-
-        if (result.hasErrors()) {
-            modelAndView.addObject("error", "Моля, попълнете коректно всички задължителни полета.");
-            return modelAndView;
-        }
-
-        try {
-            UUID userId = userData.getUserId();
-
-            if (userId == null) {
-                modelAndView.setViewName("redirect:/login");
-                return modelAndView;
-            }
-
-            appointmentService.createAppointment(
-                userId,
-                appointmentRequest.getTreatmentId(),
-                appointmentRequest.getAppointmentDate()
-            );
-
-            modelAndView.addObject("success", "Часът беше успешно запазен!");
-            modelAndView.addObject("appointmentRequest", new AppointmentRequest());
-        } catch (Exception e) {
-            modelAndView.addObject("error", e.getMessage());
-        }
-
-        return modelAndView;
-    }
+    return modelAndView;
+  }
 
 }

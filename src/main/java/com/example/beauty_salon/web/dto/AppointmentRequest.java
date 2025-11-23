@@ -4,20 +4,19 @@ package com.example.beauty_salon.web.dto;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import lombok.Data;
-
 import java.util.UUID;
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 public class AppointmentRequest {
 
-    @NotNull(message = "Датата е задължителна.")
-    @Future(message = "Не можете да изберете минала дата и час.")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // <- добавено
-    private LocalDateTime appointmentDate;
+  @NotNull(message = "Датата е задължителна.")
+  @Future(message = "Не можете да изберете минала дата и час.")
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // <- добавено
+  private LocalDateTime appointmentDate;
 
-    @NotNull(message = "Услугата е задължителна.")
-    private UUID treatmentId;
+  @NotNull(message = "Услугата е задължителна.")
+  private UUID treatmentId;
 
 }

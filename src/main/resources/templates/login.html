@@ -16,14 +16,14 @@
 
 <!-- Навигация -->
 <header class="info">
-    <nav>
-        <ul>
-            <li><a th:href="@{/}">Начало</a></li>
-            <li><a th:href="@{/about}">За нас</a></li>
-<!--            <li><a th:href="@{/services}">Услуги</a></li>-->
-            <li><a th:href="@{/team}">Екип</a></li>
-        </ul>
-    </nav>
+  <nav>
+    <ul>
+      <li><a th:href="@{/}">Начало</a></li>
+      <li><a th:href="@{/about}">За нас</a></li>
+      <!--            <li><a th:href="@{/services}">Услуги</a></li>-->
+      <li><a th:href="@{/team}">Екип</a></li>
+    </ul>
+  </nav>
 </header>
 
 <!-- Hero секция -->
@@ -37,14 +37,20 @@
     <form th:action="@{/login}" th:method="POST" th:object="${loginRequest}">
 
       <p class="error-message" th:if="${loginAttemptMessage}" th:text="${loginAttemptMessage}"></p>
+      <p class="error-message" th:text="${errorMessage}"></p>
 
       <label for="username">Потребителско име:</label>
-      <input type="text" th:field="*{username}" id="username" placeholder="Изберете потребителско име">
-      <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-message">Invalid username</div>
+      <input type="text" th:field="*{username}" id="username"
+             placeholder="Изберете потребителско име">
+      <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-message">
+        Invalid username
+      </div>
 
       <label for="password">Парола:</label>
       <input type="password" th:field="*{password}" id="password" placeholder="Парола">
-      <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message">Invalid password</div>
+      <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message">
+        Invalid password
+      </div>
 
       <button type="submit">Вход</button>
     </form>
@@ -52,8 +58,7 @@
   </div>
 </section>
 
-<!-- Footer-->
-<th:block th:insert="fragments/footer :: my-footer"></th:block>
+<th:block th:insert="~{fragments/footer :: my-footer}"></th:block>
 
 </body>
 </html>
