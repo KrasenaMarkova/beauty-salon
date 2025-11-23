@@ -27,14 +27,24 @@ public class SchedulerConfig {
     System.out.println("Monthly treatment prices updated at " + java.time.LocalDateTime.now());
   }
 
-  @Scheduled(fixedRate = 15 * 60 * 1000)
-  public void sendAppointmentReminders() {
-    appointmentService.sendUpcomingAppointmentReminders();
+  @Scheduled(fixedRate = 5 * 60 * 1000)
+  public void updatePastAppointmentsStatus() {
+    appointmentService.markPastAppointmentsAsCompleted();
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
     String formattedNow = LocalDateTime.now().format(formatter);
 
-    System.out.println("Sent upcoming appointment reminders at " + formattedNow);
+    System.out.println("Updated past appointments status at " + formattedNow);
   }
+
+//  @Scheduled(fixedRate = 15 * 60 * 1000)
+//  public void sendAppointmentReminders() {
+//    appointmentService.sendUpcomingAppointmentReminders();
+//
+//    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+//    String formattedNow = LocalDateTime.now().format(formatter);
+//
+//    System.out.println("Sent upcoming appointment reminders at " + formattedNow);
+//  }
 
 }

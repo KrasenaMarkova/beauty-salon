@@ -106,28 +106,41 @@ public class AppointmentService {
         };
     }
 
-    public void sendUpcomingAppointmentReminders() {
-
+    @Transactional
+    public void markPastAppointmentsAsCompleted() {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime soon = now.plusHours(2);
 
-        List<Appointment> upcoming =
-            appointmentRepository.findUpcomingAppointments(now, soon);
+        List<Appointment> pastAppointments = appointmentRepository.findAll().stream()
+            .filter(a -> a.getStatus() == AppointmentStatus.SCHEDULED)
+            .filter(a -> a.getAppointmentDate().plusMinutes(a.getDurationMinutes()).isBefore(now))
+            .toList();
 
-        for (Appointment appointment : upcoming) {
-            BeautyTreatment treatment = appointment.getTreatment();
-
-            if (treatment != null) {
-                emailService.sendAppointmentReminder(
-                    appointment.getUser().getEmail(),
-                    treatment.getBeautyTreatmentName().getDisplayName(),
-                    appointment.getAppointmentDate()
-                );
-            }
-        }
-
-        System.out.println("Sent reminders: " + upcoming.size());
+        pastAppointments.forEach(a -> a.setStatus(AppointmentStatus.COMPLETED));
+        appointmentRepository.saveAll(pastAppointments);
     }
+
+//    public void sendUpcomingAppointmentReminders() {
+//
+//        LocalDateTime now = LocalDateTime.now();
+//        LocalDateTime soon = now.plusHours(2);
+//
+//        List<Appointment> upcoming =
+//            appointmentRepository.findUpcomingAppointments(now, soon);
+//
+//        for (Appointment appointment : upcoming) {
+//            BeautyTreatment treatment = appointment.getTreatment();
+//
+//            if (treatment != null) {
+//                emailService.sendAppointmentReminder(
+//                    appointment.getUser().getEmail(),
+//                    treatment.getBeautyTreatmentName().getDisplayName(),
+//                    appointment.getAppointmentDate()
+//                );
+//            }
+//        }
+//
+//        System.out.println("Sent reminders: " + upcoming.size());
+//    }
 
     public List<Appointment> getAll() {
         return appointmentRepository.findAll();
@@ -148,7 +161,6 @@ public class AppointmentService {
     public void deleteAppointment(UUID id) {
         appointmentRepository.deleteById(id);
     }
-
 
 }
 
