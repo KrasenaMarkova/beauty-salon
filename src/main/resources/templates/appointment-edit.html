@@ -36,8 +36,8 @@
     <h2>Редакция</h2>
 
     <!-- Съобщения -->
-    <div th:if="${success}" class="success-message" th:text="${success}"></div>
-    <div th:if="${error}" class="error-message" th:text="${error}"></div>
+    <div th:if="${successMessage}" class="success-message" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></div>
 
     <form th:action="@{'/appointments/' + ${appointment.id} + '/edit'}"
           th:object="${editAppointmentRequest}" method="POST">

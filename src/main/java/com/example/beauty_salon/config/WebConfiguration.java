@@ -17,16 +17,16 @@ public class WebConfiguration implements WebMvcConfigurer {
   public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
     httpSecurity.authorizeHttpRequests(matcher -> matcher
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                .requestMatchers("/", "/register", "/login", "/about-us", "/team", "/error").permitAll()
-//                        .requestMatchers("/admin-panel").hasRole("ADMIN")
-                .anyRequest().authenticated()
+            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+            .requestMatchers("/", "/register", "/login", "/about-us", "/team", "/error").permitAll()
+            .requestMatchers("/admin-panel/**").hasRole("ADMIN")
+            .anyRequest().authenticated()
         )
         .formLogin(formLogin -> formLogin
-                .loginPage("/login")
-                .defaultSuccessUrl("/home", true)
-                .failureUrl("/login?error")
-                .permitAll()
+            .loginPage("/login")
+            .defaultSuccessUrl("/home", true)
+            .failureUrl("/login?error")
+            .permitAll()
         )
         .logout(logout -> logout
             .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))

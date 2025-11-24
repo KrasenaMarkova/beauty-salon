@@ -11,10 +11,12 @@ import com.example.beauty_salon.employee.model.EmployeePosition;
 import com.example.beauty_salon.employee.service.EmployeeService;
 import com.example.beauty_salon.user.model.User;
 import com.example.beauty_salon.user.service.UserService;
+import com.example.beauty_salon.web.dto.EditAppointmentRequest;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -151,5 +153,78 @@ public class AppointmentService {
         .toList();
   }
 
+  public List<Appointment> getPastAppointmentsForUser(UUID userId) {
+    List<Appointment> allAppointments = getAllByUserId(userId);
+
+    if (allAppointments == null) {
+      return allAppointments = new ArrayList<>();
+    }
+
+    return allAppointments.stream()
+        .filter(a -> a.getStatus() == AppointmentStatus.COMPLETED
+            || a.getStatus() == AppointmentStatus.CANCELLED)
+        .sorted(
+            Comparator.comparing((Appointment a) -> a.getAppointmentDate().toLocalDate()).reversed()
+                .thenComparing(Appointment::getAppointmentDate)
+        )
+        .toList();
+  }
+
+  public void deleteAppointmentForUser(UUID appointmentId, UUID userId) {
+
+    Appointment appointment = appointmentRepository.findById(appointmentId)
+        .orElseThrow(() -> new IllegalArgumentException("Appointment not found"));
+
+    if (!appointment.getUser().getId().equals(userId)) {
+      throw new SecurityException("User does not own this appointment");
+    }
+
+    appointmentRepository.deleteById(appointmentId);
+  }
+
+  public void editAppointmentForUser(UUID appointmentId, UUID userId, EditAppointmentRequest editAppointmentRequest) {
+    Appointment existing = appointmentRepository.findById(appointmentId)
+        .orElseThrow(() -> new IllegalArgumentException("Часът не съществува."));
+
+    if (!existing.getUser().getId().equals(userId)) {
+      throw new SecurityException("Нямате права да редактирате този час.");
+    }
+
+    // Промяна на дата
+    existing.setAppointmentDate(editAppointmentRequest.getAppointmentDate());
+
+    // Промяна на процедура
+    if (editAppointmentRequest.getTreatmentId() != null) {
+      BeautyTreatment treatment = beautyTreatmentService.getById(editAppointmentRequest.getTreatmentId());
+      existing.setTreatment(treatment);
+      existing.setPrice(treatment.getPrice());
+      existing.setDurationMinutes(treatment.getDurationMinutes());
+    }
+
+    appointmentRepository.save(existing);
+  }
+
+  public EditAppointmentRequest prepareEditForm(UUID appointmentId, UUID userId) {
+    Appointment appointment = appointmentRepository.findById(appointmentId)
+        .orElseThrow(() -> new IllegalArgumentException("Този час не съществува."));
+
+    if (!appointment.getUser().getId().equals(userId)) {
+      throw new IllegalArgumentException("Нямате права да редактирате този час.");
+    }
+
+    if (appointment.getStatus() == AppointmentStatus.CANCELLED ||
+        appointment.getAppointmentDate().isBefore(LocalDateTime.now())) {
+      throw new IllegalArgumentException("Този час не може да бъде редактиран.");
+    }
+
+    EditAppointmentRequest editAppointmentRequest = new EditAppointmentRequest();
+    editAppointmentRequest.setAppointmentDate(appointment.getAppointmentDate());
+
+    if (appointment.getTreatment() != null) {
+      editAppointmentRequest.setTreatmentId(appointment.getTreatment().getId());
+    }
+
+    return editAppointmentRequest;
+  }
 }
 
