@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Добавяне на служител</title>
+  <link rel="stylesheet" type="text/css" href="/css/index.css">
+  <link rel="stylesheet" type="text/css" href="/css/admin.css">
+</head>
+<body>
+
+<header class="info">
+  <nav>
+    <ul>
+      <li><a th:href="@{/admin/employees}">⬅ Назад</a></li>
+      <li><a th:href="@{/logout}">Изход</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-text">
+    <h1>Добавяне на служител 👤</h1>
+    <p>Попълнете информацията по-долу</p>
+  </div>
+</section>
+
+<main class="container">
+  <form th:action="@{/admin/employees/add}" th:method="POST" th:object="${registerEmployeeRequest}" class="form">
+
+    <label>Име:</label>
+    <input type="text" th:field="*{name}" placeholder="Име на служителя">
+    <p class="error" th:errors="*{name}"></p>
+
+    <label>Позиция:</label>
+    <select th:field="*{employeePosition}">
+      <option th:each="pos : ${positions}"
+              th:value="${pos}"
+              th:text="${pos.displayName}">
+      </option>
+    </select>
+
+    <button type="submit" class="btn btn-active">Добави</button>
+  </form>
+</main>
+
+</body>
+</html>

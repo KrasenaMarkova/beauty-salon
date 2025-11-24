@@ -56,7 +56,7 @@ public class IndexController {
     //case 1 - app has user - throw UserAlreadyExistsException and handle it in global ExceptionHandler
     //case 2 - no user exists - continue with registration
     userService.register(registerRequest);
-    redirectAttributes.addFlashAttribute("registrationSuccessful", "Your registration is successful");
+    redirectAttributes.addFlashAttribute("registrationSuccessful", "Вашата регистрация е успешна");
 
     return new ModelAndView("redirect:/login");
   }

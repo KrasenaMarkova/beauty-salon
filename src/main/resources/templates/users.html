@@ -54,10 +54,11 @@
         <th>Имейл</th>
         <th>Телефон</th>
         <th>Роля</th>
+        <th>Промяна на ролята</th>
         <th>Статус</th>
         <th>Промяна на статуса</th>
         <th>Брой часове</th>
-        <!--                <th>Действия</th>-->
+
       </tr>
       </thead>
       <tbody>
@@ -69,12 +70,20 @@
         <td th:text="${user.phone}">0888123456</td>
         <td th:text="${user.userRole.getDisplayName()}">User</td>
         <td>
+          <form th:action="@{'/admin/' + ${user.id} + '/toggle-role'}" th:method="POST" style="display:inline;">
+            <button type="submit"
+                    th:text="${user.userRole.name() == 'ADMIN' ? 'USER' : 'ADMIN'}"
+                    class="edit-btn">
+            </button>
+          </form>
+        </td>
+        <td>
           <p th:if="${user.active}" class="status active">Активен</p>
           <p th:if="${!user.active}" class="status terminated">Неактивен</p>
         </td>
         <td>
           <!--                    <form th:action="@{'/admin/users/' + ${user.id} + '/toggle-status'}" method="post" style="display:inline;">-->
-          <form th:action="@{'/users/' + ${user.id} + '/status'}" th:method="PATCH"
+          <form th:action="@{'/admin/' + ${user.id} + '/toggle-status'}" th:method="POST"
                 style="display:inline;">
             <button type="submit"
                     th:text="${user.active ? 'Деактивирай' : 'Активирай'}"

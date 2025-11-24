@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Всички служители</title>
+  <link rel="stylesheet" type="text/css" href="/css/index.css">
+  <link rel="stylesheet" type="text/css" href="/css/admin.css">
+</head>
+<body>
+
+<!-- Горна лента -->
+<div class="top-header">
+  <div class="contact">📞 0888 123 456</div>
+  <div class="address">📍 гр. Русе, бул. Красота 19</div>
+</div>
+
+<!-- Навигация -->
+<header class="info">
+  <nav>
+    <ul>
+      <li><a th:href="@{/home}">⬅ Назад към началото</a></li>
+      <li><a th:href="@{/admin/users}">👥 Потребители</a></li>
+      <li><a th:href="@{/logout}">Изход</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Заглавие -->
+<section class="hero">
+  <div class="hero-text">
+    <h1>Управление на служители 👩‍🔧</h1>
+    <p>Преглед, редакция и премахване на служители от екипа</p>
+  </div>
+</section>
+
+<main class="container">
+
+  <section class="users-list">
+    <h2>Всички служители</h2>
+
+    <!-- Ако няма служители -->
+    <div th:if="${#lists.isEmpty(employees)}" class="no-users">
+      <p>Все още няма въведени служители.</p>
+    </div>
+
+    <div th:if="${registrationSuccessful}" class="success-message">
+      <p th:text="${registrationSuccessful}"></p>
+    </div>
+
+    <!-- Таблица със служители -->
+    <table th:if="${!#lists.isEmpty(employees)}">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Име</th>
+        <th>Позиция</th>
+        <th>Редакция</th>
+        <th>Изтриване</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr th:each="employee : ${employees}">
+
+        <td th:text="${employee.id}">UUID</td>
+
+        <td th:text="${employee.name}">Име</td>
+
+        <td th:text="${employee.employeePosition.displayName}">Позиция</td>
+
+        <!-- Бутон за редакция -->
+        <td>
+          <a class="edit-btn"
+             th:href="@{'/admin/employees/' + ${employee.id} + '/edit'}">
+            ✏️ Редактирай
+          </a>
+        </td>
+
+        <!-- Бутон за изтриване -->
+        <td>
+          <form th:action="@{'/admin/employees/' + ${employee.id} + '/delete'}"
+                th:method="POST"
+                onsubmit="return confirm('Сигурни ли сте, че искате да изтриете този служител?');">
+            <button class="btn btn-delete">🗑 Изтрий</button>
+          </form>
+        </td>
+
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- ✔ Бутон за добавяне на служител -->
+    <div class="add-container">
+      <a class="btn btn-active"
+         th:href="@{/admin/employees/add}">
+        ➕ Добави служител
+      </a>
+    </div>
+
+  </section>
+
+</main>
+
+<th:block th:insert="~{fragments/footer :: my-footer}"></th:block>
+
+</body>
+</html>

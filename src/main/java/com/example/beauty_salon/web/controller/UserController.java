@@ -5,7 +5,6 @@ import com.example.beauty_salon.user.service.UserService;
 import com.example.beauty_salon.web.dto.DtoMapper;
 import com.example.beauty_salon.web.dto.EditProfileRequest;
 import jakarta.validation.Valid;
-import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,18 +53,6 @@ public class UserController {
 
     userService.updateProfile(id, editProfileRequest);
     return new ModelAndView("redirect:/home");
-  }
-
-  @GetMapping
-  public ModelAndView getUsers() {
-
-    List<User> users = userService.getAll();
-
-    ModelAndView modelAndView = new ModelAndView();
-    modelAndView.setViewName("users");
-    modelAndView.addObject("users", users);
-
-    return modelAndView;
   }
 
 }

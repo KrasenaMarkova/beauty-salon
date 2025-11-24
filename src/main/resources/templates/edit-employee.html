@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Редакция на служител</title>
+  <link rel="stylesheet" type="text/css" href="/css/index.css">
+  <link rel="stylesheet" type="text/css" href="/css/admin.css">
+</head>
+<body>
+
+!-- Горна лента -->
+<div class="top-header">
+  <div class="contact">📞 0888 123 456</div>
+  <div class="address">📍 гр. Русе, бул. Красота 19</div>
+</div>
+
+<!-- Навигация -->
+<header class="info">
+  <nav>
+    <ul>
+      <li><a th:href="@{/home}">⬅ Назад към началото</a></li>
+      <li><a th:href="@{/admin/users}">👥 Потребители</a></li>
+      <li><a th:href="@{/logout}">Изход</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Заглавие -->
+<section class="hero">
+  <div class="hero-text">
+    <h1>Управление на служители 👩‍🔧</h1>
+    <p>Преглед, редакция и премахване на служители от екипа</p>
+  </div>
+</section>
+
+<main class="container">
+  <form th:action="@{'/admin/employees/' + ${employee.id} + '/edit'}" th:method="POST"
+        th:object="${employee}" class="form">
+
+    <label>Име:</label>
+    <input type="text" th:field="*{name}" placeholder="Име на служителя">
+    <p class="error" th:errors="*{name}"></p>
+
+    <label>Позиция:</label>
+    <select th:field="*{employeePosition}">
+      <option th:each="pos : ${positions}"
+              th:value="${pos}"
+              th:text="${pos.displayName}"
+              th:selected="${pos == employee.employeePosition}">
+      </option>
+    </select>
+
+    <button type="submit" class="btn btn-active">Запази</button>
+  </form>
+</main>
+
+<th:block th:insert="~{fragments/footer :: my-footer}"></th:block>
+
+</body>
+</html>

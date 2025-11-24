@@ -108,5 +108,18 @@ public class UserService implements UserDetailsService {
 
     return new UserData(user.getId(), username, user.getPassword(), user.getUserRole(), user.getEmail(), user.isActive());
   }
+
+  public void toggleUserRole(UUID userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new RuntimeException("Потребителят не е намерен"));
+
+    if (user.getUserRole() == UserRole.ADMIN) {
+      user.setUserRole(UserRole.USER);
+    } else {
+      user.setUserRole(UserRole.ADMIN);
+    }
+
+    userRepository.save(user);
+  }
 }
 
