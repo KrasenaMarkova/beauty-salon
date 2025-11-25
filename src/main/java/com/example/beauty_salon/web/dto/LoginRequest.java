@@ -16,10 +16,10 @@ import lombok.Setter;
 public class LoginRequest {
 
   @NotNull(message = "Not null username!")
-  @Size(min = 3, max = 15, message = "Username length must be between 3 and 15 characters!")
+  @Size(min = 3, max = 15, message = "Дължината на потребителското име трябва да е между 3 и 20 символа!")
   private String username;
 
   @NotNull(message = "Not null password!")
-  @Size(min = 3, max = 15, message = "Password length must be between 3 and 15 characters!")
+  @Size(min = 3, max = 15, message = "Дължината на паролата трябва да е между 3 и 20 знака!")
   private String password;
 }

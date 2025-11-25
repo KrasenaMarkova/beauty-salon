@@ -20,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/admin/")
+@RequestMapping("/admin")
 public class AdminController {
 
   private final UserService userService;
@@ -62,12 +62,24 @@ public class AdminController {
   }
 
   @PreAuthorize("hasRole('ADMIN')")
+  @GetMapping("/users/delete")
+  public ModelAndView showDeleteUserPage() {
+
+    List<User> users = userService.getAll();
+
+    ModelAndView modelAndView = new ModelAndView("delete-user");
+    modelAndView.addObject("users", users);
+
+    return modelAndView;
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/delete")
   public String deleteUser(@PathVariable UUID id) {
 
     userService.deleteById(id);
 
-    return "redirect:/admin/users";
+    return "redirect:/admin/users/delete";
   }
 
   @PreAuthorize("hasRole('ADMIN')")

@@ -190,10 +190,8 @@ public class AppointmentService {
       throw new SecurityException("Нямате права да редактирате този час.");
     }
 
-    // Промяна на дата
     existing.setAppointmentDate(editAppointmentRequest.getAppointmentDate());
 
-    // Промяна на процедура
     if (editAppointmentRequest.getTreatmentId() != null) {
       BeautyTreatment treatment = beautyTreatmentService.getById(editAppointmentRequest.getTreatmentId());
       existing.setTreatment(treatment);

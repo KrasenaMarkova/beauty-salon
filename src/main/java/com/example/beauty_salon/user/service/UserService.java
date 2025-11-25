@@ -1,5 +1,6 @@
 package com.example.beauty_salon.user.service;
 
+import com.example.beauty_salon.appointment.service.AppointmentService;
 import com.example.beauty_salon.event.SuccessfulChargeEvent;
 import com.example.beauty_salon.security.UserData;
 import com.example.beauty_salon.user.model.User;
@@ -75,7 +76,7 @@ public class UserService implements UserDetailsService {
     user.setLastName(editProfileRequest.getLastName());
     user.setEmail(editProfileRequest.getEmail());
     user.setPhone(editProfileRequest.getPhone());
-    user.setPassword(passwordEncoder.encode(editProfileRequest.getPassword()));
+//    user.setPassword(passwordEncoder.encode(editProfileRequest.getPassword()));
 
     userRepository.save(user);
   }
@@ -121,5 +122,6 @@ public class UserService implements UserDetailsService {
 
     userRepository.save(user);
   }
+
 }
 

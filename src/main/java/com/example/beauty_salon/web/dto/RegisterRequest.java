@@ -9,16 +9,16 @@ import lombok.Data;
 @Data
 public class RegisterRequest {
 
-  @NotNull(message = "Not null firstName!")
-  @Size(min = 3, max = 20, message = "First name length must be between 3 and 20 characters!")
+  @NotNull
+  @Size(min = 3, max = 20, message = "Дължината на собственото име трябва да е между 3 и 20 знака!")
   private String firstName;
 
-  @NotNull(message = "Not null lastName!")
-  @Size(min = 3, max = 20, message = "Last name length must be between 3 and 20 characters!")
+  @NotNull
+  @Size(min = 3, max = 20, message = "Дължината на фамилията трябва да е между 3 и 20 знака!")
   private String lastName;
 
-  @NotNull(message = "Not null username!")
-  @Size(min = 3, max = 20, message = "Username length must be between 3 and 20 characters!")
+  @NotNull
+  @Size(min = 3, max = 20, message = "Дължината на потребителското име трябва да е между 3 и 20 символа!")
   private String username;
 
   @NotNull
@@ -26,15 +26,15 @@ public class RegisterRequest {
   private String email;
 
   @NotNull
-  @Pattern(regexp = "[0-9]{10}", message = "phone length must be 10 digits!")
+  @Pattern(regexp = "[0-9]{10}", message = "Дължината на телефона трябва да е 10 цифри!")
   private String phone;
 
   @NotNull
-  @Size(min = 3, max = 20, message = "Password length must be between 3 and 20 characters!")
+  @Size(min = 3, max = 20, message = "Дължината на паролата трябва да е между 3 и 20 знака!")
   private String password;
 
   @NotNull
-  @Size(min = 3, max = 20, message = "Password length must be between 3 and 20 characters!")
+  @Size(min = 3, max = 20, message = "Дължината на паролата трябва да е между 3 и 20 знака!")
   private String confirmPassword;
 
 }

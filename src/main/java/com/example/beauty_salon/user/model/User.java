@@ -45,7 +45,10 @@ public class User {
   private boolean active;
 
   // Един потребител може да има много часове (appointments)
+//  @OneToMany(fetch = FetchType.LAZY, mappedBy = "user",
+//      cascade = CascadeType.REMOVE, orphanRemoval = true)
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
   @OrderBy("appointmentDate DESC")
   private List<Appointment> appointments = new ArrayList<>();
+
 }

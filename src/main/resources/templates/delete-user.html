@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Всички потребители</title>
+  <title>Изтрий потребител</title>
   <link rel="stylesheet" type="text/css" href="/css/index.css">
   <link rel="stylesheet" type="text/css" href="/css/admin.css">
 </head>
@@ -20,7 +20,7 @@
 <header class="info">
   <nav>
     <ul>
-      <li><a th:href="@{/home}">⬅ Назад към началото</a></li>
+      <li><a th:href="@{/home}">⬅ Назад към профила</a></li>
       <li><a th:href="@{/logout}">Изход</a></li>
     </ul>
   </nav>
@@ -29,8 +29,8 @@
 <!-- Заглавие -->
 <section class="hero">
   <div class="hero-text">
-    <h1>Управление на потребители 👥</h1>
-    <p>Преглед, редакция и смяна на роля на регистрирани потребители</p>
+    <h1>Изтриване на потребители 👥</h1>
+    <p>Изтриване на регистрирани потребители</p>
   </div>
 </section>
 
@@ -54,10 +54,9 @@
         <th>Имейл</th>
         <th>Телефон</th>
         <th>Роля</th>
-        <th>Промяна на ролята</th>
         <th>Статус</th>
-        <th>Промяна на статуса</th>
         <th>Брой часове</th>
+        <th>Изтриване на потребител</th>
 
       </tr>
       </thead>
@@ -70,35 +69,19 @@
         <td th:text="${user.phone}">0888123456</td>
         <td th:text="${user.userRole.getDisplayName()}">User</td>
         <td>
-          <form th:action="@{'/admin/' + ${user.id} + '/toggle-role'}" th:method="POST" style="display:inline;">
-            <button type="submit"
-                    th:text="${user.userRole.name() == 'ADMIN' ? 'USER' : 'ADMIN'}"
-                    class="edit-btn">
-            </button>
-          </form>
-        </td>
-        <td>
           <p th:if="${user.active}" class="status active">Активен</p>
           <p th:if="${!user.active}" class="status terminated">Неактивен</p>
         </td>
+        <td th:text="${#lists.size(user.appointments)}">2</td>
         <td>
-          <!--                    <form th:action="@{'/admin/users/' + ${user.id} + '/toggle-status'}" method="post" style="display:inline;">-->
-          <form th:action="@{'/admin/' + ${user.id} + '/toggle-status'}" th:method="POST"
+          <form th:action="@{'/admin/' + ${user.id} + '/delete'}" th:method="POST"
                 style="display:inline;">
-            <button type="submit"
-                    th:text="${user.active ? 'Деактивирай' : 'Активирай'}"
-                    th:class="${user.active ? 'btn btn-inactive' : 'btn btn-active'}">
+            <button type="submit" class="btn btn-delete"
+                    onclick="return confirm('Сигурни ли сте, че искате да изтриете този потребител?');">
+              🗑 Изтрий
             </button>
           </form>
-
         </td>
-        <td th:text="${#lists.size(user.appointments)}">2</td>
-        <!--                <td>-->
-        <!--&lt;!&ndash;                    <form th:action="@{'/admin/users/' + ${user.id} + '/delete'}" method="post" style="display:inline;">&ndash;&gt;-->
-        <!--                    <form th:action="@{'/users/' + ${user.id} + '/delete'}" th:method="PATCH" style="display:inline;">-->
-        <!--                        <button type="submit" class="btn btn-delete" onclick="return confirm('Сигурни ли сте, че искате да изтриете този потребител?');">🗑 Изтрий</button>-->
-        <!--                    </form>-->
-        <!--                </td>-->
       </tr>
       </tbody>
     </table>
