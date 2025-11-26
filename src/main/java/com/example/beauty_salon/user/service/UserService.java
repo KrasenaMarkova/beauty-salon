@@ -1,6 +1,6 @@
 package com.example.beauty_salon.user.service;
 
-import com.example.beauty_salon.appointment.service.AppointmentService;
+import com.example.beauty_salon.restclient.UserValidationClient;
 import com.example.beauty_salon.event.SuccessfulChargeEvent;
 import com.example.beauty_salon.security.UserData;
 import com.example.beauty_salon.user.model.User;
@@ -8,12 +8,14 @@ import com.example.beauty_salon.user.model.UserRole;
 import com.example.beauty_salon.user.repository.UserRepository;
 import com.example.beauty_salon.web.dto.EditProfileRequest;
 import com.example.beauty_salon.web.dto.RegisterRequest;
+import com.example.beauty_salon.restclient.dto.UserSyncDto;
+import com.example.beauty_salon.restclient.dto.UserValidationRequestDto;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,24 +24,27 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
   private final ApplicationEventPublisher eventPublisher;
-
-  @Autowired
-  public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ApplicationEventPublisher eventPublisher) {
-    this.userRepository = userRepository;
-    this.passwordEncoder = passwordEncoder;
-    this.eventPublisher = eventPublisher;
-  }
+  private final UserValidationClient userValidationClient;
 
   public void register(RegisterRequest registerRequest) {
+    ResponseEntity<Boolean> userExists = userValidationClient.validateUserData(UserValidationRequestDto.builder()
+            .username(registerRequest.getUsername())
+            .email(registerRequest.getEmail())
+        .build());
+    //
 
-    Optional<User> optionalUser = userRepository.findByUsernameOrEmail(registerRequest.getUsername(), registerRequest.getEmail());
-    if (optionalUser.isPresent()) {
+    if (!userExists.getStatusCode().is2xxSuccessful()) {
+      throw new RuntimeException("Commuication error!");
+    }
+
+    if (Boolean.TRUE.equals( userExists.getBody())){
       throw new RuntimeException("User with [%s] username already exist.".formatted(registerRequest.getUsername()));
     }
 
@@ -55,6 +60,19 @@ public class UserService implements UserDetailsService {
         .build();
 
     userRepository.save(user);
+
+    userValidationClient.syncUser(
+        UserSyncDto.builder()
+            .username(user.getUsername())
+            .email(user.getEmail())
+            .phone(user.getPhone())
+            .password(user.getPassword())
+            .active(user.isActive())
+            .firstName(user.getFirstName())
+            .lastName(user.getLastName())
+            .userRole(user.getUserRole().name())
+            .build()
+    );
 
     SuccessfulChargeEvent event = SuccessfulChargeEvent.builder()
         .userId(user.getId())
