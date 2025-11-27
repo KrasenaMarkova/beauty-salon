@@ -45,12 +45,22 @@ public class AdminController {
     return modelAndView;
   }
 
+//  @PreAuthorize("hasRole('ADMIN')")
+//  @PostMapping("/{id}/toggle-status")
+//  public String toggleUserStatus(@PathVariable UUID id) {
+//
+//    userService.toggleUserStatus(id);
+//
+//    return "redirect:/admin/users";
+//  }
+
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/toggle-status")
-  public String toggleUserStatus(@PathVariable UUID id) {
+  public String toggleUserStatus(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
 
-    userService.toggleUserStatus(id);
+    userService.toggleStatus(id);
 
+    redirectAttributes.addFlashAttribute("message", "Статусът е променен успешно");
     return "redirect:/admin/users";
   }
 
@@ -137,7 +147,7 @@ public class AdminController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/employees/{id}/edit")
-  public ModelAndView editEmployee(@PathVariable UUID id,@Valid RegisterEmployeeRequest editEmployeeRequest, RedirectAttributes redirectAttributes) {
+  public ModelAndView editEmployee(@PathVariable UUID id, @Valid RegisterEmployeeRequest editEmployeeRequest, RedirectAttributes redirectAttributes) {
     employeeService.update(id, editEmployeeRequest);
 
     redirectAttributes.addFlashAttribute("updateSuccessful", "Промените са запазени успешно");

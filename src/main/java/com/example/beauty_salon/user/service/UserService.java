@@ -2,6 +2,7 @@ package com.example.beauty_salon.user.service;
 
 import com.example.beauty_salon.restclient.UserValidationClient;
 import com.example.beauty_salon.event.SuccessfulChargeEvent;
+import com.example.beauty_salon.restclient.dto.StatusResponseDto;
 import com.example.beauty_salon.security.UserData;
 import com.example.beauty_salon.user.model.User;
 import com.example.beauty_salon.user.model.UserRole;
@@ -61,8 +62,9 @@ public class UserService implements UserDetailsService {
 
     userRepository.save(user);
 
-    userValidationClient.syncUser(
+    ResponseEntity<String> response = userValidationClient.syncUser(
         UserSyncDto.builder()
+            .id(user.getId())
             .username(user.getUsername())
             .email(user.getEmail())
             .phone(user.getPhone())
@@ -73,6 +75,7 @@ public class UserService implements UserDetailsService {
             .userRole(user.getUserRole().name())
             .build()
     );
+    System.out.println(response.getBody());
 
     SuccessfulChargeEvent event = SuccessfulChargeEvent.builder()
         .userId(user.getId())
@@ -94,7 +97,6 @@ public class UserService implements UserDetailsService {
     user.setLastName(editProfileRequest.getLastName());
     user.setEmail(editProfileRequest.getEmail());
     user.setPhone(editProfileRequest.getPhone());
-//    user.setPassword(passwordEncoder.encode(editProfileRequest.getPassword()));
 
     userRepository.save(user);
   }
@@ -113,13 +115,13 @@ public class UserService implements UserDetailsService {
     userRepository.deleteById(id);
   }
 
-  public void toggleUserStatus(UUID id) {
-    User user = userRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Потребителят не е намерен!"));
-
-    user.setActive(!user.isActive());
-    userRepository.save(user);
-  }
+//  public void toggleUserStatus(UUID id) {
+//    User user = userRepository.findById(id)
+//        .orElseThrow(() -> new IllegalArgumentException("Потребителят не е намерен!"));
+//
+//    user.setActive(!user.isActive());
+//    userRepository.save(user);
+//  }
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -141,5 +143,21 @@ public class UserService implements UserDetailsService {
     userRepository.save(user);
   }
 
+  public void toggleStatus(UUID id) {
+
+    StatusResponseDto response = userValidationClient
+        .toggleUserStatus(id)
+        .getBody();
+
+    if (response == null) {
+      throw new IllegalStateException("REST microservice returned null response");
+    }
+
+    User user = userRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+
+    user.setActive(response.isActive());
+    userRepository.save(user);
+  }
 }
 
