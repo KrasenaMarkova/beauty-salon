@@ -34,4 +34,6 @@ public interface UserValidationClient {
   ResponseEntity<UserRoleResponseDto> toggleUserRole(@PathVariable UUID id);
 
 
+
+
 }

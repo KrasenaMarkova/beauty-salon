@@ -18,7 +18,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     httpSecurity.authorizeHttpRequests(matcher -> matcher
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-            .requestMatchers("/", "/register", "/login", "/about-us", "/team", "/error").permitAll()
+            .requestMatchers("/", "/register", "/login", "/about-us", "/team", "error", "/not-found").permitAll()
             .requestMatchers("/admin-panel/**").hasRole("ADMIN")
             .anyRequest().authenticated()
         )
@@ -31,7 +31,13 @@ public class WebConfiguration implements WebMvcConfigurer {
         .logout(logout -> logout
             .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
             .logoutSuccessUrl("/")
-        );
+        )
+        .exceptionHandling(ex -> ex
+            .accessDeniedHandler((request, response, accessDeniedException) ->
+                response.sendRedirect("/not-found"))
+            .authenticationEntryPoint((request, response, authException) ->
+                response.sendRedirect("/not-found"))
+        );;
 
     return httpSecurity.build();
   }

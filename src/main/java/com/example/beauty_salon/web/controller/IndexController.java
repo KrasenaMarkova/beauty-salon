@@ -71,7 +71,6 @@ public class IndexController {
     modelAndView.addObject("loginAttemptMessage", message);
 
     if (errorMessage != null) {
-//      modelAndView.addObject("errorMessage", "Invalid username or password");
       modelAndView.addObject("errorMessage", "Невалидно потребителско име или парола");
     }
 

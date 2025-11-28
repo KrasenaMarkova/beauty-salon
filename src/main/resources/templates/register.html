@@ -55,12 +55,16 @@
                  placeholder="Изберете потребителско име">
           <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
                class="error-message"></div>
+          <div th:if="${errorMessage}" th:text="${errorMessage}"
+               class="error-message"></div>
         </div>
 
         <div class="form-group">
           <label for="email">Имейл:</label>
           <input type="email" th:field="*{email}" id="email" placeholder="example@mail.com">
           <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+               class="error-message"></div>
+          <div th:if="${errorMessage}" th:text="${errorMessage}"
                class="error-message"></div>
         </div>
 

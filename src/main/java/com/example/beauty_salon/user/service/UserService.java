@@ -1,20 +1,19 @@
 package com.example.beauty_salon.user.service;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
-import com.example.beauty_salon.restclient.UserValidationClient;
 import com.example.beauty_salon.event.SuccessfulChargeEvent;
+import com.example.beauty_salon.exception.UserAlreadyExistsException;
+import com.example.beauty_salon.exception.UserNotFoundException;
+import com.example.beauty_salon.restclient.UserValidationClient;
 import com.example.beauty_salon.restclient.dto.StatusResponseDto;
 import com.example.beauty_salon.restclient.dto.UserRoleResponseDto;
-import com.example.beauty_salon.restclient.dto.UserValidationResponseDto;
+import com.example.beauty_salon.restclient.dto.UserSyncDto;
+import com.example.beauty_salon.restclient.dto.UserValidationRequestDto;
 import com.example.beauty_salon.security.UserData;
 import com.example.beauty_salon.user.model.User;
 import com.example.beauty_salon.user.model.UserRole;
 import com.example.beauty_salon.user.repository.UserRepository;
 import com.example.beauty_salon.web.dto.EditProfileRequest;
 import com.example.beauty_salon.web.dto.RegisterRequest;
-import com.example.beauty_salon.restclient.dto.UserSyncDto;
-import com.example.beauty_salon.restclient.dto.UserValidationRequestDto;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +49,7 @@ public class UserService implements UserDetailsService {
     }
 
     if (Boolean.TRUE.equals( userExists.getBody())){
-      throw new RuntimeException("User with [%s] username already exist.".formatted(registerRequest.getUsername()));
+      throw new UserAlreadyExistsException("Потребителското име или email вече съществуват");
     }
 
     User user = User.builder()
@@ -156,9 +155,6 @@ public class UserService implements UserDetailsService {
 //    log.info("New user profile was registered in the system for user [{}].", registerRequest.getUsername());
 //  }
 
-
-
-
   public void updateProfile(UUID id, EditProfileRequest editProfileRequest) {
 
     User user = getById(id);
@@ -171,23 +167,13 @@ public class UserService implements UserDetailsService {
     userRepository.save(user);
   }
 
-  public User getById(UUID userId) {
-
-    return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Потребител с id [%s] не е намерен.".formatted(userId)));
-  }
-
-  public List<User> getAll() {
-
-    return userRepository.findAll();
-  }
-
-  public void deleteById(UUID id) {
-    userRepository.deleteById(id);
-  }
+//  public void deleteById(UUID id) {
+//    userRepository.deleteById(id);
+//  }
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Username not found"));
+    User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("Username not found"));
 
     return new UserData(user.getId(), username, user.getPassword(), user.getUserRole(), user.getEmail(), user.isActive());
   }
@@ -211,7 +197,7 @@ public class UserService implements UserDetailsService {
     }
 
     User user = userRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("User not found"));
+        .orElseThrow(() -> new UserNotFoundException("Потребител с id [%s] не е намерен.".formatted(id)));
 
     user.setActive(response.isActive());
     userRepository.save(user);
@@ -245,5 +231,15 @@ public class UserService implements UserDetailsService {
 //
 //    userRepository.save(user);
 //  }
+
+  public User getById(UUID userId) {
+
+    return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Потребител с id [%s] не е намерен.".formatted(userId)));
+  }
+
+  public List<User> getAll() {
+
+    return userRepository.findAll();
+  }
 }
 

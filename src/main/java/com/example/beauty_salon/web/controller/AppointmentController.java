@@ -49,6 +49,9 @@ public class AppointmentController {
   @PostMapping("/{id}/cancel")
   public String cancelAppointment(@PathVariable("id") UUID appointmentId, @AuthenticationPrincipal UserData userData,
       RedirectAttributes redirectAttributes) {
+
+    // TODO try - catch махни от контролера
+
     try {
       appointmentService.cancelAppointment(appointmentId);
       redirectAttributes.addFlashAttribute("successMessage", "Часът е успешно отменен.");
@@ -147,6 +150,9 @@ public class AppointmentController {
     }
 
 //    appointmentService.deleteAppointmentForUser(id, userData.getUserId());
+
+    // TODO try - catch махни от контролера
+
     try {
       appointmentService.deleteAppointmentForUser(id, userData.getUserId());
     } catch (Exception e) {
