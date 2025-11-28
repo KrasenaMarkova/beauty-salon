@@ -64,12 +64,22 @@ public class AdminController {
     return "redirect:/admin/users";
   }
 
+//  @PreAuthorize("hasRole('ADMIN')")
+//  @PostMapping("/{id}/toggle-role")
+//  public String toggleUserRole(@PathVariable UUID id) {
+//    userService.toggleUserRole(id);
+//    return "redirect:/admin/users";
+//  }
+
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/toggle-role")
-  public String toggleUserRole(@PathVariable UUID id) {
+  public String toggleUserRole(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
     userService.toggleUserRole(id);
+    redirectAttributes.addFlashAttribute("message",  "Ролята на потребителя е променена успешно");
     return "redirect:/admin/users";
+
   }
+
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/users/delete")

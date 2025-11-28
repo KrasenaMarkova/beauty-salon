@@ -1,6 +1,7 @@
 package com.example.beauty_salon.restclient;
 
 import com.example.beauty_salon.restclient.dto.StatusResponseDto;
+import com.example.beauty_salon.restclient.dto.UserRoleResponseDto;
 import com.example.beauty_salon.restclient.dto.UserSyncDto;
 import com.example.beauty_salon.restclient.dto.UserValidationRequestDto;
 import java.util.UUID;
@@ -20,11 +21,17 @@ public interface UserValidationClient {
   @PostMapping("/validation")
   ResponseEntity<Boolean> validateUserData(@RequestBody UserValidationRequestDto dto);
 
+//  @PostMapping("/validation")
+//  ResponseEntity<UserValidationResponseDto> validateUserData(@RequestBody UserValidationRequestDto dto);
+
   @PostMapping("/sync")
   ResponseEntity<String> syncUser(@RequestBody UserSyncDto dto);
 
   @PutMapping("/toggle-status/{id}")
   ResponseEntity<StatusResponseDto> toggleUserStatus(@PathVariable UUID id);
+
+  @PutMapping("/{id}/toggle-role")
+  ResponseEntity<UserRoleResponseDto> toggleUserRole(@PathVariable UUID id);
 
 
 }
