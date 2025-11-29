@@ -45,7 +45,7 @@ public class UserService implements UserDetailsService {
     //
 
     if (!userExists.getStatusCode().is2xxSuccessful()) {
-      throw new RuntimeException("Commuication error!");
+      throw new RuntimeException("Communication error!");
     }
 
     if (Boolean.TRUE.equals( userExists.getBody())){

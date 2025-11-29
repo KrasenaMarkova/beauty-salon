@@ -25,10 +25,18 @@ public class GlobalControllerAdvice {
   @ExceptionHandler(UserAlreadyExistsException.class)
   public String handleUserAlreadyExistsException(UserAlreadyExistsException e, RedirectAttributes redirectAttributes) {
 
-    // ?????
     redirectAttributes.addFlashAttribute("errorMessage", "Потребителското име или email вече съществуват");
     return "redirect:/register";
 
+  }
+
+  @ExceptionHandler({IllegalArgumentException.class, SecurityException.class})
+  public String handleEditingExceptions(
+      RuntimeException ex,
+      RedirectAttributes redirectAttributes) {
+
+    redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+    return "redirect:/home";
   }
 
   @ResponseStatus(HttpStatus.NOT_FOUND)

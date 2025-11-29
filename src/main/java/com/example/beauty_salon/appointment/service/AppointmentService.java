@@ -9,7 +9,6 @@ import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
 import com.example.beauty_salon.employee.model.Employee;
 import com.example.beauty_salon.employee.model.EmployeePosition;
 import com.example.beauty_salon.employee.service.EmployeeService;
-import com.example.beauty_salon.security.UserData;
 import com.example.beauty_salon.user.model.User;
 import com.example.beauty_salon.user.service.UserService;
 import com.example.beauty_salon.web.dto.EditAppointmentRequest;
@@ -129,6 +128,10 @@ public class AppointmentService {
     Appointment appointment = appointmentRepository.findById(appointmentId)
         .orElseThrow(() -> new IllegalArgumentException("Часът не съществува!"));
 
+    if (appointment.getStatus() == AppointmentStatus.CANCELLED) {
+      throw new IllegalArgumentException("Този час вече е отменен.");
+    }
+
     appointment.setStatus(AppointmentStatus.CANCELLED);
     appointmentRepository.save(appointment);
   }
@@ -163,23 +166,23 @@ public class AppointmentService {
         .toList();
   }
 
-  public void deleteAppointment(UUID appointmentId, UserData userData) {
-
-    if (userData == null || userData.getUserId() == null) {
-      throw new SecurityException("User is not logged in.");
-    }
-
-    deleteAppointmentForUser(appointmentId, userData.getUserId());
-
-  }
+//  public void deleteAppointment(UUID appointmentId, UserData userData) {
+//
+//    if (userData == null || userData.getUserId() == null) {
+//      throw new SecurityException("User is not logged in.");
+//    }
+//
+//    deleteAppointmentForUser(appointmentId, userData.getUserId());
+//
+//  }
 
   public void deleteAppointmentForUser(UUID appointmentId, UUID userId) {
 
     Appointment appointment = appointmentRepository.findById(appointmentId)
-        .orElseThrow(() -> new IllegalArgumentException("Appointment not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Такъв час не съществува."));
 
     if (!appointment.getUser().getId().equals(userId)) {
-      throw new SecurityException("User does not own this appointment");
+      throw new SecurityException("Нямате права да изтриете този час");
     }
 
     appointmentRepository.deleteById(appointmentId);

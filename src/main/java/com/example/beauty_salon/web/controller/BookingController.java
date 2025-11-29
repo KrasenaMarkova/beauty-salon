@@ -48,20 +48,13 @@ public class BookingController {
       return modelAndView;
     }
 
-    // TODO try - catch махни от контролера
+    appointmentService.createAppointment(
+        userData.getUserId(),
+        appointmentRequest.getTreatmentId(),
+        appointmentRequest.getAppointmentDate());
 
-    try {
-      appointmentService.createAppointment(
-          userData.getUserId(),
-          appointmentRequest.getTreatmentId(),
-          appointmentRequest.getAppointmentDate()
-      );
-      
-      modelAndView.addObject("success", "Часът беше успешно запазен!");
-      modelAndView.addObject("appointmentRequest", new AppointmentRequest());
-    } catch (IllegalStateException e) {
-      modelAndView.addObject("error", e.getMessage());
-    }
+    modelAndView.addObject("success", "Часът беше успешно запазен!");
+    modelAndView.addObject("appointmentRequest", new AppointmentRequest());
 
     return modelAndView;
   }

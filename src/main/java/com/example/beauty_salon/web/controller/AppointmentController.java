@@ -39,13 +39,15 @@ public class AppointmentController {
       RedirectAttributes redirectAttributes) {
 
     // TODO try - catch махни от контролера
+//    try {
+//      appointmentService.cancelAppointment(appointmentId);
+//      redirectAttributes.addFlashAttribute("successMessage", "Часът е успешно отменен.");
+//    } catch (IllegalArgumentException e) {
+//      redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+//    }
+    appointmentService.cancelAppointment(appointmentId);
 
-    try {
-      appointmentService.cancelAppointment(appointmentId);
-      redirectAttributes.addFlashAttribute("successMessage", "Часът е успешно отменен.");
-    } catch (IllegalArgumentException e) {
-      redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-    }
+    redirectAttributes.addFlashAttribute("successMessage", "Часът е успешно отменен.");
 
     return "redirect:/home";
   }
@@ -72,15 +74,21 @@ public class AppointmentController {
       return new ModelAndView("redirect:/login");
     }
 
-    ModelAndView modelAndView = new ModelAndView("redirect:/home");
+//    ModelAndView modelAndView = new ModelAndView("redirect:/home");
 //    modelAndView.addObject("successMessage", "Часът беше успешно редактиран.");
 
-    try {
-      appointmentService.editAppointmentForUser(appointmentId, userData.getUserId(), editAppointmentRequest);
-      modelAndView.addObject("successMessage", "Часът беше успешно редактиран.");
-    } catch (SecurityException | IllegalArgumentException e) {
-      modelAndView.addObject("errorMessage", e.getMessage());
-    }
+    appointmentService.editAppointmentForUser(appointmentId, userData.getUserId(), editAppointmentRequest);
+
+//    try {
+//      appointmentService.editAppointmentForUser(appointmentId, userData.getUserId(), editAppointmentRequest);
+//      modelAndView.addObject("successMessage", "Часът беше успешно редактиран.");
+//    } catch (SecurityException | IllegalArgumentException e) {
+//      modelAndView.addObject("errorMessage", e.getMessage());
+//    }
+//    return modelAndView;
+    ModelAndView modelAndView = new ModelAndView("redirect:/home");
+    modelAndView.addObject("successMessage", "Часът беше успешно редактиран.");
+
     return modelAndView;
   }
 
@@ -88,22 +96,47 @@ public class AppointmentController {
   public ModelAndView deleteAppointment(@PathVariable UUID id, @AuthenticationPrincipal UserData userData) {
 
     // TODO try - catch махни от контролера
+
+//  try {     appointmentService.deleteAppointmentForUser(id, userData.getUserId());
+//  }
+//  catch (Exception e) {
+//  System.out.println("Delete failed: " + e.getMessage());
+//  }
+
 //    try {
-//      appointmentService.deleteAppointmentForUser(id, userData.getUserId());
+//      appointmentService.deleteAppointment(id, userData);
+//    } catch (SecurityException e) {
+//      return new ModelAndView("redirect:/login");
 //    } catch (Exception e) {
 //      System.out.println("Delete failed: " + e.getMessage());
 //    }
 
-    try {
-      appointmentService.deleteAppointment(id, userData);
-    } catch (SecurityException e) {
+    if (userData == null || userData.getUserId() == null) {
       return new ModelAndView("redirect:/login");
-    } catch (Exception e) {
-      System.out.println("Delete failed: " + e.getMessage());
     }
 
-    return new ModelAndView("redirect:/appointments/history");
+    appointmentService.deleteAppointmentForUser(id, userData.getUserId());
+
+    ModelAndView modelAndView = new ModelAndView("redirect:/appointments/history");
+    modelAndView.addObject("successMessage", "Часът беше изтрит успешно.");
+    return modelAndView;
+
+//    return new ModelAndView("redirect:/appointments/history");
   }
+//  @PostMapping("/{id}/delete")
+//  public String deleteAppointment(@PathVariable UUID id,
+//      @AuthenticationPrincipal UserData userData,
+//      RedirectAttributes redirectAttributes) {
+//
+//    if (userData == null || userData.getUserId() == null) {
+//      return "redirect:/login";
+//    }
+//
+//    appointmentService.deleteAppointmentForUser(id, userData.getUserId());
+//
+//    redirectAttributes.addFlashAttribute("successMessage", "Часът беше изтрит успешно.");
+//    return "redirect:/appointments/history";
+//  }
 
   @GetMapping("/history")
   public ModelAndView getAppointmentHistoryPage(@AuthenticationPrincipal UserData userData) {

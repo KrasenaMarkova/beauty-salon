@@ -48,7 +48,7 @@ public class UserController {
       ModelAndView modelAndView = new ModelAndView();
       modelAndView.setViewName("profile-menu");
       modelAndView.addObject("user", user);
-//      return modelAndView;
+      return modelAndView;
     }
 
     userService.updateProfile(id, editProfileRequest);
