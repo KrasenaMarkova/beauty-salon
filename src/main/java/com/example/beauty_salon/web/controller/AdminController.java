@@ -80,28 +80,6 @@ public class AdminController {
 
   }
 
-
-//  @PreAuthorize("hasRole('ADMIN')")
-//  @GetMapping("/users/delete")
-//  public ModelAndView showDeleteUserPage() {
-//
-//    List<User> users = userService.getAll();
-//
-//    ModelAndView modelAndView = new ModelAndView("delete-user");
-//    modelAndView.addObject("users", users);
-//
-//    return modelAndView;
-//  }
-//
-//  @PreAuthorize("hasRole('ADMIN')")
-//  @PostMapping("/{id}/delete")
-//  public String deleteUser(@PathVariable UUID id) {
-//
-//    userService.deleteById(id);
-//
-//    return "redirect:/admin/users/delete";
-//  }
-
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/employees")
   public ModelAndView getAllEmployees() {

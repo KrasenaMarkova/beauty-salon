@@ -9,6 +9,7 @@ import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
 import com.example.beauty_salon.employee.model.Employee;
 import com.example.beauty_salon.employee.model.EmployeePosition;
 import com.example.beauty_salon.employee.service.EmployeeService;
+import com.example.beauty_salon.security.UserData;
 import com.example.beauty_salon.user.model.User;
 import com.example.beauty_salon.user.service.UserService;
 import com.example.beauty_salon.web.dto.EditAppointmentRequest;
@@ -123,14 +124,6 @@ public class AppointmentService {
     return appointmentRepository.getById(appointmentId);
   }
 
-  public void save(Appointment appointment) {
-    appointmentRepository.save(appointment);
-  }
-
-  public void deleteAppointment(UUID id) {
-    appointmentRepository.deleteById(id);
-  }
-
   @Transactional
   public void cancelAppointment(UUID appointmentId) {
     Appointment appointment = appointmentRepository.findById(appointmentId)
@@ -168,6 +161,16 @@ public class AppointmentService {
                 .thenComparing(Appointment::getAppointmentDate)
         )
         .toList();
+  }
+
+  public void deleteAppointment(UUID appointmentId, UserData userData) {
+
+    if (userData == null || userData.getUserId() == null) {
+      throw new SecurityException("User is not logged in.");
+    }
+
+    deleteAppointmentForUser(appointmentId, userData.getUserId());
+
   }
 
   public void deleteAppointmentForUser(UUID appointmentId, UUID userId) {
@@ -224,5 +227,6 @@ public class AppointmentService {
 
     return editAppointmentRequest;
   }
+
 }
 

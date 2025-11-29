@@ -19,12 +19,13 @@ public class GlobalControllerAdvice {
   public ModelAndView handleException(UserNotFoundException e) {
 
     ModelAndView modelAndView = new ModelAndView("not-found");
-
     return modelAndView;
   }
 
   @ExceptionHandler(UserAlreadyExistsException.class)
   public String handleUserAlreadyExistsException(UserAlreadyExistsException e, RedirectAttributes redirectAttributes) {
+
+    // ?????
     redirectAttributes.addFlashAttribute("errorMessage", "Потребителското име или email вече съществуват");
     return "redirect:/register";
 

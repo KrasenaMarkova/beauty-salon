@@ -34,18 +34,6 @@ public class AppointmentController {
     this.beautyTreatmentService = beautyTreatmentService;
   }
 
-//  @PostMapping("/{id}/cancel")
-//  public String cancelAppointment(@PathVariable("id") UUID appointmentId, @AuthenticationPrincipal UserData userData, RedirectAttributes redirectAttributes) {
-//    UUID userId = userData.getUserId();
-//    Appointment appointment = appointmentService.getById(appointmentId);
-//
-//    appointment.setStatus(CANCELLED);
-//    appointmentService.save(appointment);
-//
-//    redirectAttributes.addFlashAttribute("successMessage", "Часът е успешно отменен.");
-//    return "redirect:/home";
-//  }
-
   @PostMapping("/{id}/cancel")
   public String cancelAppointment(@PathVariable("id") UUID appointmentId, @AuthenticationPrincipal UserData userData,
       RedirectAttributes redirectAttributes) {
@@ -64,29 +52,12 @@ public class AppointmentController {
 
   @GetMapping("/{id}/edit")
   public ModelAndView showEditForm(@PathVariable("id") UUID appointmentId, @AuthenticationPrincipal UserData userData) {
-//    UUID userId = userData.getUserId();
-//    Appointment appointment = appointmentService.getById(appointmentId);
-//
-//    if (appointment == null || !appointment.getUser().getId().equals(userId) ||
-//        appointment.getStatus() == AppointmentStatus.CANCELLED ||
-//        appointment.getAppointmentDate().isBefore(LocalDateTime.now())) {
-//      ModelAndView mv = new ModelAndView("redirect:/home");
-//      mv.addObject("errorMessage", "Този час не може да бъде редактиран или не съществува.");
-//      return mv;
-//    }
-//
-//    EditAppointmentRequest editAppointmentRequest = new EditAppointmentRequest();
-//    editAppointmentRequest.setAppointmentDate(appointment.getAppointmentDate());
-//    if (appointment.getTreatment() != null) {
-//      editAppointmentRequest.setTreatmentId(appointment.getTreatment().getId());
-//    }
 
     EditAppointmentRequest editAppointmentRequest =
         appointmentService.prepareEditForm(appointmentId, userData.getUserId());
 
     ModelAndView modelAndView = new ModelAndView("appointment-edit");
     modelAndView.addObject("editAppointmentRequest", editAppointmentRequest);
-//    modelAndView.addObject("appointment", appointment);
     modelAndView.addObject("appointment", appointmentService.getById(appointmentId));
     modelAndView.addObject("treatments", beautyTreatmentService.getAll());
     return modelAndView;
@@ -97,25 +68,6 @@ public class AppointmentController {
       @ModelAttribute("editAppointmentRequest") EditAppointmentRequest editAppointmentRequest,
       @AuthenticationPrincipal UserData userData) {
 
-//    UUID userId = userData.getUserId();
-//    Appointment existing = appointmentService.getById(appointmentId);
-//
-//    if (existing == null || !existing.getUser().getId().equals(userId)) {
-//      ModelAndView mv = new ModelAndView("redirect:/home");
-//      mv.addObject("errorMessage", "Нямате права или часът не съществува.");
-//      return mv;
-//    }
-//
-//    existing.setAppointmentDate(editAppointmentRequest.getAppointmentDate());
-//
-//    if (editAppointmentRequest.getTreatmentId() != null) {
-//      BeautyTreatment treatment = beautyTreatmentService.getById(editAppointmentRequest.getTreatmentId());
-//      existing.setTreatment(treatment);
-//      existing.setPrice(treatment.getPrice());
-//      existing.setDurationMinutes(treatment.getDurationMinutes());
-//    }
-//
-//    appointmentService.save(existing);
     if (userData == null || userData.getUserId() == null) {
       return new ModelAndView("redirect:/login");
     }
@@ -134,55 +86,27 @@ public class AppointmentController {
 
   @PostMapping("/{id}/delete")
   public ModelAndView deleteAppointment(@PathVariable UUID id, @AuthenticationPrincipal UserData userData) {
-//    UUID userId = userData.getUserId();
-//    if (userId == null) {
-//      return new ModelAndView("redirect:/login");
-//    }
-//
-//    Appointment appointment = appointmentService.getById(id);
-//
-//    if (appointment != null && appointment.getUser().getId().equals(userId)) {
-//      appointmentService.deleteAppointment(id);
-//    }
-
-    if (userData == null || userData.getUserId() == null) {
-      return new ModelAndView("redirect:/login");
-    }
-
-//    appointmentService.deleteAppointmentForUser(id, userData.getUserId());
 
     // TODO try - catch махни от контролера
+//    try {
+//      appointmentService.deleteAppointmentForUser(id, userData.getUserId());
+//    } catch (Exception e) {
+//      System.out.println("Delete failed: " + e.getMessage());
+//    }
 
     try {
-      appointmentService.deleteAppointmentForUser(id, userData.getUserId());
+      appointmentService.deleteAppointment(id, userData);
+    } catch (SecurityException e) {
+      return new ModelAndView("redirect:/login");
     } catch (Exception e) {
       System.out.println("Delete failed: " + e.getMessage());
     }
+
     return new ModelAndView("redirect:/appointments/history");
   }
 
   @GetMapping("/history")
   public ModelAndView getAppointmentHistoryPage(@AuthenticationPrincipal UserData userData) {
-//    UUID userId = userData.getUserId();
-//    if (userId == null) {
-//      return new ModelAndView("redirect:/login");
-//    }
-//
-//    User user = userService.getById(userId);
-//
-//    List<Appointment> allAppointments = appointmentService.getAllByUserId(userId);
-//    if (allAppointments == null) {
-//      allAppointments = new ArrayList<>();
-//    }
-//
-//    List<Appointment> pastAppointments = allAppointments.stream()
-//        .filter(a -> a.getStatus() == AppointmentStatus.COMPLETED
-//            || a.getStatus() == AppointmentStatus.CANCELLED)
-//        .sorted(
-//            Comparator.comparing((Appointment a) -> a.getAppointmentDate().toLocalDate()).reversed()
-//                .thenComparing(Appointment::getAppointmentDate)
-//        )
-//        .toList();
 
     if (userData == null || userData.getUserId() == null) {
       return new ModelAndView("redirect:/login");
