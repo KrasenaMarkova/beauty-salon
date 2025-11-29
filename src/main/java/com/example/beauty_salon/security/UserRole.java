@@ -1,4 +1,4 @@
-package com.example.beauty_salon.user.model;
+package com.example.beauty_salon.security;
 
 public enum UserRole {
   USER("User"),

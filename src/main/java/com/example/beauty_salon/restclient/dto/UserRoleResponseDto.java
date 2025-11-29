@@ -1,6 +1,6 @@
 package com.example.beauty_salon.restclient.dto;
 
-import com.example.beauty_salon.user.model.UserRole;
+import com.example.beauty_salon.security.UserRole;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;

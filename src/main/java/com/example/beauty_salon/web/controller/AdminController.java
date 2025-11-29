@@ -1,15 +1,15 @@
 package com.example.beauty_salon.web.controller;
 
+import com.example.beauty_salon.config.UserService;
 import com.example.beauty_salon.employee.model.Employee;
 import com.example.beauty_salon.employee.model.EmployeePosition;
 import com.example.beauty_salon.employee.service.EmployeeService;
-import com.example.beauty_salon.user.model.User;
-import com.example.beauty_salon.user.service.UserService;
+import com.example.beauty_salon.restclient.dto.UserDto;
 import com.example.beauty_salon.web.dto.RegisterEmployeeRequest;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,22 +21,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin")
+@RequiredArgsConstructor
 public class AdminController {
 
   private final UserService userService;
   private final EmployeeService employeeService;
 
-  @Autowired
-  public AdminController(UserService userService, EmployeeService employeeService) {
-    this.userService = userService;
-    this.employeeService = employeeService;
-  }
-
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/users")
   public ModelAndView getAllUsers() {
 
-    List<User> users = userService.getAll();
+    List<UserDto> users = userService.getAll();
 
     ModelAndView modelAndView = new ModelAndView();
     modelAndView.setViewName("users");
@@ -44,15 +39,6 @@ public class AdminController {
 
     return modelAndView;
   }
-
-//  @PreAuthorize("hasRole('ADMIN')")
-//  @PostMapping("/{id}/toggle-status")
-//  public String toggleUserStatus(@PathVariable UUID id) {
-//
-//    userService.toggleUserStatus(id);
-//
-//    return "redirect:/admin/users";
-//  }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/toggle-status")
@@ -63,13 +49,6 @@ public class AdminController {
     redirectAttributes.addFlashAttribute("message", "Статусът е променен успешно");
     return "redirect:/admin/users";
   }
-
-//  @PreAuthorize("hasRole('ADMIN')")
-//  @PostMapping("/{id}/toggle-role")
-//  public String toggleUserRole(@PathVariable UUID id) {
-//    userService.toggleUserRole(id);
-//    return "redirect:/admin/users";
-//  }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/toggle-role")

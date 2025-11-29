@@ -3,12 +3,13 @@ package com.example.beauty_salon.web.controller;
 import com.example.beauty_salon.appointment.model.Appointment;
 import com.example.beauty_salon.appointment.service.AppointmentService;
 import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
+import com.example.beauty_salon.restclient.dto.UserDto;
 import com.example.beauty_salon.security.UserData;
-import com.example.beauty_salon.user.model.User;
-import com.example.beauty_salon.user.service.UserService;
+import com.example.beauty_salon.config.UserService;
 import com.example.beauty_salon.web.dto.EditAppointmentRequest;
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,18 +22,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/appointments")
+@RequiredArgsConstructor
 public class AppointmentController {
 
   private final AppointmentService appointmentService;
   private final UserService userService;
   private final BeautyTreatmentService beautyTreatmentService;
-
-
-  public AppointmentController(AppointmentService appointmentService, UserService userService, BeautyTreatmentService beautyTreatmentService) {
-    this.appointmentService = appointmentService;
-    this.userService = userService;
-    this.beautyTreatmentService = beautyTreatmentService;
-  }
 
   @PostMapping("/{id}/cancel")
   public String cancelAppointment(@PathVariable("id") UUID appointmentId, @AuthenticationPrincipal UserData userData,
@@ -120,23 +115,7 @@ public class AppointmentController {
     ModelAndView modelAndView = new ModelAndView("redirect:/appointments/history");
     modelAndView.addObject("successMessage", "Часът беше изтрит успешно.");
     return modelAndView;
-
-//    return new ModelAndView("redirect:/appointments/history");
   }
-//  @PostMapping("/{id}/delete")
-//  public String deleteAppointment(@PathVariable UUID id,
-//      @AuthenticationPrincipal UserData userData,
-//      RedirectAttributes redirectAttributes) {
-//
-//    if (userData == null || userData.getUserId() == null) {
-//      return "redirect:/login";
-//    }
-//
-//    appointmentService.deleteAppointmentForUser(id, userData.getUserId());
-//
-//    redirectAttributes.addFlashAttribute("successMessage", "Часът беше изтрит успешно.");
-//    return "redirect:/appointments/history";
-//  }
 
   @GetMapping("/history")
   public ModelAndView getAppointmentHistoryPage(@AuthenticationPrincipal UserData userData) {
@@ -145,7 +124,7 @@ public class AppointmentController {
       return new ModelAndView("redirect:/login");
     }
 
-    User user = userService.getById(userData.getUserId());
+    UserDto user = userService.getById(userData.getUserId());
     List<Appointment> pastAppointments = appointmentService.getPastAppointmentsForUser(userData.getUserId());
 
     ModelAndView modelAndView = new ModelAndView();

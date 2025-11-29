@@ -1,7 +1,7 @@
 package com.example.beauty_salon.web.controller;
 
-import com.example.beauty_salon.user.model.User;
-import com.example.beauty_salon.user.service.UserService;
+import com.example.beauty_salon.config.UserService;
+import com.example.beauty_salon.restclient.dto.UserDto;
 import com.example.beauty_salon.web.dto.DtoMapper;
 import com.example.beauty_salon.web.dto.EditProfileRequest;
 import jakarta.validation.Valid;
@@ -29,7 +29,7 @@ public class UserController {
   @GetMapping("/{id}/profile")
   public ModelAndView getProfilePage(@PathVariable UUID id) {
 
-    User user = userService.getById(id);
+    UserDto user = userService.getById(id);
     EditProfileRequest editProfileRequest = DtoMapper.fromUser(user);
 
     ModelAndView modelAndView = new ModelAndView();
@@ -44,7 +44,7 @@ public class UserController {
   public ModelAndView updateProfile(@Valid EditProfileRequest editProfileRequest, BindingResult bindingResult, @PathVariable UUID id) {
 
     if (bindingResult.hasErrors()) {
-      User user = userService.getById(id);
+      UserDto user = userService.getById(id);
       ModelAndView modelAndView = new ModelAndView();
       modelAndView.setViewName("profile-menu");
       modelAndView.addObject("user", user);

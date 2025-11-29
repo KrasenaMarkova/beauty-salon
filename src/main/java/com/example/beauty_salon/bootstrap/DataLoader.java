@@ -58,7 +58,6 @@ public class DataLoader implements CommandLineRunner {
       System.out.println("Начални услуги успешно заредени!");
     }
 
-    // Зареждане на служители
     if (employeeRepository.count() == 0) {
       employeeRepository.save(Employee.builder()
           .name("Луна Локона")

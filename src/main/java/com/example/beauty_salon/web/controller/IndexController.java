@@ -2,9 +2,9 @@ package com.example.beauty_salon.web.controller;
 
 import com.example.beauty_salon.appointment.model.Appointment;
 import com.example.beauty_salon.appointment.service.AppointmentService;
+import com.example.beauty_salon.restclient.dto.UserDto;
 import com.example.beauty_salon.security.UserData;
-import com.example.beauty_salon.user.model.User;
-import com.example.beauty_salon.user.service.UserService;
+import com.example.beauty_salon.config.UserService;
 import com.example.beauty_salon.web.dto.LoginRequest;
 import com.example.beauty_salon.web.dto.RegisterRequest;
 import jakarta.validation.Valid;
@@ -80,7 +80,7 @@ public class IndexController {
   @GetMapping("/home")
   public ModelAndView getHomePage(@AuthenticationPrincipal UserData userData) {
 
-    User user = userService.getById(userData.getUserId());
+    UserDto user = userService.getById(userData.getUserId());
 
     List<Appointment> allAppointments = appointmentService.getAllSortedByUser(userData.getUserId());
     List<Appointment> activeAppointments = appointmentService.getActiveAppointments(userData.getUserId());
