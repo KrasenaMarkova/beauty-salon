@@ -92,69 +92,6 @@ public class UserService implements UserDetailsService {
     log.info("New user profile was registered in the system for user [%s].".formatted(registerRequest.getUsername()));
   }
 
-//  public void register(RegisterRequest registerRequest) {
-//
-//    // 1. Проверка дали потребител съществува в microservice
-//    ResponseEntity<UserValidationResponseDto> userExistsResponse =
-//        userValidationClient.validateUserData(UserValidationRequestDto.builder()
-//            .username(registerRequest.getUsername())
-//            .email(registerRequest.getEmail())
-//            .build());
-//
-//    if (!userExistsResponse.getStatusCode().is2xxSuccessful()) {
-//      throw new RuntimeException("Communication error with user microservice!");
-//    }
-//
-//    UserValidationResponseDto userExists = userExistsResponse.getBody();
-//
-//    if (userExists != null && userExists.isExists()) {
-//      // използваме съобщението от microservice
-//      throw new RuntimeException(userExists.getMessage());
-//    }
-//
-//    // 2. Създаване на User в Main App
-//    User user = User.builder()
-//        .firstName(registerRequest.getFirstName())
-//        .lastName(registerRequest.getLastName())
-//        .username(registerRequest.getUsername())
-//        .email(registerRequest.getEmail())
-//        .phone(registerRequest.getPhone())
-//        .password(passwordEncoder.encode(registerRequest.getPassword()))
-//        .userRole(UserRole.USER)
-//        .active(true)
-//        .build();
-//
-//    userRepository.save(user);
-//
-//    // 3. Синхронизация с microservice (Feign)
-//    ResponseEntity<String> response = userValidationClient.syncUser(
-//        UserSyncDto.builder()
-//            .id(user.getId())
-//            .username(user.getUsername())
-//            .email(user.getEmail())
-//            .phone(user.getPhone())
-//            .password(user.getPassword())
-//            .active(user.isActive())
-//            .firstName(user.getFirstName())
-//            .lastName(user.getLastName())
-//            .userRole(user.getUserRole().name())
-//            .build()
-//    );
-//    log.info("Microservice sync response: {}", response.getBody());
-//
-//    // 4. Публикуване на събитие
-//    SuccessfulChargeEvent event = SuccessfulChargeEvent.builder()
-//        .userId(user.getId())
-//        .username(user.getUsername())
-//        .email(user.getEmail())
-//        .firstName(user.getFirstName())
-//        .lastName(user.getLastName())
-//        .build();
-//    eventPublisher.publishEvent(event);
-//
-//    log.info("New user profile was registered in the system for user [{}].", registerRequest.getUsername());
-//  }
-
   public void updateProfile(UUID id, EditProfileRequest editProfileRequest) {
 
     User user = getById(id);
@@ -167,24 +104,12 @@ public class UserService implements UserDetailsService {
     userRepository.save(user);
   }
 
-//  public void deleteById(UUID id) {
-//    userRepository.deleteById(id);
-//  }
-
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("Username not found"));
 
     return new UserData(user.getId(), username, user.getPassword(), user.getUserRole(), user.getEmail(), user.isActive());
   }
-
-  //  public void toggleUserStatus(UUID id) {
-//    User user = userRepository.findById(id)
-//        .orElseThrow(() -> new IllegalArgumentException("Потребителят не е намерен!"));
-//
-//    user.setActive(!user.isActive());
-//    userRepository.save(user);
-//  }
 
   public void toggleStatus(UUID id) {
 
@@ -218,19 +143,6 @@ public class UserService implements UserDetailsService {
     user.setUserRole(response.getRole());
     userRepository.save(user);
   }
-
-//  public void toggleUserRole(UUID userId) {
-//    User user = userRepository.findById(userId)
-//        .orElseThrow(() -> new RuntimeException("Потребителят не е намерен"));
-//
-//    if (user.getUserRole() == UserRole.ADMIN) {
-//      user.setUserRole(UserRole.USER);
-//    } else {
-//      user.setUserRole(UserRole.ADMIN);
-//    }
-//
-//    userRepository.save(user);
-//  }
 
   public User getById(UUID userId) {
 
