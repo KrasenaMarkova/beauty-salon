@@ -9,8 +9,9 @@ import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
 import com.example.beauty_salon.employee.model.Employee;
 import com.example.beauty_salon.employee.model.EmployeePosition;
 import com.example.beauty_salon.employee.service.EmployeeService;
-import com.example.beauty_salon.user.model.User;
-import com.example.beauty_salon.user.service.UserService;
+import com.example.beauty_salon.exception.NoFreeEmployeeException;
+import com.example.beauty_salon.restclient.dto.UserDto;
+import com.example.beauty_salon.config.UserService;
 import com.example.beauty_salon.web.dto.EditAppointmentRequest;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
@@ -20,10 +21,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AppointmentService {
 
   private final AppointmentRepository appointmentRepository;
@@ -31,18 +34,9 @@ public class AppointmentService {
   private final UserService userService;
   private final BeautyTreatmentService beautyTreatmentService;
 
-  @Autowired
-  public AppointmentService(AppointmentRepository appointmentRepository, EmployeeService employeeService, UserService userService,
-      BeautyTreatmentService beautyTreatmentService) {
-    this.appointmentRepository = appointmentRepository;
-    this.employeeService = employeeService;
-    this.userService = userService;
-    this.beautyTreatmentService = beautyTreatmentService;
-  }
-
   @Transactional
   public Appointment createAppointment(UUID userId, UUID treatmentId, LocalDateTime dateTime) {
-    User user = userService.getById(userId);
+    UserDto user = userService.getById(userId);
 
     BeautyTreatment treatment = beautyTreatmentService.getById(treatmentId);
 
@@ -56,14 +50,14 @@ public class AppointmentService {
     Employee employee = potentialEmployees.stream()
         .filter(e -> isEmployeeAvailable(e, dateTime, treatment.getDurationMinutes()))
         .findFirst()
-        .orElseThrow(() -> new IllegalStateException("Няма свободен служител за избрания час."));
+        .orElseThrow(() -> new NoFreeEmployeeException("Няма свободен служител за избрания час."));
 
     Appointment appointment = Appointment.builder()
         .appointmentDate(dateTime)
         .durationMinutes(treatment.getDurationMinutes())
         .price(treatment.getPrice())
         .status(AppointmentStatus.SCHEDULED)
-        .user(user)
+        .userId(user.getId())
         .employee(employee)
         .treatment(treatment)
         .build();
@@ -166,22 +160,13 @@ public class AppointmentService {
         .toList();
   }
 
-//  public void deleteAppointment(UUID appointmentId, UserData userData) {
-//
-//    if (userData == null || userData.getUserId() == null) {
-//      throw new SecurityException("User is not logged in.");
-//    }
-//
-//    deleteAppointmentForUser(appointmentId, userData.getUserId());
-//
-//  }
 
   public void deleteAppointmentForUser(UUID appointmentId, UUID userId) {
 
     Appointment appointment = appointmentRepository.findById(appointmentId)
         .orElseThrow(() -> new IllegalArgumentException("Такъв час не съществува."));
 
-    if (!appointment.getUser().getId().equals(userId)) {
+    if (!appointment.getUserId().equals(userId)) {
       throw new SecurityException("Нямате права да изтриете този час");
     }
 
@@ -192,7 +177,7 @@ public class AppointmentService {
     Appointment existing = appointmentRepository.findById(appointmentId)
         .orElseThrow(() -> new IllegalArgumentException("Часът не съществува."));
 
-    if (!existing.getUser().getId().equals(userId)) {
+    if (!existing.getUserId().equals(userId)) {
       throw new SecurityException("Нямате права да редактирате този час.");
     }
 
@@ -212,7 +197,7 @@ public class AppointmentService {
     Appointment appointment = appointmentRepository.findById(appointmentId)
         .orElseThrow(() -> new IllegalArgumentException("Този час не съществува."));
 
-    if (!appointment.getUser().getId().equals(userId)) {
+    if (!appointment.getUserId().equals(userId)) {
       throw new IllegalArgumentException("Нямате права да редактирате този час.");
     }
 

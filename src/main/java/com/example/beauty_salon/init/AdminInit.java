@@ -1,29 +1,32 @@
 package com.example.beauty_salon.init;
 
-import com.example.beauty_salon.user.model.User;
-import com.example.beauty_salon.user.model.UserRole;
-import com.example.beauty_salon.user.repository.UserRepository;
+import com.example.beauty_salon.restclient.UserServiceClient;
+import com.example.beauty_salon.restclient.dto.UserDto;
+import com.example.beauty_salon.restclient.dto.UserValidationRequestDto;
+import com.example.beauty_salon.security.UserRole;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class AdminInit implements CommandLineRunner {
 
-  private final UserRepository userRepository;
+  private final UserServiceClient userServiceClient;
   private final PasswordEncoder passwordEncoder;
-
-  public AdminInit(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-    this.userRepository = userRepository;
-    this.passwordEncoder = passwordEncoder;
-  }
 
   @Override
   public void run(String... args) {
 
-    if (userRepository.findByUsername("admin").isEmpty()) {
+    //TODO: check if admin exists
 
-      User admin = new User();
+    if (!userServiceClient.validateUserData(UserValidationRequestDto.builder()
+        .username("admin")
+        .email("admin@admin.bg")
+        .build()).getBody()) {
+
+      UserDto admin = new UserDto();
       admin.setUsername("admin");
       admin.setFirstName("Admin");
       admin.setLastName("Adminov");
@@ -33,7 +36,7 @@ public class AdminInit implements CommandLineRunner {
       admin.setUserRole(UserRole.ADMIN);
       admin.setActive(true);
 
-      userRepository.save(admin);
+      userServiceClient.saveUser(admin);
 
       System.out.println("✅ ADMIN user created: username=admin, password=admin123");
     }

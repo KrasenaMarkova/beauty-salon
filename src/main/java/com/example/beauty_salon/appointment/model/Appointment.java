@@ -2,7 +2,6 @@ package com.example.beauty_salon.appointment.model;
 
 import com.example.beauty_salon.beautyTreatment.model.BeautyTreatment;
 import com.example.beauty_salon.employee.model.Employee;
-import com.example.beauty_salon.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,9 +34,8 @@ public class Appointment {
   @Column(nullable = false)
   private AppointmentStatus status;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+  @Column(name = "user_id")
+  private UUID userId;
 
   @ManyToOne
   @JoinColumn(name = "treatment_id")

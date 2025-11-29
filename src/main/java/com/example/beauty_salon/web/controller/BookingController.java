@@ -52,7 +52,6 @@ public class BookingController {
         userData.getUserId(),
         appointmentRequest.getTreatmentId(),
         appointmentRequest.getAppointmentDate());
-
     modelAndView.addObject("success", "Часът беше успешно запазен!");
     modelAndView.addObject("appointmentRequest", new AppointmentRequest());
 
