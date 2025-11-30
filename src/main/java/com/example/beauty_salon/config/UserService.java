@@ -4,8 +4,8 @@ import com.example.beauty_salon.event.SuccessfulChargeEvent;
 import com.example.beauty_salon.exception.UserAlreadyExistsException;
 import com.example.beauty_salon.restclient.UserServiceClient;
 import com.example.beauty_salon.restclient.dto.StatusResponseDto;
-import com.example.beauty_salon.restclient.dto.UserRoleResponseDto;
 import com.example.beauty_salon.restclient.dto.UserDto;
+import com.example.beauty_salon.restclient.dto.UserRoleResponseDto;
 import com.example.beauty_salon.restclient.dto.UserValidationRequestDto;
 import com.example.beauty_salon.security.UserData;
 import com.example.beauty_salon.security.UserRole;
@@ -34,19 +34,17 @@ public class UserService implements UserDetailsService {
 
   public void register(RegisterRequest registerRequest) {
     ResponseEntity<Boolean> userExists = userServiceClient.validateUserData(UserValidationRequestDto.builder()
-            .username(registerRequest.getUsername())
-            .email(registerRequest.getEmail())
+        .username(registerRequest.getUsername())
+        .email(registerRequest.getEmail())
         .build());
-    //
 
     if (!userExists.getStatusCode().is2xxSuccessful()) {
       throw new RuntimeException("Communication error!");
     }
 
-    if (Boolean.TRUE.equals( userExists.getBody())){
+    if (Boolean.TRUE.equals(userExists.getBody())) {
       throw new UserAlreadyExistsException("Потребителското име или email вече съществуват");
     }
-
 
     UserDto userDto = UserDto.builder()
         .firstName(registerRequest.getFirstName())
@@ -60,7 +58,7 @@ public class UserService implements UserDetailsService {
 
     ResponseEntity<UserDto> userResponse = userServiceClient.saveUser(userDto);
 
-    if (!userResponse.getStatusCode().is2xxSuccessful() ) {
+    if (!userResponse.getStatusCode().is2xxSuccessful()) {
       throw new RuntimeException("User creation error!");
     }
 
@@ -95,7 +93,8 @@ public class UserService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    UserDto user =  userServiceClient.loadByUsername(username).getBody();
+
+    UserDto user = userServiceClient.loadByUsername(username).getBody();
 
     return new UserData(user.getId(), username, user.getPassword(), user.getUserRole(), user.getEmail(), user.isActive());
   }
@@ -134,5 +133,6 @@ public class UserService implements UserDetailsService {
         .listAllUsers()
         .getBody();
   }
+
 }
 

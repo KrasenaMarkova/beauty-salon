@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Treatment – Beauty salon</title>
+  <link rel="stylesheet" type="text/css" href="/css/index.css">
+</head>
+
+<body>
+
+<!-- Top Header -->
+<div class="top-header">
+  <div class="contact">📞 0888 123 456</div>
+  <div class="address">📍 гр. Русе, бул. Красота 19</div>
+</div>
+
+<!-- Навигация -->
+<header class="info">
+  <nav>
+    <ul>
+      <li><a th:href="@{/home}">⬅ Назад към профила</a></li>
+      <li><a th:href="@{/admin/treatments}">Услуги</a></li>
+      <li><a th:href="@{/admin/users}">👥 Потребители</a></li>
+      <li><a th:href="@{/logout}">Изход</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Hero секция -->
+<section class="hero small-hero">
+  <div class="hero-text">
+    <h1>Редакция на услуга</h1>
+    <p>Променете информацията за избраната процедура.</p>
+  </div>
+</section>
+
+<!-- Основен контейнер -->
+<main class="container">
+
+  <div class="about" style="max-width: 600px; margin: 0 auto;">
+
+    <h2 style="text-align:center; margin-bottom: 20px;">Редактирай услуга</h2>
+
+    <form th:action="@{'/admin/treatments/' + ${treatmentId} + '/edit'}"
+          th:object="${editBeautyTreatmentRequest}"
+          th:method="POST"
+          class="form-box">
+
+      <!-- DESCRIPTION -->
+      <label>Описание:</label>
+
+<!--      <textarea th:field="*{serviceDescription}" class="form-input" rows="4"></textarea>-->
+      <input type="text" th:field="*{serviceDescription}">
+
+      <button type="submit" class="btn" style="margin-top: 20px; width: 100%;">Запази промените</button>
+    </form>
+
+  </div>
+
+</main>
+
+<th:block th:insert="~{fragments/footer :: my-footer}"></th:block>
+
+</body>
+</html>

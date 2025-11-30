@@ -97,6 +97,7 @@ public class AppointmentService {
 
   @Transactional
   public void markPastAppointmentsAsCompleted() {
+
     LocalDateTime now = LocalDateTime.now();
 
     List<Appointment> pastAppointments = appointmentRepository.findAll().stream()
@@ -118,6 +119,7 @@ public class AppointmentService {
 
   @Transactional
   public void cancelAppointment(UUID appointmentId) {
+
     Appointment appointment = appointmentRepository.findById(appointmentId)
         .orElseThrow(() -> new IllegalArgumentException("Часът не съществува!"));
 
@@ -143,6 +145,7 @@ public class AppointmentService {
   }
 
   public List<Appointment> getPastAppointmentsForUser(UUID userId) {
+
     List<Appointment> allAppointments = getAllByUserId(userId);
 
     if (allAppointments == null) {
@@ -173,6 +176,7 @@ public class AppointmentService {
 
   @Transactional
   public void editAppointmentForUser(UUID appointmentId, UUID userId, EditAppointmentRequest editAppointmentRequest) {
+
     Appointment existing = appointmentRepository.findById(appointmentId)
         .orElseThrow(() -> new IllegalArgumentException("Часът не съществува."));
 
@@ -188,7 +192,6 @@ public class AppointmentService {
       existing.setPrice(treatment.getPrice());
       existing.setDurationMinutes(treatment.getDurationMinutes());
 
-//      // Проверка за свободен служител
       if (!isEmployeeAvailable(existing.getEmployee(), existing.getAppointmentDate(), treatment.getDurationMinutes())) {
         throw new IllegalArgumentException("Служителят не е свободен за избрания час.");
       }
@@ -198,6 +201,7 @@ public class AppointmentService {
   }
 
   public EditAppointmentRequest prepareEditForm(UUID appointmentId, UUID userId) {
+
     Appointment appointment = appointmentRepository.findById(appointmentId)
         .orElseThrow(() -> new IllegalArgumentException("Този час не съществува."));
 

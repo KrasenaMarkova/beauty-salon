@@ -50,30 +50,5 @@ public class AdminInit implements CommandLineRunner {
     }
   }
 
-//  @Override
-//  public void run(String... args) {
-//
-//    //TODO: check if admin exists
-//
-//    if (!userServiceClient.validateUserData(UserValidationRequestDto.builder()
-//        .username("admin")
-//        .email("admin@admin.bg")
-//        .build()).getBody()) {
-//
-//      UserDto admin = new UserDto();
-//      admin.setUsername("admin");
-//      admin.setFirstName("Admin");
-//      admin.setLastName("Adminov");
-//      admin.setEmail("admin@admin.bg");
-//      admin.setPhone("0000000000");
-//      admin.setPassword(passwordEncoder.encode("admin123"));
-//      admin.setUserRole(UserRole.ADMIN);
-//      admin.setActive(true);
-//
-//      userServiceClient.saveUser(admin);
-//
-//      System.out.println("✅ ADMIN user created: username=admin, password=admin123");
-//    }
-//  }
 }
 

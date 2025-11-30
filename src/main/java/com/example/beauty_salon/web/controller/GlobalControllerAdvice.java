@@ -1,9 +1,7 @@
 package com.example.beauty_salon.web.controller;
 
-import com.example.beauty_salon.exception.NoFreeEmployeeException;
 import com.example.beauty_salon.exception.UserAlreadyExistsException;
 import com.example.beauty_salon.exception.UserNotFoundException;
-import com.example.beauty_salon.web.dto.AppointmentRequest;
 import java.nio.file.AccessDeniedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -28,6 +26,7 @@ public class GlobalControllerAdvice {
   public String handleUserAlreadyExistsException(UserAlreadyExistsException e, RedirectAttributes redirectAttributes) {
 
     redirectAttributes.addFlashAttribute("errorMessage", "Потребителското име или email вече съществуват");
+
     return "redirect:/register";
   }
 
@@ -37,6 +36,7 @@ public class GlobalControllerAdvice {
       RedirectAttributes redirectAttributes) {
 
     redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+
     return "redirect:/home";
   }
 

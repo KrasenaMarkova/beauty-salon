@@ -17,15 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
     name = "beauty-salon-rest",
-    url = "http://localhost:8081/api/v1/users"  // адрес на микросървиса
+    url = "http://localhost:8081/api/v1/users"
 )
 public interface UserServiceClient {
 
   @PostMapping("/validation")
   ResponseEntity<Boolean> validateUserData(@RequestBody UserValidationRequestDto dto);
-
-//  @PostMapping("/validation")
-//  ResponseEntity<UserValidationResponseDto> validateUserData(@RequestBody UserValidationRequestDto dto);
 
   @PostMapping("/sync")
   ResponseEntity<String> syncUser(@RequestBody UserDto dto);

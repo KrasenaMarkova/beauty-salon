@@ -15,11 +15,4 @@ public class EmailService {
     System.out.println("Sending email for registration for user with email: " + event.getEmail());
   }
 
-//  @Async
-//  public void sendAppointmentReminder(String email, String treatmentName, LocalDateTime appointmentDate) {
-//    System.out.println("Sending reminder to: " + email +
-//        " for treatment: " + treatmentName +
-//        " at: " + appointmentDate);
-//  }
-
 }

@@ -2,7 +2,9 @@ package com.example.beauty_salon.beautyTreatment.service;
 
 import com.example.beauty_salon.beautyTreatment.model.BeautyTreatment;
 import com.example.beauty_salon.beautyTreatment.repository.BeautyTreatmentRepository;
+import com.example.beauty_salon.web.dto.EditBeautyTreatmentRequest;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -27,6 +29,7 @@ public class BeautyTreatmentService {
   @Transactional
   @CacheEvict(value = "beautyTreatments", allEntries = true)
   public void adjustPricesForInflation() {
+
     List<BeautyTreatment> treatments = beautyTreatmentRepository.findAll();
 
     for (BeautyTreatment treatment : treatments) {
@@ -48,6 +51,17 @@ public class BeautyTreatmentService {
   public BeautyTreatment getById(UUID id) {
     return beautyTreatmentRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Услугата не е намерена."));
+  }
+
+  @Transactional
+  public void update(UUID id, @Valid EditBeautyTreatmentRequest editBeautyTreatmentRequest) {
+
+    BeautyTreatment treatment = beautyTreatmentRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("Услугата не съществува"));
+
+    treatment.setServiceDescription(editBeautyTreatmentRequest.getServiceDescription());
+
+    beautyTreatmentRepository.save(treatment);
   }
 
 }

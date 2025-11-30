@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Услуги в салона</title>
+  <link rel="stylesheet" type="text/css" href="/css/index.css">
+  <link rel="stylesheet" type="text/css" href="/css/admin.css">
+</head>
+<body>
+
+<!-- Горна лента -->
+<div class="top-header">
+  <div class="contact">📞 0888 123 456</div>
+  <div class="address">📍 гр. Русе, бул. Красота 19</div>
+</div>
+
+<!-- Навигация -->
+<header class="info">
+  <nav>
+    <ul>
+      <li><a th:href="@{/home}">⬅ Назад към профила</a></li>
+      <li><a th:href="@{/admin/users}">👥 Потребители</a></li>
+      <li><a th:href="@{/admin/employees}">👩‍🔧 Служители</a></li>
+      <li><a th:href="@{/logout}">Изход</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Заглавие -->
+<section class="hero">
+  <div class="hero-text">
+    <h1>Услуги на салона 💅💇‍♀️</h1>
+<!--    <p>Преглед, редакция и управление на всички предлагани услуги</p>-->
+    <p>Преглед и редакция на всички предлагани услуги</p>
+  </div>
+</section>
+
+<main class="container">
+
+  <section class="users-list">
+    <h2>Всички услуги</h2>
+
+    <!-- Ако няма услуги -->
+    <div th:if="${#lists.isEmpty(treatments)}" class="no-users">
+      <p>Няма добавени услуги.</p>
+    </div>
+
+    <div th:if="${updateSuccessful}" class="success-message">
+      <p th:text="${updateSuccessful}"></p>
+    </div>
+
+    <!-- Таблица с услуги -->
+    <table th:if="${!#lists.isEmpty(treatments)}">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Име на услугата</th>
+        <th>Описание</th>
+        <th>Цена</th>
+        <th>Продължителност (мин)</th>
+        <th>Редакция</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr th:each="treatment : ${treatments}">
+
+        <td th:text="${treatment.id}">UUID</td>
+
+        <td th:text="${treatment.beautyTreatmentName.displayName}">Име</td>
+
+        <td th:text="${treatment.serviceDescription}">Описание</td>
+
+        <td th:text="${treatment.price}">Цена</td>
+
+        <td th:text="${treatment.durationMinutes}">30</td>
+
+        <!-- Бутон за редакция -->
+        <td>
+          <a class="edit-btn"
+             th:href="@{'/admin/treatments/' + ${treatment.id} + '/edit'}">
+            ✏️ Редактирай
+          </a>
+        </td>
+
+      </tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<th:block th:insert="~{fragments/footer :: my-footer}"></th:block>
+
+</body>
+</html>

@@ -37,14 +37,4 @@ public class SchedulerConfig {
     System.out.println("Updated past appointments status at " + formattedNow);
   }
 
-//  @Scheduled(fixedRate = 15 * 60 * 1000)
-//  public void sendAppointmentReminders() {
-//    appointmentService.sendUpcomingAppointmentReminders();
-//
-//    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-//    String formattedNow = LocalDateTime.now().format(formatter);
-//
-//    System.out.println("Sent upcoming appointment reminders at " + formattedNow);
-//  }
-
 }

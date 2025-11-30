@@ -38,6 +38,7 @@ public class IndexController {
 
   @GetMapping("/register")
   public ModelAndView getRegisterPage() {
+
     ModelAndView modelAndView = new ModelAndView();
     modelAndView.setViewName("register");
     modelAndView.addObject("registerRequest", new RegisterRequest());
@@ -52,9 +53,6 @@ public class IndexController {
       return new ModelAndView("register");
     }
 
-    //TODO: use feign to call userValidation microservice to check if user with mail and username already excists
-    //case 1 - app has user - throw UserAlreadyExistsException and handle it in global ExceptionHandler
-    //case 2 - no user exists - continue with registration
     userService.register(registerRequest);
     redirectAttributes.addFlashAttribute("registrationSuccessful", "Вашата регистрация е успешна");
 
