@@ -188,9 +188,9 @@ public class AppointmentService {
       existing.setPrice(treatment.getPrice());
       existing.setDurationMinutes(treatment.getDurationMinutes());
 
-      // Проверка за свободен служител
+//      // Проверка за свободен служител
       if (!isEmployeeAvailable(existing.getEmployee(), existing.getAppointmentDate(), treatment.getDurationMinutes())) {
-        throw new NoFreeEmployeeException("Служителят не е свободен за избрания час.");
+        throw new IllegalArgumentException("Служителят не е свободен за избрания час.");
       }
     }
 

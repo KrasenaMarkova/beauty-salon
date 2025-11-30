@@ -85,6 +85,7 @@ public class UserService implements UserDetailsService {
         .phone(editProfileRequest.getPhone())
         .email(editProfileRequest.getEmail())
         .build();
+    System.out.println(editProfileRequest.getPhone());
 
     ResponseEntity<UserDto> responseEntity = userServiceClient.updateUser(userDto);
     if (!responseEntity.getStatusCode().is2xxSuccessful()) {

@@ -3,6 +3,7 @@ package com.example.beauty_salon.web.controller;
 import com.example.beauty_salon.exception.NoFreeEmployeeException;
 import com.example.beauty_salon.exception.UserAlreadyExistsException;
 import com.example.beauty_salon.exception.UserNotFoundException;
+import com.example.beauty_salon.web.dto.AppointmentRequest;
 import java.nio.file.AccessDeniedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -37,22 +38,6 @@ public class GlobalControllerAdvice {
 
     redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
     return "redirect:/home";
-  }
-
-  @ExceptionHandler({NoFreeEmployeeException.class})
-  public String handleNoFreeEmployeeExceptions(
-      NoFreeEmployeeException ex,
-      RedirectAttributes redirectAttributes) {
-    //modelAndView.addObject("success", "Часът беше успешно запазен!");
-//    modelAndView.addObject("appointmentRequest", new AppointmentRequest());
-//    redirectAttributes.addFlashAttribute("success", ex.getMessage());
-//    redirectAttributes.addFlashAttribute("appointmentRequest", new AppointmentRequest());
-
-    redirectAttributes.addFlashAttribute("error", ex.getMessage());
-    redirectAttributes.addFlashAttribute("noSuccess", ex.getMessage());
-//    redirectAttributes.addFlashAttribute("appointmentRequest", new AppointmentRequest());
-
-    return "redirect:/booking";
   }
 
   @ResponseStatus(HttpStatus.NOT_FOUND)

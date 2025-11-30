@@ -57,10 +57,9 @@
         <th>Промяна на ролята</th>
         <th>Статус</th>
         <th>Промяна на статуса</th>
-        <th>Брой часове</th>
-
       </tr>
       </thead>
+
       <tbody>
       <tr th:each="user : ${users}">
         <td th:text="${user.id}">UUID</td>
@@ -89,9 +88,7 @@
                     th:class="${user.active ? 'btn btn-inactive' : 'btn btn-active'}">
             </button>
           </form>
-
         </td>
-        <td th:text="${#lists.size(user.appointments)}">2</td>
       </tr>
       </tbody>
     </table>
