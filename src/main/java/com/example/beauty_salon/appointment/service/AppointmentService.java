@@ -6,12 +6,12 @@ import com.example.beauty_salon.appointment.repository.AppointmentRepository;
 import com.example.beauty_salon.beautyTreatment.model.BeautyTreatment;
 import com.example.beauty_salon.beautyTreatment.model.BeautyTreatmentName;
 import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
+import com.example.beauty_salon.config.UserService;
 import com.example.beauty_salon.employee.model.Employee;
 import com.example.beauty_salon.employee.model.EmployeePosition;
 import com.example.beauty_salon.employee.service.EmployeeService;
 import com.example.beauty_salon.exception.NoFreeEmployeeException;
 import com.example.beauty_salon.restclient.dto.UserDto;
-import com.example.beauty_salon.config.UserService;
 import com.example.beauty_salon.web.dto.EditAppointmentRequest;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
@@ -22,7 +22,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,7 +43,7 @@ public class AppointmentService {
 
     List<Employee> potentialEmployees = employeeService.getEmployeeByPosition(requiredPosition);
     if (potentialEmployees.isEmpty()) {
-      throw new IllegalStateException("Няма наличен служител за тази услуга.");
+      throw new NoFreeEmployeeException("Няма наличен служител за тази услуга.");
     }
 
     Employee employee = potentialEmployees.stream()
@@ -160,7 +159,6 @@ public class AppointmentService {
         .toList();
   }
 
-
   public void deleteAppointmentForUser(UUID appointmentId, UUID userId) {
 
     Appointment appointment = appointmentRepository.findById(appointmentId)
@@ -173,6 +171,7 @@ public class AppointmentService {
     appointmentRepository.deleteById(appointmentId);
   }
 
+  @Transactional
   public void editAppointmentForUser(UUID appointmentId, UUID userId, EditAppointmentRequest editAppointmentRequest) {
     Appointment existing = appointmentRepository.findById(appointmentId)
         .orElseThrow(() -> new IllegalArgumentException("Часът не съществува."));
@@ -188,6 +187,11 @@ public class AppointmentService {
       existing.setTreatment(treatment);
       existing.setPrice(treatment.getPrice());
       existing.setDurationMinutes(treatment.getDurationMinutes());
+
+      // Проверка за свободен служител
+      if (!isEmployeeAvailable(existing.getEmployee(), existing.getAppointmentDate(), treatment.getDurationMinutes())) {
+        throw new NoFreeEmployeeException("Служителят не е свободен за избрания час.");
+      }
     }
 
     appointmentRepository.save(existing);

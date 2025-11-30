@@ -3,7 +3,6 @@ package com.example.beauty_salon.web.controller;
 import com.example.beauty_salon.exception.NoFreeEmployeeException;
 import com.example.beauty_salon.exception.UserAlreadyExistsException;
 import com.example.beauty_salon.exception.UserNotFoundException;
-import com.example.beauty_salon.web.dto.AppointmentRequest;
 import java.nio.file.AccessDeniedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -29,7 +28,6 @@ public class GlobalControllerAdvice {
 
     redirectAttributes.addFlashAttribute("errorMessage", "Потребителското име или email вече съществуват");
     return "redirect:/register";
-
   }
 
   @ExceptionHandler({IllegalArgumentException.class, SecurityException.class})
@@ -43,12 +41,17 @@ public class GlobalControllerAdvice {
 
   @ExceptionHandler({NoFreeEmployeeException.class})
   public String handleNoFreeEmployeeExceptions(
-      RuntimeException ex,
+      NoFreeEmployeeException ex,
       RedirectAttributes redirectAttributes) {
     //modelAndView.addObject("success", "Часът беше успешно запазен!");
-    //modelAndView.addObject("appointmentRequest", new AppointmentRequest());
-    redirectAttributes.addFlashAttribute("success", ex.getMessage());
-    redirectAttributes.addFlashAttribute("appointmentRequest", new AppointmentRequest());
+//    modelAndView.addObject("appointmentRequest", new AppointmentRequest());
+//    redirectAttributes.addFlashAttribute("success", ex.getMessage());
+//    redirectAttributes.addFlashAttribute("appointmentRequest", new AppointmentRequest());
+
+    redirectAttributes.addFlashAttribute("error", ex.getMessage());
+    redirectAttributes.addFlashAttribute("noSuccess", ex.getMessage());
+//    redirectAttributes.addFlashAttribute("appointmentRequest", new AppointmentRequest());
+
     return "redirect:/booking";
   }
 
@@ -70,14 +73,5 @@ public class GlobalControllerAdvice {
 
     return modelAndView;
   }
-
-  /*@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  @ExceptionHandler(Exception.class)
-  public ModelAndView handleLeftoverExceptions(Exception e) {
-
-    ModelAndView modelAndView = new ModelAndView("not-found");
-
-    return modelAndView;
-  }*/
 
 }

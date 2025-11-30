@@ -3,9 +3,9 @@ package com.example.beauty_salon.web.controller;
 import com.example.beauty_salon.appointment.model.Appointment;
 import com.example.beauty_salon.appointment.service.AppointmentService;
 import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
+import com.example.beauty_salon.config.UserService;
 import com.example.beauty_salon.restclient.dto.UserDto;
 import com.example.beauty_salon.security.UserData;
-import com.example.beauty_salon.config.UserService;
 import com.example.beauty_salon.web.dto.EditAppointmentRequest;
 import java.util.List;
 import java.util.UUID;
@@ -33,15 +33,7 @@ public class AppointmentController {
   public String cancelAppointment(@PathVariable("id") UUID appointmentId, @AuthenticationPrincipal UserData userData,
       RedirectAttributes redirectAttributes) {
 
-    // TODO try - catch махни от контролера
-//    try {
-//      appointmentService.cancelAppointment(appointmentId);
-//      redirectAttributes.addFlashAttribute("successMessage", "Часът е успешно отменен.");
-//    } catch (IllegalArgumentException e) {
-//      redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-//    }
     appointmentService.cancelAppointment(appointmentId);
-
     redirectAttributes.addFlashAttribute("successMessage", "Часът е успешно отменен.");
 
     return "redirect:/home";
@@ -69,18 +61,8 @@ public class AppointmentController {
       return new ModelAndView("redirect:/login");
     }
 
-//    ModelAndView modelAndView = new ModelAndView("redirect:/home");
-//    modelAndView.addObject("successMessage", "Часът беше успешно редактиран.");
-
     appointmentService.editAppointmentForUser(appointmentId, userData.getUserId(), editAppointmentRequest);
 
-//    try {
-//      appointmentService.editAppointmentForUser(appointmentId, userData.getUserId(), editAppointmentRequest);
-//      modelAndView.addObject("successMessage", "Часът беше успешно редактиран.");
-//    } catch (SecurityException | IllegalArgumentException e) {
-//      modelAndView.addObject("errorMessage", e.getMessage());
-//    }
-//    return modelAndView;
     ModelAndView modelAndView = new ModelAndView("redirect:/home");
     modelAndView.addObject("successMessage", "Часът беше успешно редактиран.");
 
@@ -89,22 +71,6 @@ public class AppointmentController {
 
   @PostMapping("/{id}/delete")
   public ModelAndView deleteAppointment(@PathVariable UUID id, @AuthenticationPrincipal UserData userData) {
-
-    // TODO try - catch махни от контролера
-
-//  try {     appointmentService.deleteAppointmentForUser(id, userData.getUserId());
-//  }
-//  catch (Exception e) {
-//  System.out.println("Delete failed: " + e.getMessage());
-//  }
-
-//    try {
-//      appointmentService.deleteAppointment(id, userData);
-//    } catch (SecurityException e) {
-//      return new ModelAndView("redirect:/login");
-//    } catch (Exception e) {
-//      System.out.println("Delete failed: " + e.getMessage());
-//    }
 
     if (userData == null || userData.getUserId() == null) {
       return new ModelAndView("redirect:/login");

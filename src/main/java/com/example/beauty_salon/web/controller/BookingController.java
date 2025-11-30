@@ -30,7 +30,7 @@ public class BookingController {
 
     ModelAndView modelAndView = new ModelAndView("booking");
     modelAndView.addObject("treatments", beautyTreatmentService.getAll());
-    modelAndView.addObject("appointmentRequest", new AppointmentRequest()); //
+    modelAndView.addObject("appointmentRequest", new AppointmentRequest());
 
     return modelAndView;
   }
@@ -53,6 +53,7 @@ public class BookingController {
         appointmentRequest.getTreatmentId(),
         appointmentRequest.getAppointmentDate());
     modelAndView.addObject("success", "Часът беше успешно запазен!");
+
     modelAndView.addObject("appointmentRequest", new AppointmentRequest());
 
     return modelAndView;

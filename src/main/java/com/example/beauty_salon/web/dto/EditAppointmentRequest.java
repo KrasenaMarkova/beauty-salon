@@ -12,7 +12,7 @@ public class EditAppointmentRequest {
 
   @NotNull(message = "Датата е задължителна.")
   @Future(message = "Не можете да изберете минала дата и час.")
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // <- добавено
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime appointmentDate;
 
   @NotNull(message = "Услугата е задължителна.")

@@ -82,7 +82,6 @@
           <p th:if="${!user.active}" class="status terminated">Неактивен</p>
         </td>
         <td>
-          <!--                    <form th:action="@{'/admin/users/' + ${user.id} + '/toggle-status'}" method="post" style="display:inline;">-->
           <form th:action="@{'/admin/' + ${user.id} + '/toggle-status'}" th:method="POST"
                 style="display:inline;">
             <button type="submit"
@@ -93,12 +92,6 @@
 
         </td>
         <td th:text="${#lists.size(user.appointments)}">2</td>
-        <!--                <td>-->
-        <!--&lt;!&ndash;                    <form th:action="@{'/admin/users/' + ${user.id} + '/delete'}" method="post" style="display:inline;">&ndash;&gt;-->
-        <!--                    <form th:action="@{'/users/' + ${user.id} + '/delete'}" th:method="PATCH" style="display:inline;">-->
-        <!--                        <button type="submit" class="btn btn-delete" onclick="return confirm('Сигурни ли сте, че искате да изтриете този потребител?');">🗑 Изтрий</button>-->
-        <!--                    </form>-->
-        <!--                </td>-->
       </tr>
       </tbody>
     </table>
