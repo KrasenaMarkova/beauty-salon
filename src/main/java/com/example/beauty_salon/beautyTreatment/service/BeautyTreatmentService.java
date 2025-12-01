@@ -54,6 +54,7 @@ public class BeautyTreatmentService {
   }
 
   @Transactional
+  @CacheEvict(value = "beautyTreatments", allEntries = true)
   public void update(UUID id, @Valid EditBeautyTreatmentRequest editBeautyTreatmentRequest) {
 
     BeautyTreatment treatment = beautyTreatmentRepository.findById(id)

@@ -153,7 +153,7 @@ public class AdminController {
     BeautyTreatment beautyTreatment = beautyTreatmentService.getById(id);
 
     ModelAndView modelAndView = new ModelAndView("edit-treatment");
-    modelAndView.addObject("editBeautyTreatmentRequest", beautyTreatment); // Тук името трябва да съвпада с th:object
+    modelAndView.addObject("editBeautyTreatmentRequest", beautyTreatment);
     modelAndView.addObject("treatmentId", beautyTreatment.getId());
 
     return modelAndView;
@@ -167,7 +167,7 @@ public class AdminController {
       RedirectAttributes redirectAttributes) {
 
     beautyTreatmentService.update(id, editBeautyTreatmentRequest);
-    redirectAttributes.addFlashAttribute("updateSuccessful", "Промените са запазени успешно");
+    redirectAttributes.addFlashAttribute("updateSuccessful", "Промените са запазени успешно.");
 
     return new ModelAndView("redirect:/admin/treatments");
   }

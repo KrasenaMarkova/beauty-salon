@@ -78,12 +78,12 @@ public class UserService implements UserDetailsService {
   public void updateProfile(UUID id, EditProfileRequest editProfileRequest) {
 
     UserDto userDto = UserDto.builder()
+        .id(id)
         .firstName(editProfileRequest.getFirstName())
         .lastName(editProfileRequest.getLastName())
         .phone(editProfileRequest.getPhone())
         .email(editProfileRequest.getEmail())
         .build();
-    System.out.println(editProfileRequest.getPhone());
 
     ResponseEntity<UserDto> responseEntity = userServiceClient.updateUser(userDto);
     if (!responseEntity.getStatusCode().is2xxSuccessful()) {
