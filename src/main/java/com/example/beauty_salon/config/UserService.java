@@ -47,8 +47,8 @@ public class UserService implements UserDetailsService {
       throw new UserAlreadyExistsException("Потребителското име или email вече съществуват");
     }
 
-    String password = passwordEncoder.encode(registerRequest.getPassword());
-    String confirmPassword = passwordEncoder.encode(registerRequest.getConfirmPassword());
+    String password = registerRequest.getPassword();
+    String confirmPassword = registerRequest.getConfirmPassword();
 
     if (!password.equals(confirmPassword)) {
       throw new PasswordDoNotMatchException("Паролите не съвпадат. Моля, въведете ги отново.");

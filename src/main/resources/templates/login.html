@@ -33,6 +33,9 @@
   </div>
   <div class="reservation login-box" id="reservation">
     <h2>Вход</h2>
+    <div th:if="${registrationSuccessful}" class="success-message">
+      <p th:text="${registrationSuccessful}"></p>
+    </div>
     <form th:action="@{/login}" th:method="POST" th:object="${loginRequest}">
 
       <p class="error-message" th:if="${loginAttemptMessage}" th:text="${loginAttemptMessage}"></p>
