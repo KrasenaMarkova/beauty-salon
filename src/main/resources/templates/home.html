@@ -68,6 +68,9 @@
       <a class="btn" th:href="@{/appointments/history}"
          style="margin-top: 10px; display: inline-block;">История на минали или отменени часове</a>
     </div>
+    <div th:if="${successMessage}" class="success-message">
+      <p th:text="${successMessage}"></p>
+    </div>
 
     <div th:if="${!#lists.isEmpty(allAppointment)}"
          style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">

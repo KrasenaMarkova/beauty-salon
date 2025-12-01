@@ -1,6 +1,7 @@
 package com.example.beauty_salon.config;
 
 import com.example.beauty_salon.event.SuccessfulChargeEvent;
+import com.example.beauty_salon.exception.PasswordDoNotMatchException;
 import com.example.beauty_salon.exception.UserAlreadyExistsException;
 import com.example.beauty_salon.restclient.UserServiceClient;
 import com.example.beauty_salon.restclient.dto.StatusResponseDto;
@@ -44,6 +45,13 @@ public class UserService implements UserDetailsService {
 
     if (Boolean.TRUE.equals(userExists.getBody())) {
       throw new UserAlreadyExistsException("Потребителското име или email вече съществуват");
+    }
+
+    String password = passwordEncoder.encode(registerRequest.getPassword());
+    String confirmPassword = passwordEncoder.encode(registerRequest.getConfirmPassword());
+
+    if (!password.equals(confirmPassword)) {
+      throw new PasswordDoNotMatchException("Паролите не съвпадат. Моля, въведете ги отново.");
     }
 
     UserDto userDto = UserDto.builder()

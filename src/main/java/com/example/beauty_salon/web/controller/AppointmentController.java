@@ -55,7 +55,7 @@ public class AppointmentController {
   @PostMapping("/{id}/edit")
   public ModelAndView editAppointment(@PathVariable("id") UUID appointmentId,
       @ModelAttribute("editAppointmentRequest") EditAppointmentRequest editAppointmentRequest,
-      @AuthenticationPrincipal UserData userData) {
+      @AuthenticationPrincipal UserData userData, RedirectAttributes redirectAttributes) {
 
     if (userData == null || userData.getUserId() == null) {
       return new ModelAndView("redirect:/login");
@@ -64,7 +64,7 @@ public class AppointmentController {
     appointmentService.editAppointmentForUser(appointmentId, userData.getUserId(), editAppointmentRequest);
 
     ModelAndView modelAndView = new ModelAndView("redirect:/home");
-    modelAndView.addObject("successMessage", "Часът беше успешно редактиран.");
+    redirectAttributes.addFlashAttribute("successMessage", "Часът беше успешно редактиран.");
 
     return modelAndView;
   }

@@ -37,7 +37,7 @@ public class WebConfiguration implements WebMvcConfigurer {
                 response.sendRedirect("/not-found"))
             .authenticationEntryPoint((request, response, authException) ->
                 response.sendRedirect("/not-found"))
-        );;
+        );
 
     return httpSecurity.build();
   }

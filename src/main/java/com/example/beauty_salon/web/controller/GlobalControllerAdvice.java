@@ -1,5 +1,6 @@
 package com.example.beauty_salon.web.controller;
 
+import com.example.beauty_salon.exception.PasswordDoNotMatchException;
 import com.example.beauty_salon.exception.UserAlreadyExistsException;
 import com.example.beauty_salon.exception.UserNotFoundException;
 import java.nio.file.AccessDeniedException;
@@ -25,7 +26,15 @@ public class GlobalControllerAdvice {
   @ExceptionHandler(UserAlreadyExistsException.class)
   public String handleUserAlreadyExistsException(UserAlreadyExistsException e, RedirectAttributes redirectAttributes) {
 
-    redirectAttributes.addFlashAttribute("errorMessage", "Потребителското име или email вече съществуват");
+    redirectAttributes.addFlashAttribute("errorMessage", "Потребителското име или email вече съществуват.");
+
+    return "redirect:/register";
+  }
+
+  @ExceptionHandler(PasswordDoNotMatchException.class)
+  public String handlePasswordDoNotMatchException(PasswordDoNotMatchException e, RedirectAttributes redirectAttributes) {
+
+    redirectAttributes.addFlashAttribute("errorMessage", "Паролите не съвпадат. Моля, въведете ги отново.");
 
     return "redirect:/register";
   }
