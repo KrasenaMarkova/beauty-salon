@@ -12,7 +12,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class BookingController {
@@ -38,7 +40,8 @@ public class BookingController {
   @PostMapping("/booking")
   @PreAuthorize("isAuthenticated()")
   public ModelAndView bookAppointment(@Valid @ModelAttribute("appointmentRequest") AppointmentRequest appointmentRequest,
-      BindingResult result, @AuthenticationPrincipal UserData userData) {
+      BindingResult result, @AuthenticationPrincipal UserData userData, RedirectAttributes redirectAttributes,
+      @RequestParam(name = "error", required = false) String errorMessage) {
 
     ModelAndView modelAndView = new ModelAndView("booking");
     modelAndView.addObject("treatments", beautyTreatmentService.getAll());
@@ -54,7 +57,6 @@ public class BookingController {
         appointmentRequest.getAppointmentDate());
 
     modelAndView.addObject("success", "Часът беше успешно запазен!");
-
     modelAndView.addObject("appointmentRequest", new AppointmentRequest());
 
     return modelAndView;

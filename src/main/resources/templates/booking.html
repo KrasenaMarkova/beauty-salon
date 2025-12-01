@@ -36,7 +36,7 @@
     <!-- Съобщения -->
     <div th:if="${success}" class="success-message" th:text="${success}"></div>
     <div th:if="${error}" class="error-message" th:text="${error}"></div>
-    <div th:if="${noSuccess}" class="error-message" th:text="${noSuccess}"></div>
+    <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></div>
 
     <form th:action="@{/booking}" th:object="${appointmentRequest}" th:method="POST">
 

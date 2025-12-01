@@ -45,8 +45,16 @@
       <p>Все още няма въведени служители.</p>
     </div>
 
-    <div th:if="${registrationSuccessful}" class="success-message">
-      <p th:text="${registrationSuccessful}"></p>
+    <div th:if="${successfulMessage}" class="success-message">
+      <p th:text="${successfulMessage}"></p>
+    </div>
+
+    <!-- ✔ Бутон за добавяне на служител -->
+    <div class="add-container">
+      <a class="btn btn-active"
+         th:href="@{/admin/employees/add}">
+        ➕ Добави служител
+      </a>
     </div>
 
     <!-- Таблица със служители -->
@@ -90,14 +98,6 @@
       </tr>
       </tbody>
     </table>
-
-    <!-- ✔ Бутон за добавяне на служител -->
-    <div class="add-container">
-      <a class="btn btn-active"
-         th:href="@{/admin/employees/add}">
-        ➕ Добави служител
-      </a>
-    </div>
 
   </section>
 

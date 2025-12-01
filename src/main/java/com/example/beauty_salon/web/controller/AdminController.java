@@ -95,7 +95,7 @@ public class AdminController {
 
     employeeService.register(registerEmployeeRequest);
 
-    redirectAttributes.addFlashAttribute("registrationSuccessful", "Вашата регистрация е успешна");
+    redirectAttributes.addFlashAttribute("successfulMessage", "Успешно добавихте служител.");
 
     return new ModelAndView("redirect:/admin/employees");
   }
@@ -128,7 +128,7 @@ public class AdminController {
 
     employeeService.update(id, editEmployeeRequest);
 
-    redirectAttributes.addFlashAttribute("updateSuccessful", "Промените са запазени успешно");
+    redirectAttributes.addFlashAttribute("successfulMessage", "Промените са запазени успешно.");
 
     return new ModelAndView("redirect:/admin/employees");
   }

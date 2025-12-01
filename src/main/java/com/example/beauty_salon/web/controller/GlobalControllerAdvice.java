@@ -39,6 +39,7 @@ public class GlobalControllerAdvice {
     return "redirect:/register";
   }
 
+
   @ExceptionHandler({IllegalArgumentException.class, SecurityException.class})
   public String handleEditingExceptions(
       RuntimeException ex,
