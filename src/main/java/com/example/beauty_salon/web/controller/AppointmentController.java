@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -55,16 +56,20 @@ public class AppointmentController {
   @PostMapping("/{id}/edit")
   public ModelAndView editAppointment(@PathVariable("id") UUID appointmentId,
       @ModelAttribute("editAppointmentRequest") EditAppointmentRequest editAppointmentRequest,
-      @AuthenticationPrincipal UserData userData, RedirectAttributes redirectAttributes) {
+      @AuthenticationPrincipal UserData userData, RedirectAttributes redirectAttributes,
+      @RequestParam(name = "error", required = false) String errorMessage) {
 
     if (userData == null || userData.getUserId() == null) {
       return new ModelAndView("redirect:/login");
     }
 
     appointmentService.editAppointmentForUser(appointmentId, userData.getUserId(), editAppointmentRequest);
-
     ModelAndView modelAndView = new ModelAndView("redirect:/home");
     redirectAttributes.addFlashAttribute("successMessage", "Часът беше успешно редактиран.");
+
+    if (errorMessage != null) {
+      modelAndView.addObject("errorMessage", "Невалидно потребителско име или парола");
+    }
 
     return modelAndView;
   }

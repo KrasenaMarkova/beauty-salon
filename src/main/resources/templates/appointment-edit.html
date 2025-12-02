@@ -44,15 +44,6 @@
       <label>Дата и час:</label>
       <input type="text" id="appointmentDate" th:field="*{appointmentDate}"/>
 
-      <label>Услуга:</label>
-      <select th:field="*{treatmentId}">
-        <option th:each="t : ${treatments}"
-                th:value="${t.id}"
-                th:text="${t.beautyTreatmentName.displayName}"
-                th:selected="${t.id == editAppointmentRequest.treatmentId}">
-        </option>
-      </select>
-
       <button type="submit">Запази промените</button>
     </form>
 

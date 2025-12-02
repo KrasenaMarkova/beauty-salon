@@ -2,9 +2,9 @@ package com.example.beauty_salon.web.controller;
 
 import com.example.beauty_salon.appointment.model.Appointment;
 import com.example.beauty_salon.appointment.service.AppointmentService;
+import com.example.beauty_salon.config.UserService;
 import com.example.beauty_salon.restclient.dto.UserDto;
 import com.example.beauty_salon.security.UserData;
-import com.example.beauty_salon.config.UserService;
 import com.example.beauty_salon.web.dto.LoginRequest;
 import com.example.beauty_salon.web.dto.RegisterRequest;
 import jakarta.validation.Valid;

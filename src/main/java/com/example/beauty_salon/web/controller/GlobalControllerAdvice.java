@@ -1,5 +1,6 @@
 package com.example.beauty_salon.web.controller;
 
+import com.example.beauty_salon.exception.NoFreeEmployeeException;
 import com.example.beauty_salon.exception.PasswordDoNotMatchException;
 import com.example.beauty_salon.exception.UserAlreadyExistsException;
 import com.example.beauty_salon.exception.UserNotFoundException;
@@ -39,6 +40,13 @@ public class GlobalControllerAdvice {
     return "redirect:/register";
   }
 
+  @ExceptionHandler(NoFreeEmployeeException.class)
+  public String handleNoFreeEmployeeException(NoFreeEmployeeException e, RedirectAttributes redirectAttributes) {
+
+    redirectAttributes.addFlashAttribute("errorMessage", "Служителят е зает в този час.");
+
+    return "redirect:/appointments/{id}/edit";
+  }
 
   @ExceptionHandler({IllegalArgumentException.class, SecurityException.class})
   public String handleEditingExceptions(

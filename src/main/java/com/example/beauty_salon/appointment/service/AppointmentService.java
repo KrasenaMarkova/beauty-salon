@@ -14,10 +14,8 @@ import com.example.beauty_salon.exception.NoFreeEmployeeException;
 import com.example.beauty_salon.restclient.dto.UserDto;
 import com.example.beauty_salon.web.dto.EditAppointmentRequest;
 import jakarta.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -43,13 +41,13 @@ public class AppointmentService {
 
     List<Employee> potentialEmployees = employeeService.getEmployeeByPosition(requiredPosition);
     if (potentialEmployees.isEmpty()) {
-      throw new NoFreeEmployeeException("Няма наличен служител за тази услуга.");
+      throw new IllegalArgumentException("Няма наличен служител за тази услуга.");
     }
 
     Employee employee = potentialEmployees.stream()
         .filter(e -> isEmployeeAvailable(e, dateTime, treatment.getDurationMinutes()))
         .findFirst()
-        .orElseThrow(() -> new NoFreeEmployeeException("Няма свободен служител за избрания час."));
+        .orElseThrow(() -> new IllegalArgumentException("Няма свободен служител за избрания час."));
 
     Appointment appointment = Appointment.builder()
         .appointmentDate(dateTime)
@@ -66,25 +64,31 @@ public class AppointmentService {
 
   private boolean isEmployeeAvailable(Employee employee, LocalDateTime startTime, int durationMinutes) {
 
-    LocalTime workStart = LocalTime.of(9, 0);
-    LocalTime workEnd = LocalTime.of(18, 0);
+    LocalTime start = startTime.toLocalTime();
+    LocalTime end = startTime.plusMinutes(durationMinutes).toLocalTime();
 
-    LocalDate appointmentDate = startTime.toLocalDate();
-    LocalDateTime dayStart = appointmentDate.atTime(workStart);
-    LocalDateTime dayEnd = appointmentDate.atTime(workEnd);
+    if (start.isBefore(LocalTime.of(9, 0)) ||
+        end.isAfter(LocalTime.of(18, 0))) {
+      return false;
+    }
 
-    List<Appointment> existing = appointmentRepository.findAll().stream()
-        .filter(a -> a.getEmployee().getId().equals(employee.getId()))
-        .filter(a -> !a.getAppointmentDate().isBefore(dayStart) && !a.getAppointmentDate().isAfter(dayEnd))
-        .toList();
+    List<Appointment> appointments = appointmentRepository.findAllByEmployeeId(employee.getId());
+    LocalDateTime requestedEnd = startTime.plusMinutes(durationMinutes);
 
-    LocalDateTime endTime = startTime.plusMinutes(durationMinutes);
+    for (Appointment a : appointments) {
+      LocalDateTime existingStart = a.getAppointmentDate();
+      LocalDateTime existingEnd = a.getAppointmentDate().plusMinutes(a.getDurationMinutes());
 
-    return existing.stream().noneMatch(a -> {
-      LocalDateTime aStart = a.getAppointmentDate();
-      LocalDateTime aEnd = aStart.plusMinutes(a.getDurationMinutes());
-      return aStart.isBefore(endTime) && aEnd.isAfter(startTime);
-    }) && !startTime.toLocalTime().isBefore(workStart) && !endTime.toLocalTime().isAfter(workEnd);
+      boolean overlap =
+          startTime.isBefore(existingEnd) &&
+              requestedEnd.isAfter(existingStart);
+
+      if (overlap) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   private EmployeePosition mapTreatmentToEmployeePosition(BeautyTreatmentName treatmentName) {
@@ -148,9 +152,9 @@ public class AppointmentService {
 
     List<Appointment> allAppointments = getAllByUserId(userId);
 
-    if (allAppointments == null) {
-      return allAppointments = new ArrayList<>();
-    }
+//    if (allAppointments == null) {
+//      return allAppointments = new ArrayList<>();
+//    }
 
     return allAppointments.stream()
         .filter(a -> a.getStatus() == AppointmentStatus.COMPLETED
@@ -175,29 +179,27 @@ public class AppointmentService {
   }
 
   @Transactional
-  public void editAppointmentForUser(UUID appointmentId, UUID userId, EditAppointmentRequest editAppointmentRequest) {
+  public void editAppointmentForUser(UUID appointmentId,
+      UUID userId,
+      EditAppointmentRequest request) {
 
-    Appointment existing = appointmentRepository.findById(appointmentId)
-        .orElseThrow(() -> new IllegalArgumentException("Часът не съществува."));
+    Appointment appointment = appointmentRepository.findById(appointmentId)
+        .orElseThrow(() -> new IllegalArgumentException("Часът не е намерен."));
 
-    if (!existing.getUserId().equals(userId)) {
-      throw new SecurityException("Нямате права да редактирате този час.");
+    if (!appointment.getUserId().equals(userId)) {
+      throw new IllegalArgumentException("Нямате право да редактирате този час.");
     }
 
-    existing.setAppointmentDate(editAppointmentRequest.getAppointmentDate());
+    LocalDateTime newDate = request.getAppointmentDate();
+    int duration = appointment.getTreatment().getDurationMinutes();
+    boolean isFree = isEmployeeAvailable(appointment.getEmployee(), newDate, duration);
 
-    if (editAppointmentRequest.getTreatmentId() != null) {
-      BeautyTreatment treatment = beautyTreatmentService.getById(editAppointmentRequest.getTreatmentId());
-      existing.setTreatment(treatment);
-      existing.setPrice(treatment.getPrice());
-      existing.setDurationMinutes(treatment.getDurationMinutes());
-
-      if (!isEmployeeAvailable(existing.getEmployee(), existing.getAppointmentDate(), treatment.getDurationMinutes())) {
-        throw new IllegalArgumentException("Служителят не е свободен за избрания час.");
-      }
+    if (!isFree) {
+      throw new NoFreeEmployeeException("Служителят е зает в този час.");
     }
 
-    appointmentRepository.save(existing);
+    appointment.setAppointmentDate(newDate);
+    appointmentRepository.save(appointment);
   }
 
   public EditAppointmentRequest prepareEditForm(UUID appointmentId, UUID userId) {
@@ -216,10 +218,6 @@ public class AppointmentService {
 
     EditAppointmentRequest editAppointmentRequest = new EditAppointmentRequest();
     editAppointmentRequest.setAppointmentDate(appointment.getAppointmentDate());
-
-    if (appointment.getTreatment() != null) {
-      editAppointmentRequest.setTreatmentId(appointment.getTreatment().getId());
-    }
 
     return editAppointmentRequest;
   }
