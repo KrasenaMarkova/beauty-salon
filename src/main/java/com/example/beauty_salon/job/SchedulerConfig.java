@@ -36,5 +36,4 @@ public class SchedulerConfig {
 
     System.out.println("Updated past appointments status at " + formattedNow);
   }
-
 }

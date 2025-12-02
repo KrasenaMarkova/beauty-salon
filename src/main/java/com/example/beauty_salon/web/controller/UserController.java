@@ -52,7 +52,7 @@ public class UserController {
     }
 
     userService.updateProfile(id, editProfileRequest);
+
     return new ModelAndView("redirect:/home");
   }
-
 }

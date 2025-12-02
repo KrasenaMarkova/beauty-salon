@@ -13,5 +13,4 @@ public class EditAppointmentRequest {
   @Future(message = "Не можете да изберете минала дата и час.")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime appointmentDate;
-
 }

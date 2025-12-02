@@ -1,8 +1,8 @@
 package com.example.beauty_salon.exception;
 
-public class UserAlreadyExistsException extends RuntimeException{
+public class UserAlreadyExistsException extends RuntimeException {
 
-    public UserAlreadyExistsException(String message) {
-        super();
-    }
+  public UserAlreadyExistsException(String message) {
+    super();
+  }
 }

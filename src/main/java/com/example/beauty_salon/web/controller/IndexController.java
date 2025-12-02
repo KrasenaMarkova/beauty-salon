@@ -94,12 +94,13 @@ public class IndexController {
 
   @GetMapping("/about-us")
   public String about() {
+
     return "about-us";
   }
 
   @GetMapping("/team")
   public String team() {
+
     return "team";
   }
-
 }

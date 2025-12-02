@@ -14,5 +14,4 @@ public class EmailService {
 
     System.out.println("Sending email for registration for user with email: " + event.getEmail());
   }
-
 }

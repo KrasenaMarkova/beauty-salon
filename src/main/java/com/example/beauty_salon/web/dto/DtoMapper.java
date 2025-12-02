@@ -15,5 +15,4 @@ public class DtoMapper {
         .phone(user.getPhone())
         .build();
   }
-
 }

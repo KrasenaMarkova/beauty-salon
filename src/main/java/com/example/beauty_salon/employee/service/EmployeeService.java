@@ -20,12 +20,13 @@ public class EmployeeService {
     this.employeeRepository = employeeRepository;
   }
 
-
   public List<Employee> getEmployeeByPosition(EmployeePosition requiredPosition) {
+
     return employeeRepository.findByEmployeePosition(requiredPosition);
   }
 
   public List<Employee> getAll() {
+
     return employeeRepository.findAll();
   }
 
@@ -40,14 +41,17 @@ public class EmployeeService {
   }
 
   public void deleteById(UUID id) {
+
     employeeRepository.deleteById(id);
   }
 
   public Employee getById(UUID id) {
+
     return employeeRepository.findById(id).orElse(null);
   }
 
   public void update(UUID id, @Valid RegisterEmployeeRequest editEmployeeRequest) {
+
     Employee employee = employeeRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Служителят не съществува"));
 

@@ -9,6 +9,6 @@ import lombok.Data;
 public class StatusResponseDto {
 
   private UUID id;
-  private boolean active;
 
+  private boolean active;
 }

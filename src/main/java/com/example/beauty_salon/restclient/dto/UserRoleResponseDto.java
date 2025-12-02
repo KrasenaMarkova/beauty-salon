@@ -10,6 +10,6 @@ import lombok.Data;
 public class UserRoleResponseDto {
 
   private UUID id;
-  private UserRole role;
 
+  private UserRole role;
 }

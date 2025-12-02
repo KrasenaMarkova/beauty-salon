@@ -32,5 +32,4 @@ public class EditProfileRequest {
   @NotNull
   @Pattern(regexp = "[0-9]{10}", message = "phone length must be 10 digits!")
   private String phone;
-
 }

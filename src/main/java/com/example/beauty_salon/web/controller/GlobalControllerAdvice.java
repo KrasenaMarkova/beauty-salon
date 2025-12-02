@@ -21,6 +21,7 @@ public class GlobalControllerAdvice {
   public ModelAndView handleException(UserNotFoundException e) {
 
     ModelAndView modelAndView = new ModelAndView("not-found");
+
     return modelAndView;
   }
 
@@ -76,5 +77,4 @@ public class GlobalControllerAdvice {
 
     return modelAndView;
   }
-
 }

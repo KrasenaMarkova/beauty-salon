@@ -1,5 +1,8 @@
 package com.example.beauty_salon.employee.model;
 
+import lombok.Getter;
+
+@Getter
 public enum EmployeePosition {
 
   HAIRDRESSER("Hairdresser"),
@@ -10,9 +13,5 @@ public enum EmployeePosition {
 
   EmployeePosition(String displayName) {
     this.displayName = displayName;
-  }
-
-  public String getDisplayName() {
-    return displayName;
   }
 }

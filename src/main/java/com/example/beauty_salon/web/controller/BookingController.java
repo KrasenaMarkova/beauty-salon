@@ -5,6 +5,7 @@ import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
 import com.example.beauty_salon.security.UserData;
 import com.example.beauty_salon.web.dto.AppointmentRequest;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ public class BookingController {
   private final AppointmentService appointmentService;
   private final BeautyTreatmentService beautyTreatmentService;
 
+  @Autowired
   public BookingController(AppointmentService appointmentService, BeautyTreatmentService beautyTreatmentService) {
     this.appointmentService = appointmentService;
     this.beautyTreatmentService = beautyTreatmentService;
@@ -61,5 +63,4 @@ public class BookingController {
 
     return modelAndView;
   }
-
 }

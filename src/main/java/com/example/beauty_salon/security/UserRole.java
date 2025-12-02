@@ -1,5 +1,8 @@
 package com.example.beauty_salon.security;
 
+import lombok.Getter;
+
+@Getter
 public enum UserRole {
   USER("User"),
   ADMIN("Admin");
@@ -8,9 +11,5 @@ public enum UserRole {
 
   UserRole(String displayName) {
     this.displayName = displayName;
-  }
-
-  public String getDisplayName() {
-    return displayName;
   }
 }

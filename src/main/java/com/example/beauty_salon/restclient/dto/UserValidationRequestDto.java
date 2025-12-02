@@ -14,5 +14,6 @@ import lombok.Setter;
 public class UserValidationRequestDto {
 
   private String username;
+
   private String email;
 }

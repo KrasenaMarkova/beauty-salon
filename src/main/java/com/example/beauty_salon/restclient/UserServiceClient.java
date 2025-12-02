@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(
-    name = "beauty-salon-rest",
-    url = "http://localhost:8081/api/v1/users"
-)
+@FeignClient(name = "beauty-salon-rest", url = "http://localhost:8081/api/v1/users")
 public interface UserServiceClient {
 
   @PostMapping("/validation")

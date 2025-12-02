@@ -16,12 +16,20 @@ import lombok.Setter;
 public class UserDto {
 
   private UUID id;
+
   private String username;
+
   private String firstName;
+
   private String lastName;
+
   private UserRole userRole;
+
   private String email;
+
   private String phone;
+
   private String password;
+
   private boolean active;
 }

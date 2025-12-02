@@ -64,5 +64,4 @@ public class BeautyTreatmentService {
 
     beautyTreatmentRepository.save(treatment);
   }
-
 }

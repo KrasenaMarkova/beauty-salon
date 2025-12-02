@@ -119,6 +119,7 @@ public class UserService implements UserDetailsService {
   }
 
   public void toggleUserRole(UUID id) {
+
     UserRoleResponseDto response = userServiceClient
         .toggleUserRole(id)
         .getBody();
@@ -141,6 +142,5 @@ public class UserService implements UserDetailsService {
         .listAllUsers()
         .getBody();
   }
-
 }
 

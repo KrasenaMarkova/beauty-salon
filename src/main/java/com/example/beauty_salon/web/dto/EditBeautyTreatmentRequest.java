@@ -8,5 +8,4 @@ public class EditBeautyTreatmentRequest {
 
   @NotBlank
   private String serviceDescription;
-
 }

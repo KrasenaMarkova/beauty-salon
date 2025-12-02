@@ -51,6 +51,7 @@ public class AdminController {
     userService.toggleStatus(id);
 
     redirectAttributes.addFlashAttribute("message", "Статусът е променен успешно");
+
     return "redirect:/admin/users";
   }
 
@@ -61,6 +62,7 @@ public class AdminController {
     userService.toggleUserRole(id);
 
     redirectAttributes.addFlashAttribute("message", "Ролята на потребителя е променена успешно");
+
     return "redirect:/admin/users";
   }
 
@@ -171,5 +173,4 @@ public class AdminController {
 
     return new ModelAndView("redirect:/admin/treatments");
   }
-
 }

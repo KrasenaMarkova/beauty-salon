@@ -50,6 +50,7 @@ public class AppointmentController {
     modelAndView.addObject("editAppointmentRequest", editAppointmentRequest);
     modelAndView.addObject("appointment", appointmentService.getById(appointmentId));
     modelAndView.addObject("treatments", beautyTreatmentService.getAll());
+
     return modelAndView;
   }
 
@@ -85,6 +86,7 @@ public class AppointmentController {
 
     ModelAndView modelAndView = new ModelAndView("redirect:/appointments/history");
     modelAndView.addObject("successMessage", "Часът беше изтрит успешно.");
+
     return modelAndView;
   }
 
@@ -105,6 +107,5 @@ public class AppointmentController {
 
     return modelAndView;
   }
-
 }
 

@@ -14,10 +14,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class UserData implements UserDetails {
 
   private UUID userId;
+
   private String username;
+
   private String password;
+
   private UserRole role;
+
   private String email;
+
   private boolean isAccountActive;
 
   @Override

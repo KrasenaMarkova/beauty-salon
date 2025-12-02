@@ -23,6 +23,9 @@ public class RegisterRequest {
 
   @NotNull
   @Email
+  @Pattern(
+      regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
+      message = "Невалиден email адрес!")
   private String email;
 
   @NotNull
@@ -36,5 +39,4 @@ public class RegisterRequest {
   @NotNull
   @Size(min = 3, max = 20, message = "Дължината на паролата трябва да е между 3 и 20 знака!")
   private String confirmPassword;
-
 }

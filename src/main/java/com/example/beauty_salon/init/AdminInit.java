@@ -49,6 +49,5 @@ public class AdminInit implements CommandLineRunner {
       System.err.println("⚠️ Could not check or create admin: " + e.getMessage());
     }
   }
-
 }
 
