@@ -32,13 +32,13 @@ public class EmployeeServiceUTest {
 
   @InjectMocks
   private EmployeeService employeeService;
-
-  private UUID employeeId;
-
-  @BeforeEach
-  void setUp() {
-    employeeId = UUID.randomUUID();
-  }
+//
+//  private UUID employeeId;
+//
+//  @BeforeEach
+//  void setUp() {
+//    employeeId = UUID.randomUUID();
+//  }
 
   @Test
   void whenGetEmployeeByPosition_thenReturnEmployeesWithPosition() {
@@ -103,12 +103,17 @@ public class EmployeeServiceUTest {
 
   @Test
   void whenDeleteById_thenRepositoryDeleteCalled() {
+
+    UUID employeeId = UUID.randomUUID();
     employeeService.deleteById(employeeId);
+
     verify(employeeRepository).deleteById(employeeId);
   }
 
   @Test
   void whenGetById_andExists_thenReturnEmployee() {
+    UUID employeeId = UUID.randomUUID();
+
     Employee employee = Employee.builder()
         .id(employeeId)
         .name("Gosho")
@@ -125,6 +130,8 @@ public class EmployeeServiceUTest {
 
   @Test
   void whenGetById_andDoesNotExist_thenReturnNull() {
+    UUID employeeId = UUID.randomUUID();
+
     when(employeeRepository.findById(employeeId)).thenReturn(Optional.empty());
 
     Employee result = employeeService.getById(employeeId);
@@ -134,6 +141,8 @@ public class EmployeeServiceUTest {
 
   @Test
   void whenUpdate_thenModifyAndSaveEmployee() {
+    UUID employeeId = UUID.randomUUID();
+
     Employee employee = Employee.builder()
         .id(employeeId)
         .name("Old Name")
@@ -155,6 +164,8 @@ public class EmployeeServiceUTest {
 
   @Test
   void whenUpdate_andEmployeeNotFound_thenThrowsException() {
+    UUID employeeId = UUID.randomUUID();
+
     RegisterEmployeeRequest editRequest = new RegisterEmployeeRequest();
     editRequest.setName("New Name");
     editRequest.setEmployeePosition(EmployeePosition.MANICURE);

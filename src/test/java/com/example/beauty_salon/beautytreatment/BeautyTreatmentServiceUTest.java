@@ -16,7 +16,6 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,13 +30,6 @@ public class BeautyTreatmentServiceUTest {
 
   @InjectMocks
   private BeautyTreatmentService beautyTreatmentService;
-
-  private UUID treatmentId;
-
-  @BeforeEach
-  void setUp() {
-    treatmentId = UUID.randomUUID();
-  }
 
   @Test
   void whenAdjustPricesForInflation_thenPricesUpdatedCorrectly() {
@@ -102,6 +94,7 @@ public class BeautyTreatmentServiceUTest {
 
   @Test
   void whenGetById_andExists_thenReturnTreatment() {
+    UUID treatmentId = UUID.randomUUID();
     BeautyTreatment treatment = BeautyTreatment.builder()
         .id(treatmentId)
         .serviceDescription("Haircut")
@@ -120,6 +113,7 @@ public class BeautyTreatmentServiceUTest {
 
   @Test
   void whenGetById_andDoesNotExist_thenThrowsException() {
+    UUID treatmentId = UUID.randomUUID();
     when(beautyTreatmentRepository.findById(treatmentId)).thenReturn(Optional.empty());
 
     IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
@@ -130,6 +124,7 @@ public class BeautyTreatmentServiceUTest {
 
   @Test
   void whenUpdate_thenModifyServiceDescriptionAndSave() {
+    UUID treatmentId = UUID.randomUUID();
     BeautyTreatment treatment = BeautyTreatment.builder()
         .id(treatmentId)
         .serviceDescription("Old Description")
@@ -151,6 +146,7 @@ public class BeautyTreatmentServiceUTest {
 
   @Test
   void whenUpdate_andTreatmentNotFound_thenThrowsException() {
+    UUID treatmentId = UUID.randomUUID();
     EditBeautyTreatmentRequest editRequest = new EditBeautyTreatmentRequest();
     editRequest.setServiceDescription("New Description");
 

@@ -25,7 +25,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -50,27 +49,12 @@ public class AppointmentServiceUTest {
   @InjectMocks
   private AppointmentService appointmentService;
 
-  private UUID userId;
-  private UUID appointmentId;
-  private UUID appointmentId1;
-  private UUID appointmentId2;
-  private UUID treatmentId;
-  private LocalDateTime appointmentTime1;
-  private LocalDateTime appointmentTime2;
-
-  @BeforeEach
-  void setUp() {
-    userId = UUID.randomUUID();
-    appointmentId = UUID.randomUUID();
-    appointmentId1 = UUID.randomUUID();
-    appointmentId2 = UUID.randomUUID();
-    treatmentId = UUID.randomUUID();
-    appointmentTime1 = LocalDateTime.of(2025, 12, 4, 10, 0);
-    appointmentTime2 = LocalDateTime.of(2025, 12, 5, 12, 0);
-  }
-
   @Test
   void whenCreateAppointmentWithAvailableEmployee_thenSavesAppointment() {
+    UUID userId = UUID.randomUUID();
+    UUID treatmentId = UUID.randomUUID();
+    LocalDateTime appointmentTime = LocalDateTime.of(2025, 12, 4, 10, 0);
+
     UserDto userDto = UserDto.builder().id(userId).build();
     BeautyTreatment treatment = BeautyTreatment.builder()
         .id(treatmentId)
@@ -90,13 +74,17 @@ public class AppointmentServiceUTest {
         .thenReturn(List.of(employee));
     when(appointmentRepository.findAllByEmployeeId(employee.getId())).thenReturn(List.of());
 
-    appointmentService.createAppointment(userId, treatmentId, appointmentTime1);
+    appointmentService.createAppointment(userId, treatmentId, appointmentTime);
 
     verify(appointmentRepository).save(any(Appointment.class));
   }
 
   @Test
   void whenNoEmployeesForTreatment_thenThrowsException() {
+    UUID userId = UUID.randomUUID();
+    UUID treatmentId = UUID.randomUUID();
+    LocalDateTime appointmentTime = LocalDateTime.of(2025, 12, 4, 10, 0);
+
     UserDto userDto = UserDto.builder().id(userId).build();
     BeautyTreatment treatment = BeautyTreatment.builder()
         .id(treatmentId)
@@ -107,16 +95,21 @@ public class AppointmentServiceUTest {
 
     when(userService.getById(userId)).thenReturn(userDto);
     when(beautyTreatmentService.getById(treatmentId)).thenReturn(treatment);
-    when(employeeService.getEmployeeByPosition(EmployeePosition.HAIRDRESSER)).thenReturn(List.of());
+    when(employeeService.getEmployeeByPosition(EmployeePosition.HAIRDRESSER))
+        .thenReturn(List.of());
 
     IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-        () -> appointmentService.createAppointment(userId, treatmentId, appointmentTime1));
+        () -> appointmentService.createAppointment(userId, treatmentId, appointmentTime));
 
     assertEquals("Няма наличен служител за тази услуга.", ex.getMessage());
   }
 
   @Test
   void whenNoAvailableEmployeeForTime_thenThrowsException() {
+    UUID userId = UUID.randomUUID();
+    UUID treatmentId = UUID.randomUUID();
+    LocalDateTime appointmentTime = LocalDateTime.of(2025, 12, 4, 10, 0);
+
     UserDto userDto = UserDto.builder().id(userId).build();
     BeautyTreatment treatment = BeautyTreatment.builder()
         .id(treatmentId)
@@ -132,7 +125,7 @@ public class AppointmentServiceUTest {
         .build();
 
     Appointment existingAppointment = Appointment.builder()
-        .appointmentDate(appointmentTime1)
+        .appointmentDate(appointmentTime)
         .durationMinutes(60)
         .price(BigDecimal.valueOf(50.0))
         .status(AppointmentStatus.SCHEDULED)
@@ -147,16 +140,19 @@ public class AppointmentServiceUTest {
         .thenReturn(List.of(existingAppointment));
 
     IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-        () -> appointmentService.createAppointment(userId, treatmentId, appointmentTime1));
+        () -> appointmentService.createAppointment(userId, treatmentId, appointmentTime));
 
     assertEquals("Няма свободен служител за избрания час.", ex.getMessage());
   }
 
   @Test
   void whenPastAppointmentsExist_thenMarkAsCompleted() {
+    UUID appointmentId = UUID.randomUUID();
+    LocalDateTime pastTime = LocalDateTime.of(2025, 12, 3, 10, 0);
+
     Appointment pastAppointment = Appointment.builder()
         .id(appointmentId)
-        .appointmentDate(appointmentTime1.minusDays(1))
+        .appointmentDate(pastTime)
         .durationMinutes(60)
         .status(AppointmentStatus.SCHEDULED)
         .employee(Employee.builder().id(UUID.randomUUID()).name("Gosho").employeePosition(EmployeePosition.HAIRDRESSER).build())
@@ -173,6 +169,9 @@ public class AppointmentServiceUTest {
 
   @Test
   void whenGetAllByUserId_thenReturnAppointments() {
+    UUID userId = UUID.randomUUID();
+    UUID appointmentId = UUID.randomUUID();
+
     Appointment a1 = Appointment.builder().id(appointmentId).userId(userId).build();
     when(appointmentRepository.findByUserId(userId)).thenReturn(List.of(a1));
 
@@ -184,6 +183,8 @@ public class AppointmentServiceUTest {
 
   @Test
   void whenGetById_thenReturnAppointment() {
+    UUID appointmentId = UUID.randomUUID();
+
     Appointment a = Appointment.builder().id(appointmentId).build();
     when(appointmentRepository.getById(appointmentId)).thenReturn(a);
 
@@ -194,6 +195,8 @@ public class AppointmentServiceUTest {
 
   @Test
   void whenCancelScheduledAppointment_thenStatusUpdated() {
+    UUID appointmentId = UUID.randomUUID();
+
     Appointment a = Appointment.builder()
         .id(appointmentId)
         .status(AppointmentStatus.SCHEDULED)
@@ -208,6 +211,8 @@ public class AppointmentServiceUTest {
 
   @Test
   void whenCancelAlreadyCancelledAppointment_thenThrows() {
+    UUID appointmentId = UUID.randomUUID();
+
     Appointment a = Appointment.builder()
         .id(appointmentId)
         .status(AppointmentStatus.CANCELLED)
@@ -220,9 +225,11 @@ public class AppointmentServiceUTest {
     assertEquals("Този час вече е отменен.", ex.getMessage());
   }
 
-  // --- deleteAppointmentForUser ---
   @Test
   void whenDeleteAppointmentForUserWithCorrectUserId_thenDelete() {
+    UUID userId = UUID.randomUUID();
+    UUID appointmentId = UUID.randomUUID();
+
     Appointment a = Appointment.builder().id(appointmentId).userId(userId).build();
     when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.of(a));
 
@@ -233,6 +240,9 @@ public class AppointmentServiceUTest {
 
   @Test
   void whenDeleteAppointmentForUserWithWrongUserId_thenThrows() {
+    UUID userId = UUID.randomUUID();
+    UUID appointmentId = UUID.randomUUID();
+
     Appointment a = Appointment.builder().id(appointmentId).userId(UUID.randomUUID()).build();
     when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.of(a));
 
@@ -244,11 +254,15 @@ public class AppointmentServiceUTest {
 
   @Test
   void whenPrepareEditFormWithValidAppointment_thenReturnEditRequest() {
+    UUID userId = UUID.randomUUID();
+    UUID appointmentId = UUID.randomUUID();
+    LocalDateTime appointmentTime = LocalDateTime.of(2025, 12, 5, 12, 0);
+
     Appointment a = Appointment.builder()
         .id(appointmentId)
         .userId(userId)
         .status(AppointmentStatus.SCHEDULED)
-        .appointmentDate(appointmentTime1.plusDays(1))
+        .appointmentDate(appointmentTime)
         .build();
     when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.of(a));
 
@@ -259,11 +273,15 @@ public class AppointmentServiceUTest {
 
   @Test
   void whenPrepareEditFormForCancelledAppointment_thenThrows() {
+    UUID userId = UUID.randomUUID();
+    UUID appointmentId = UUID.randomUUID();
+    LocalDateTime appointmentTime = LocalDateTime.of(2025, 12, 5, 12, 0);
+
     Appointment a = Appointment.builder()
         .id(appointmentId)
         .userId(userId)
         .status(AppointmentStatus.CANCELLED)
-        .appointmentDate(appointmentTime1.plusDays(1))
+        .appointmentDate(appointmentTime)
         .build();
     when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.of(a));
 
@@ -275,6 +293,12 @@ public class AppointmentServiceUTest {
 
   @Test
   void whenGetAllSortedByUser_thenReturnSortedList() {
+    UUID userId = UUID.randomUUID();
+    UUID appointmentId1 = UUID.randomUUID();
+    UUID appointmentId2 = UUID.randomUUID();
+    LocalDateTime appointmentTime1 = LocalDateTime.of(2025, 12, 4, 10, 0);
+    LocalDateTime appointmentTime2 = LocalDateTime.of(2025, 12, 5, 12, 0);
+
     Appointment a1 = Appointment.builder()
         .id(appointmentId2)
         .userId(userId)
@@ -298,12 +322,18 @@ public class AppointmentServiceUTest {
     List<Appointment> result = appointmentService.getAllSortedByUser(userId);
 
     assertEquals(2, result.size());
-    assertEquals(appointmentId1, result.get(0).getId());  // проверява правилната сортирана поредност
+    assertEquals(appointmentId1, result.get(0).getId()); // sorted correctly
     assertEquals(appointmentId2, result.get(1).getId());
   }
 
   @Test
   void whenGetActiveAppointments_thenReturnOnlyScheduledSorted() {
+    UUID userId = UUID.randomUUID();
+    UUID appointmentId1 = UUID.randomUUID();
+    UUID appointmentId2 = UUID.randomUUID();
+    LocalDateTime appointmentTime1 = LocalDateTime.of(2025, 12, 4, 10, 0);
+    LocalDateTime appointmentTime2 = LocalDateTime.of(2025, 12, 5, 12, 0);
+
     Appointment scheduled = Appointment.builder()
         .id(appointmentId1)
         .userId(userId)
@@ -333,6 +363,12 @@ public class AppointmentServiceUTest {
 
   @Test
   void whenGetPastAppointmentsForUser_thenReturnCompletedOrCancelledSorted() {
+    UUID userId = UUID.randomUUID();
+    UUID appointmentId1 = UUID.randomUUID();
+    UUID appointmentId2 = UUID.randomUUID();
+    LocalDateTime appointmentTime1 = LocalDateTime.of(2025, 12, 4, 10, 0);
+    LocalDateTime appointmentTime2 = LocalDateTime.of(2025, 12, 5, 12, 0);
+
     Appointment completed = Appointment.builder()
         .id(appointmentId1)
         .userId(userId)
@@ -365,8 +401,30 @@ public class AppointmentServiceUTest {
     List<Appointment> result = appointmentService.getPastAppointmentsForUser(userId);
 
     assertEquals(2, result.size());
-    assertTrue(result.stream().allMatch(a -> a.getStatus() == AppointmentStatus.COMPLETED || a.getStatus() == AppointmentStatus.CANCELLED));
-    assertEquals(appointmentId2, result.get(0).getId()); // първо cancelled (по дата desc)
-    assertEquals(appointmentId1, result.get(1).getId()); // после completed
+    assertTrue(result.stream().allMatch(a -> a.getStatus() == AppointmentStatus.COMPLETED
+        || a.getStatus() == AppointmentStatus.CANCELLED));
+    assertEquals(appointmentId2, result.get(0).getId());
+    assertEquals(appointmentId1, result.get(1).getId());
+  }
+
+  @Test
+  void whenEditAppointmentForUserWithWrongUser_thenThrowsException() {
+    UUID appointmentId = UUID.randomUUID();
+    UUID userId = UUID.randomUUID();
+
+    Appointment appointment = Appointment.builder()
+        .id(appointmentId)
+        .userId(UUID.randomUUID()) // different user
+        .build();
+
+    when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.of(appointment));
+
+    EditAppointmentRequest request = new EditAppointmentRequest();
+    request.setAppointmentDate(LocalDateTime.of(2025, 12, 5, 11, 0));
+
+    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        () -> appointmentService.editAppointmentForUser(appointmentId, userId, request));
+
+    assertEquals("Нямате право да редактирате този час.", ex.getMessage());
   }
 }
