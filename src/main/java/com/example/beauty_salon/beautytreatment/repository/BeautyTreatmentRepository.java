@@ -1,6 +1,6 @@
-package com.example.beauty_salon.beautyTreatment.repository;
+package com.example.beauty_salon.beautytreatment.repository;
 
-import com.example.beauty_salon.beautyTreatment.model.BeautyTreatment;
+import com.example.beauty_salon.beautytreatment.model.BeautyTreatment;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

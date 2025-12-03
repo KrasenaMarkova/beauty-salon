@@ -1,8 +1,8 @@
 package com.example.beauty_salon.bootstrap;
 
-import com.example.beauty_salon.beautyTreatment.model.BeautyTreatment;
-import com.example.beauty_salon.beautyTreatment.model.BeautyTreatmentName;
-import com.example.beauty_salon.beautyTreatment.repository.BeautyTreatmentRepository;
+import com.example.beauty_salon.beautytreatment.model.BeautyTreatment;
+import com.example.beauty_salon.beautytreatment.model.BeautyTreatmentName;
+import com.example.beauty_salon.beautytreatment.repository.BeautyTreatmentRepository;
 import com.example.beauty_salon.employee.model.Employee;
 import com.example.beauty_salon.employee.model.EmployeePosition;
 import com.example.beauty_salon.employee.repository.EmployeeRepository;

@@ -1,4 +1,4 @@
-package com.example.beauty_salon.beautyTreatment.model;
+package com.example.beauty_salon.beautytreatment.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,4 +1,4 @@
-package com.example.beauty_salon.beautyTreatment.model;
+package com.example.beauty_salon.beautytreatment.model;
 
 import lombok.Getter;
 

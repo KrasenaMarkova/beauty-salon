@@ -11,9 +11,9 @@ import com.example.beauty_salon.appointment.model.Appointment;
 import com.example.beauty_salon.appointment.model.AppointmentStatus;
 import com.example.beauty_salon.appointment.repository.AppointmentRepository;
 import com.example.beauty_salon.appointment.service.AppointmentService;
-import com.example.beauty_salon.beautyTreatment.model.BeautyTreatment;
-import com.example.beauty_salon.beautyTreatment.model.BeautyTreatmentName;
-import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
+import com.example.beauty_salon.beautytreatment.model.BeautyTreatment;
+import com.example.beauty_salon.beautytreatment.model.BeautyTreatmentName;
+import com.example.beauty_salon.beautytreatment.service.BeautyTreatmentService;
 import com.example.beauty_salon.config.UserService;
 import com.example.beauty_salon.employee.model.Employee;
 import com.example.beauty_salon.employee.model.EmployeePosition;
@@ -69,7 +69,6 @@ public class AppointmentServiceUTest {
     appointmentTime2 = LocalDateTime.of(2025, 12, 5, 12, 0);
   }
 
-  // --- успешен сценарий ---
   @Test
   void whenCreateAppointmentWithAvailableEmployee_thenSavesAppointment() {
     UserDto userDto = UserDto.builder().id(userId).build();
@@ -96,7 +95,6 @@ public class AppointmentServiceUTest {
     verify(appointmentRepository).save(any(Appointment.class));
   }
 
-  // --- няма служители за услугата ---
   @Test
   void whenNoEmployeesForTreatment_thenThrowsException() {
     UserDto userDto = UserDto.builder().id(userId).build();
@@ -117,7 +115,6 @@ public class AppointmentServiceUTest {
     assertEquals("Няма наличен служител за тази услуга.", ex.getMessage());
   }
 
-  // --- няма свободен служител в избрания час ---
   @Test
   void whenNoAvailableEmployeeForTime_thenThrowsException() {
     UserDto userDto = UserDto.builder().id(userId).build();
@@ -134,7 +131,6 @@ public class AppointmentServiceUTest {
         .employeePosition(EmployeePosition.HAIRDRESSER)
         .build();
 
-    // вече има appointment, който припокрива избрания час
     Appointment existingAppointment = Appointment.builder()
         .appointmentDate(appointmentTime1)
         .durationMinutes(60)
@@ -156,7 +152,6 @@ public class AppointmentServiceUTest {
     assertEquals("Няма свободен служител за избрания час.", ex.getMessage());
   }
 
-  // --- markPastAppointmentsAsCompleted ---
   @Test
   void whenPastAppointmentsExist_thenMarkAsCompleted() {
     Appointment pastAppointment = Appointment.builder()
@@ -176,7 +171,6 @@ public class AppointmentServiceUTest {
     verify(appointmentRepository).saveAll(List.of(pastAppointment));
   }
 
-  // --- getAllByUserId ---
   @Test
   void whenGetAllByUserId_thenReturnAppointments() {
     Appointment a1 = Appointment.builder().id(appointmentId).userId(userId).build();
@@ -188,7 +182,6 @@ public class AppointmentServiceUTest {
     assertEquals(appointmentId, result.get(0).getId());
   }
 
-  // --- getById ---
   @Test
   void whenGetById_thenReturnAppointment() {
     Appointment a = Appointment.builder().id(appointmentId).build();
@@ -199,7 +192,6 @@ public class AppointmentServiceUTest {
     assertEquals(appointmentId, result.getId());
   }
 
-  // --- cancelAppointment ---
   @Test
   void whenCancelScheduledAppointment_thenStatusUpdated() {
     Appointment a = Appointment.builder()
@@ -250,7 +242,6 @@ public class AppointmentServiceUTest {
     assertEquals("Нямате права да изтриете този час", ex.getMessage());
   }
 
-  // --- prepareEditForm ---
   @Test
   void whenPrepareEditFormWithValidAppointment_thenReturnEditRequest() {
     Appointment a = Appointment.builder()
@@ -282,7 +273,6 @@ public class AppointmentServiceUTest {
     assertEquals("Този час не може да бъде редактиран.", ex.getMessage());
   }
 
-  // --- getAllSortedByUser ---
   @Test
   void whenGetAllSortedByUser_thenReturnSortedList() {
     Appointment a1 = Appointment.builder()
@@ -312,7 +302,6 @@ public class AppointmentServiceUTest {
     assertEquals(appointmentId2, result.get(1).getId());
   }
 
-  // --- getActiveAppointments ---
   @Test
   void whenGetActiveAppointments_thenReturnOnlyScheduledSorted() {
     Appointment scheduled = Appointment.builder()
@@ -342,7 +331,6 @@ public class AppointmentServiceUTest {
     assertEquals(appointmentId1, result.get(0).getId());
   }
 
-  // --- getPastAppointmentsForUser ---
   @Test
   void whenGetPastAppointmentsForUser_thenReturnCompletedOrCancelledSorted() {
     Appointment completed = Appointment.builder()

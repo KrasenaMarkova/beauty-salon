@@ -1,7 +1,7 @@
 package com.example.beauty_salon.job;
 
 import com.example.beauty_salon.appointment.service.AppointmentService;
-import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
+import com.example.beauty_salon.beautytreatment.service.BeautyTreatmentService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.springframework.scheduling.annotation.EnableScheduling;

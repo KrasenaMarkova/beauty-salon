@@ -1,7 +1,7 @@
 package com.example.beauty_salon.web.controller;
 
-import com.example.beauty_salon.beautyTreatment.model.BeautyTreatment;
-import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
+import com.example.beauty_salon.beautytreatment.model.BeautyTreatment;
+import com.example.beauty_salon.beautytreatment.service.BeautyTreatmentService;
 import com.example.beauty_salon.config.UserService;
 import com.example.beauty_salon.employee.model.Employee;
 import com.example.beauty_salon.employee.model.EmployeePosition;

@@ -2,7 +2,7 @@ package com.example.beauty_salon.web.controller;
 
 import com.example.beauty_salon.appointment.model.Appointment;
 import com.example.beauty_salon.appointment.service.AppointmentService;
-import com.example.beauty_salon.beautyTreatment.service.BeautyTreatmentService;
+import com.example.beauty_salon.beautytreatment.service.BeautyTreatmentService;
 import com.example.beauty_salon.config.UserService;
 import com.example.beauty_salon.restclient.dto.UserDto;
 import com.example.beauty_salon.security.UserData;
