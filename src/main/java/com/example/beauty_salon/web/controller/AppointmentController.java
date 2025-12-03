@@ -76,7 +76,8 @@ public class AppointmentController {
   }
 
   @PostMapping("/{id}/delete")
-  public ModelAndView deleteAppointment(@PathVariable UUID id, @AuthenticationPrincipal UserData userData) {
+  public ModelAndView deleteAppointment(@PathVariable UUID id, @AuthenticationPrincipal UserData userData,
+      RedirectAttributes redirectAttributes) {
 
     if (userData == null || userData.getUserId() == null) {
       return new ModelAndView("redirect:/login");
@@ -85,7 +86,7 @@ public class AppointmentController {
     appointmentService.deleteAppointmentForUser(id, userData.getUserId());
 
     ModelAndView modelAndView = new ModelAndView("redirect:/appointments/history");
-    modelAndView.addObject("successMessage", "Часът беше изтрит успешно.");
+    redirectAttributes.addFlashAttribute("successMessage", "Часът беше изтрит успешно.");
 
     return modelAndView;
   }

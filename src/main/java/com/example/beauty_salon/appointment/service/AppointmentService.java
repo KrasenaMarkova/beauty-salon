@@ -32,7 +32,7 @@ public class AppointmentService {
   private final BeautyTreatmentService beautyTreatmentService;
 
   @Transactional
-  public Appointment createAppointment(UUID userId, UUID treatmentId, LocalDateTime dateTime) {
+  public void createAppointment(UUID userId, UUID treatmentId, LocalDateTime dateTime) {
     UserDto user = userService.getById(userId);
 
     BeautyTreatment treatment = beautyTreatmentService.getById(treatmentId);
@@ -59,7 +59,7 @@ public class AppointmentService {
         .treatment(treatment)
         .build();
 
-    return appointmentRepository.save(appointment);
+    appointmentRepository.save(appointment);
   }
 
   private boolean isEmployeeAvailable(Employee employee, LocalDateTime startTime, int durationMinutes) {

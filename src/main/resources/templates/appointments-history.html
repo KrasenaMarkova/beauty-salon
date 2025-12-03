@@ -46,6 +46,10 @@
       <a class="btn" th:href="@{/booking}" style="margin-top: 10px;">Запази нов час</a>
     </div>
 
+    <div th:if="${successMessage}" class="success-message">
+      <p th:text="${successMessage}"></p>
+    </div>
+
     <!-- Таблица с минали часове -->
     <div th:if="${!#lists.isEmpty(pastAppointments)}" style="overflow-x:auto;">
       <table style="width: 100%; border-collapse: collapse; min-width: 800px;">
