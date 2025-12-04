@@ -7,6 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.example.beauty_salon.exception.PasswordDoNotMatchException;
 import com.example.beauty_salon.restclient.UserServiceClient;
 import com.example.beauty_salon.restclient.dto.StatusResponseDto;
 import com.example.beauty_salon.restclient.dto.UserDto;
@@ -14,6 +15,7 @@ import com.example.beauty_salon.restclient.dto.UserRoleResponseDto;
 import com.example.beauty_salon.security.UserData;
 import com.example.beauty_salon.security.UserRole;
 import com.example.beauty_salon.web.dto.EditProfileRequest;
+import com.example.beauty_salon.web.dto.RegisterRequest;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -22,15 +24,87 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceUTest {
 
   @Mock
   private UserServiceClient userServiceClient;
+  @Mock
+  private PasswordEncoder passwordEncoder;
 
   @InjectMocks
   private UserService userService;
+
+  @Test
+  void register_WhenUserServiceReturnsNon2xx_ShouldThrowCommunicationError() {
+
+    RegisterRequest request = new RegisterRequest();
+    request.setUsername("testuser");
+    request.setEmail("test@mail.com");
+    request.setPassword("12345");
+    request.setConfirmPassword("12345");
+
+    ResponseEntity<Boolean> response =
+        ResponseEntity.status(500).body(null);
+
+    when(userServiceClient.validateUserData(any())).thenReturn(response);
+
+    RuntimeException ex = assertThrows(RuntimeException.class,
+        () -> userService.register(request));
+
+    assertEquals("Communication error!", ex.getMessage());
+  }
+
+  @Test
+  void register_WhenSaveUserReturnsNon2xx_ShouldThrowUserCreationError() {
+
+    RegisterRequest request = new RegisterRequest();
+    request.setUsername("testuser");
+    request.setEmail("test@mail.com");
+    request.setPassword("12345");
+    request.setConfirmPassword("12345");
+
+    ResponseEntity<Boolean> validationResponse = ResponseEntity.ok(false);
+    when(userServiceClient.validateUserData(any())).thenReturn(validationResponse);
+
+    when(passwordEncoder.encode("12345")).thenReturn("encoded-pass");
+
+    ResponseEntity<UserDto> saveUserResponse =
+        ResponseEntity.status(500).body(null);
+
+    when(userServiceClient.saveUser(any())).thenReturn(saveUserResponse);
+
+    RuntimeException ex = assertThrows(
+        RuntimeException.class,
+        () -> userService.register(request)
+    );
+
+    assertEquals("User creation error!", ex.getMessage());
+  }
+
+  @Test
+  void register_WhenPasswordsDoNotMatch_ShouldThrowPasswordDoNotMatchException() {
+
+    RegisterRequest request = new RegisterRequest();
+    request.setUsername("testuser");
+    request.setEmail("test@mail.com");
+    request.setPassword("12345");
+    request.setConfirmPassword("00000");
+
+    ResponseEntity<Boolean> response =
+        ResponseEntity.ok(false);
+
+    when(userServiceClient.validateUserData(any())).thenReturn(response);
+
+    PasswordDoNotMatchException ex = assertThrows(
+        PasswordDoNotMatchException.class,
+        () -> userService.register(request)
+    );
+
+    assertEquals("Паролите не съвпадат. Моля, въведете ги отново.", ex.getMessage());
+  }
 
   @Test
   void whenUpdateProfileSuccessful_thenClientCalledOnce() {
