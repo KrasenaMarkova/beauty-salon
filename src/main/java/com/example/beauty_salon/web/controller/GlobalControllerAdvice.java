@@ -3,7 +3,7 @@ package com.example.beauty_salon.web.controller;
 import com.example.beauty_salon.exception.NoFreeEmployeeException;
 import com.example.beauty_salon.exception.PasswordDoNotMatchException;
 import com.example.beauty_salon.exception.UserAlreadyExistsException;
-import com.example.beauty_salon.exception.UserNotFoundException;
+import com.example.beauty_salon.exception.UserException;
 import java.nio.file.AccessDeniedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,10 +17,11 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 public class GlobalControllerAdvice {
 
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  @ExceptionHandler(UserNotFoundException.class)
-  public ModelAndView handleException(UserNotFoundException e) {
+  @ExceptionHandler(UserException.class)
+  public ModelAndView handleException(UserException e) {
 
     ModelAndView modelAndView = new ModelAndView("not-found");
+    modelAndView.addObject("errorMessage", e.getMessage());
 
     return modelAndView;
   }

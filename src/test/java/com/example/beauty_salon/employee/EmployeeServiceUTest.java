@@ -32,13 +32,6 @@ public class EmployeeServiceUTest {
 
   @InjectMocks
   private EmployeeService employeeService;
-//
-//  private UUID employeeId;
-//
-//  @BeforeEach
-//  void setUp() {
-//    employeeId = UUID.randomUUID();
-//  }
 
   @Test
   void whenGetEmployeeByPosition_thenReturnEmployeesWithPosition() {

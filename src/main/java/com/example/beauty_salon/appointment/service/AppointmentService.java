@@ -152,10 +152,6 @@ public class AppointmentService {
 
     List<Appointment> allAppointments = getAllByUserId(userId);
 
-//    if (allAppointments == null) {
-//      return allAppointments = new ArrayList<>();
-//    }
-
     return allAppointments.stream()
         .filter(a -> a.getStatus() == AppointmentStatus.COMPLETED
             || a.getStatus() == AppointmentStatus.CANCELLED)
