@@ -113,6 +113,11 @@
       <artifactId>spring-cloud-starter-openfeign</artifactId>
       <version>4.2.0</version>
     </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>runtime</scope>
+    </dependency>
 
     <!-- Jakarta EL (за Java 17 LocalDate/Time) -->
     <dependency>
