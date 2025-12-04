@@ -3,8 +3,6 @@ package com.example.beauty_salon.beautytreatment.service;
 import com.example.beauty_salon.beautytreatment.model.BeautyTreatment;
 import com.example.beauty_salon.beautytreatment.repository.BeautyTreatmentRepository;
 import com.example.beauty_salon.web.dto.EditBeautyTreatmentRequest;
-//import jakarta.transaction.Transactional;
-
 import jakarta.validation.Valid;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
