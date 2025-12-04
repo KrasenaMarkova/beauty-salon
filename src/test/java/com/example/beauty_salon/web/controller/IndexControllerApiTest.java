@@ -186,4 +186,18 @@ public class IndexControllerApiTest {
         .andExpect(model().attribute("loginAttemptMessage", "Опитайте отново"))
         .andExpect(model().attributeDoesNotExist("errorMessage"));
   }
+
+  @Test
+  void getAboutUs_shouldReturnAboutUsView() throws Exception {
+    mockMvc.perform(get("/about-us"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("about-us"));
+  }
+
+  @Test
+  void getTeam_shouldReturnTeamView() throws Exception {
+    mockMvc.perform(get("/team"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("team"));
+  }
 }
