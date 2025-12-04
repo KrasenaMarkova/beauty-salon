@@ -3,7 +3,8 @@ package com.example.beauty_salon.beautytreatment.service;
 import com.example.beauty_salon.beautytreatment.model.BeautyTreatment;
 import com.example.beauty_salon.beautytreatment.repository.BeautyTreatmentRepository;
 import com.example.beauty_salon.web.dto.EditBeautyTreatmentRequest;
-import jakarta.transaction.Transactional;
+//import jakarta.transaction.Transactional;
+
 import jakarta.validation.Valid;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BeautyTreatmentService {

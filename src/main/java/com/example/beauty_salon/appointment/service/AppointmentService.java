@@ -13,7 +13,7 @@ import com.example.beauty_salon.employee.service.EmployeeService;
 import com.example.beauty_salon.exception.NoFreeEmployeeException;
 import com.example.beauty_salon.restclient.dto.UserDto;
 import com.example.beauty_salon.web.dto.EditAppointmentRequest;
-import jakarta.transaction.Transactional;
+//import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Comparator;
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
