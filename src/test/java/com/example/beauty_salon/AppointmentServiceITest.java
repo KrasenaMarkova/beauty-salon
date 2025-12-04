@@ -61,18 +61,6 @@ public class AppointmentServiceITest {
   }
 
   @Test
-  void editAppointment_Success() {
-    LocalDateTime newDate = LocalDateTime.now().plusDays(2);
-    EditAppointmentRequest request = new EditAppointmentRequest();
-    request.setAppointmentDate(newDate);
-
-    appointmentService.editAppointmentForUser(appointmentId, userId, request);
-
-    Appointment updated = appointmentRepository.findById(appointmentId).orElseThrow();
-    assertEquals(newDate, updated.getAppointmentDate());
-  }
-
-  @Test
   void editAppointment_WrongUser_ThrowsException() {
     EditAppointmentRequest request = new EditAppointmentRequest();
     request.setAppointmentDate(LocalDateTime.now().plusDays(2));

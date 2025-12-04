@@ -21,21 +21,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceUTest {
 
   @Mock
-  private ApplicationEventPublisher eventPublisher;
-
-  @Mock
   private UserServiceClient userServiceClient;
-
-  @Mock
-  private PasswordEncoder passwordEncoder;
 
   @InjectMocks
   private UserService userService;
