@@ -1,7 +1,7 @@
 # Beauty Salon Microservices System
 
 A microservices-based system built with **Spring Boot 3** and **Maven**,
-designed to manage a beauty salon business.\
+This is a Spring Boot application for managing a beauty salon. It provides functionalities for both clients and administrators, including appointment scheduling, user management, and beauty treatment management. The frontend is implemented using Thymeleaf templates.
 The system contains two services:
 
 ### ✔ **Beauty Salon Service (Main Service)**
@@ -35,122 +35,111 @@ The services communicate using **OpenFeign**.
 
 ------------------------------------------------------------------------
 
-## 🧱 Technology Stack
+## Tech Stack
 
 ### Backend
+- Java 17
+- Spring Boot
+- Spring MVC
+- Spring Security
+- Spring Data JPA
+- REST API for user-related functionalities
 
--   Java 17+
--   Spring Boot 3
--   Maven
--   Spring Web
--   Spring Data JPA
--   Validation
--   OpenFeign
+### Frontend
+- Thymeleaf
+- HTML / CSS / JavaScript
 
 ### Database
-
--   MySQL
+- MySQL (production)
+- H2 (for testing)
 
 ### Testing
+- JUnit 5
+- Mockito
+- Spring Boot Test / WebMvcTest
 
--   JUnit 5
--   Spring Boot Test
+### Build Tool
+- Maven
 
-------------------------------------------------------------------------
-
-## 🗂️ Project Structure
-
-    beauty-salon-system/
-    │
-    ├── beauty-salon/
-    │   ├── appointment
-    │   ├── beautytreatment
-    │   ├── bootstrap
-    │   ├── config
-    │   ├── email
-    │   ├── employee
-    │   └── pom.xml
-    │
-    └── user-service/
-        ├── controller
-        ├── service
-        ├── entity
-        ├── repository
-        ├── dto
-        └── pom.xml
+### Version Control
+- Git / GitHub
     
 ------------------------------------------------------------------------
 
-## 🔗 Inter-Service Communication (Feign)
+## Features
 
-### Example Feign Client
+### Client Features
+- User registration and login
+- View, book, edit, or cancel appointments
+- View past appointments
+- Browse available beauty treatments
 
-``` java
-@FeignClient(name = "beauty-salon-rest", url = "http://localhost:8081/api/v1/users")
-public interface UserServiceClient {
-  @GetMapping("/{id}")
-  ResponseEntity<UserDto> loadById(@PathVariable("id") UUID id);
-}
-```
-
-### application.yml (Beauty Salon)
-
-``` yaml
-services:
-  user:
-    url: http://localhost:8081
-```
+### Admin Features
+- Manage users and appointments
+- Edit beauty treatments
+- Role-based access (ADMIN vs USER)
+- Mark appointments as completed
 
 ------------------------------------------------------------------------
 
-## ▶️ Running the Project
+## Functionalities
 
-### 1. Clone repository
+- Secure login and role-based authentication
+- Appointment CRUD operations
+- REST API for user management
+- Flash messages for actions in frontend
+- Sorting and filtering of appointments
+- Input validation and error handling
 
-``` bash
-git clone https://github.com/your/repo.git
-cd beauty-salon-system
-```
+---
 
-### 2. Start User Service
+## Integrations
 
-``` bash
-cd user-service
-mvn spring-boot:run
-```
-
-### 3. Start Beauty Salon Service
-
-``` bash
-cd beauty-salon-service
-mvn spring-boot:run
-```
-
+- MySQL database for persistent storage
+- Spring Security for authentication and authorization
+- REST API endpoints for user operations
+- 
 ------------------------------------------------------------------------
 
-## 📘 API Documentation
+## How to Run
 
-  Service        URL
-  -------------- ---------------------------------------
-  Beauty Salon   http://localhost:8080
-  User Service   http://localhost:8081
+1. Clone the repository:
+   ```bash
+   git clone https://https://github.com/KrasenaMarkova/beauty-salon
+------------------------------------------------------------------------
+
+## Navigate to the project directory:
+
+cd beauty-salon
+
+## Configure application.properties with your database credentials.
+
+## Build and run the application:
+
+mvn spring-boot:run
+
+## Open your browser and go to:
+http://localhost:8080
 
 ------------------------------------------------------------------------
 
 ## 🧪 Testing
 
-``` bash
+``` 
 mvn test
 ```
 
 ------------------------------------------------------------------------
 
-## 🤝 Contributing
+## Project Structure
 
-1.  Fork the project\
-2.  Create a feature branch\
-3.  Commit your changes\
-4.  Open a pull request
+src/main/java – Main application code
+
+src/main/resources/templates – Thymeleaf templates
+
+src/main/resources/static – CSS, JS, images
+
+src/test/java – Unit and integration tests
 
 ------------------------------------------------------------------------
 
